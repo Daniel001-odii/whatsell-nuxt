@@ -4,8 +4,8 @@
 
       <!-- {{ products }} <span>A BREAAAAAK</span> -->
 
-      <div v-for="product in products.products">
-        <span>{{ product.name }}</span>
+      <div v-for="product in products.products" class="bg-slate-200 mb-20">
+        <span>{{ product.name }} <br/> {{ product._id }}</span><br/>
       </div>
 
       
