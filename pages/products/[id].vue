@@ -1,51 +1,71 @@
 <template>
+    <!--  <Head>
+      <Title>{{ product.name }}</Title>
+      <Meta name="description" :content="product.description" />
+      <Meta name="ogTitle" :content="product.name" />
+      <Meta name="ogDescription" :content="product.description" />
+      <Meta v-if="product" name="ogImage" :content="product?.images[0]" />
+    </Head> -->
     <div>
-        <h1>A product page for {{ route.params.id }}</h1>
-        <br/>
-        <img v-if="product" :src="product?.images[0]" class="size-[200px]" />
-        <p>{{ product?.name }}</p>
+        <h1>A product page for {{ route.params }}</h1><br/>
+        <img v-if="product" :src="product?.images[0]" class="size-[200px]"/>
+        <p>{{ product.name }}</p>
         <span>{{ product }}</span>
     </div>
 </template>
-
-<script setup>
-import { ref, watch } from 'vue';
-import { useRoute, useHead } from '#imports';
-
+<!-- 66d723e686ae1bb074c8ef47 -->
+<!-- <script setup>
 const route = useRoute();
-const product = ref(null);
-const metaImage = ref('');
+const { data: product } = await useFetch(`http://localhost:8000/api/products/66d723e686ae1bb074c8ef47`);
 
-const getProduct = async () => {
-    try {
-        const response = await $fetch(`https://wha-sell-api.vercel.app/api/products/${route.params.id}`);
-        product.value = response.product;
-        metaImage.value = response.product?.images[0] || '';
+</script>
+ -->
+<script>
+export default {
+    data() {
+        return {
+            route: useRoute(),
+            product: '',
+            useHead,
+        }
+    },
 
-        console.log("response from fetch: ", response);
-    } catch (error) {
-        console.error("Error fetching product:", error);
-    }
-};
+    methods: {
+        async getProduct(){
+            try{
+                const response = await $fetch(`https://wha-sell-api.vercel.app/api/products/${this.route.params.id}`);
+                this.product = response.product;
+                this.meta_image = response?.product?.images[0];
 
-// Fetch product when the component is mounted
-await getProduct();
-
-// Watch for product updates and update meta tags dynamically
-watch(product, (newProduct) => {
-    if (newProduct) {
-        useHead({
-            title: newProduct.name,
+                useHead({
+            title: this.product?.name,
             meta: [
-                { name: 'description', content: newProduct.description || 'Default description' },
-                { property: "og:title", content: newProduct.name },
-                { property: "og:description", content: newProduct.description },
-                { property: "og:image", content: metaImage.value },
+                { name: 'description', content: 'My amazing site.' },
+                { property: "og:title", content: this.product.name },
+                { property: "og:description", content: this.product.description },
+                { property: "og:image", content: this.meta_image },
                 { property: "og:type", content: "product" },
                 { name: "twitter:card", content: "summary_large_image" },
-                { name: "twitter:image", content: metaImage.value }
+                { name: "twitter:image", content: this.meta_image }
             ],
         });
-    }
-});
+                
+                console.log("response from fetch: ", response);
+            }catch(error){
+                console.log("error getting product: ", error);
+            }
+        },
+    },
+
+    created() {
+        this.getProduct();
+
+       
+       
+    },
+};
 </script>
+
+<style scoped>
+
+</style>
