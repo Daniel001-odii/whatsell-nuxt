@@ -5,7 +5,7 @@
       <!-- {{ products }} <span>A BREAAAAAK</span> -->
 
       <div v-for="product in products.products" class="bg-slate-200 mb-20">
-        <span>{{ product.name }} <br/> {{ product._id }}</span><br/>
+        <<NuxtLink :to="`/products/${product._id}`"></NuxtLink>>{{ product.name }} <br/> {{ product._id }}</NuxtLi><br/>
       </div>
 
       
