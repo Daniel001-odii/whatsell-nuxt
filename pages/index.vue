@@ -17,7 +17,7 @@ import { ref } from 'vue';
 
 // const products = ref([]); // Ensure it's a ref (reactive)
 
-const { data: products } = await useFetch('http://localhost:8000/api/products');
+const { data: products } = await useFetch('https://wha-sell-api.vercel.app/api/products');
 
 // products.value = all_products;
 

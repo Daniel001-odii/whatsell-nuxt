@@ -33,7 +33,7 @@ export default {
     methods: {
         async getProduct(){
             try{
-                const response = await $fetch(`http://localhost:8000/api/products/${this.route.params.id}`);
+                const response = await $fetch(`https://wha-sell-api.vercel.app/api/products/${this.route.params.id}`);
                 this.product = response.product;
                 
                 console.log("response from fetch: ", response);
