@@ -3,6 +3,7 @@
       <h1 v-if="product">Product: {{ product.name }}</h1>
       <img v-if="product" :src="product?.images[0]" class="size-[200px]" />
       <p v-if="product">{{ product.description }}</p>
+      <!-- {{ product }} -->
     </div>
   </template>
   
@@ -20,10 +21,10 @@
   
   // Set meta tags dynamically (before page is rendered)
   useHead({
-    title: product.value?.name || "Default Product Title",
+    title: `${product.value?.name} - NGN${product.value?.price.toLocaleString()}` || "Default Product Title",
     meta: [
       { name: 'description', content: product.value?.description || 'Default description' },
-      { property: "og:title", content: product.value?.name || "Default Product Title" },
+      { property: "og:title", content: `${product.value?.name} - NGN${product.value?.price.toLocaleString()}` || "Default Product Title" },
       { property: "og:description", content: product.value?.description || "Default Product Description" },
       { property: "og:image", content: product.value?.images[0] || "https://example.com/default-image.jpg" },
       { property: "og:type", content: "product" },
