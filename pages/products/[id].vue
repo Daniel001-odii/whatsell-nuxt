@@ -1,11 +1,11 @@
 <template>
-     <Head>
+    <!--  <Head>
       <Title>{{ product.name }}</Title>
       <Meta name="description" :content="product.description" />
       <Meta name="ogTitle" :content="product.name" />
       <Meta name="ogDescription" :content="product.description" />
       <Meta v-if="product" name="ogImage" :content="product?.images[0]" />
-    </Head>
+    </Head> -->
     <div>
         <h1>A product page for {{ route.params }}</h1><br/>
         <img v-if="product" :src="product?.images[0]" class="size-[200px]"/>
@@ -35,6 +35,7 @@ export default {
             try{
                 const response = await $fetch(`https://wha-sell-api.vercel.app/api/products/${this.route.params.id}`);
                 this.product = response.product;
+                this.meta_image = response?.product?.images[0];
                 
                 console.log("response from fetch: ", response);
             }catch(error){
@@ -46,14 +47,18 @@ export default {
     created() {
         this.getProduct();
 
-  /*       useSeoMeta({
+        useHead({
             title: this.product?.name,
-            ogTitle: 'My Amazing Site',
-            description: 'This is my amazing site, let me tell you all about it.',
-            ogDescription: 'This is my amazing site, let me tell you all about it.',
-            ogImage: 'https://example.com/image.png',
-            twitterCard: 'summary_large_image',
-        }); */
+            meta: [
+                { name: 'description', content: 'My amazing site.' },
+                { property: "og:title", content: this.product.name },
+                { property: "og:description", content: this.product.description },
+                { property: "og:image", content: this.meta_image },
+                { property: "og:type", content: "product" },
+                { name: "twitter:card", content: "summary_large_image" },
+                { name: "twitter:image", content: this.meta_image }
+            ],
+        });
        
     },
 };
