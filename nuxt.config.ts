@@ -13,4 +13,12 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+    }
+  }
+  // ssr: true, // Ensures Server-Side Rendering is enabled
 })
