@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.form-input{
+@apply w-full  rounded-md p-3 shadow-md shadow-[#E0F6EA] hover:bg-app_light_green  outline-none border border-gray-300
+}
+
+.divider-tab{
+@apply font-bold p-3 border rounded-lg mt-6 capitalize text-green-700
+}
+
+button:disabled{
+@apply bg-gray-300 cursor-not-allowed
+}
+
+button{
+@apply hover:bg-opacity-90
+}
+
+.btn{
+@apply rounded-md px-6 py-2 flex flex-row justify-center items-center
+}
+
+.app_spinner {
+margin-right: 5px;
+width: 14px;
+height: 14px;
+border: 3px solid gray;
+border-bottom-color: transparent;
+border-radius: 50%;
+display: inline-block;
+box-sizing: border-box;
+animation: rotation 0.9s linear infinite;
+}
+
+@keyframes rotation {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+} 
+
+
+
+
+/* SCROLL BAR */
+
+/* width */
+::-webkit-scrollbar {
+width: 10px;
+height: 10px !important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888;
+border-radius: 10px;
+height: 20px !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+  
+  
