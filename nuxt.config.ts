@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { config } from 'dotenv';
+config();
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/ui", "radix-vue/nuxt"],
@@ -8,7 +11,7 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8000/api' // Make sure this is correct
+      apiBase: process.env.NUXT_PUBLIC_API_BASE,
     }
   }
 })
