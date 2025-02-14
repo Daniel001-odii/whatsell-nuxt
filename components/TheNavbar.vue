@@ -15,7 +15,7 @@
             <!-- search -->
             <div :class="is_collapsed ? 'flex':'hidden md:flex'" class=" md:w-fit flex-1 flex-col gap-3 md:flex-row md:justify-between md:items-center">
                 <div class=" flex flex-col w-full justify-center items-center mt-6 md:mt-0">
-                    <form @submit.prevent="handleSearch()" class=" flex flex-row w-full md:w-[600px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
+                    <form @submit.prevent="handleSearch()" class=" flex flex-row w-full md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
                         <input 
                         v-model="searchQuery"
                         @keyup.enter="handleSearch"

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@yeger/vue-masonry-wall": "^5.0.18",
+    "axios": "^1.7.9",
     "radix-vue": "^1.9.14",
     "vue-spinner": "^1.0.4",
     "vue3-spinners": "^1.2.2"
