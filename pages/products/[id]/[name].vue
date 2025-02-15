@@ -71,18 +71,18 @@
                 <div class=""> 
                   <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
                     <Slide  v-for="(image, index) in product_images" :key="index">
-                      <img :src="image" alt="Gallery Image" class="gallery-image" />
+                      <img :src="image" alt="Gallery Image" class="gallery-image !rounded-lg" />
                     </Slide>
                   </Carousel>
 
-                  <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide">
+                  <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide" class=" mt-3">
                     <Slide v-for="(image, index) in product_images" :key="index">
                       <template #default="{ currentIndex, isActive }">
                         <div
                           :class="['thumbnail', { 'is-active': isActive }]"
                           @click="slideTo(currentIndex)"
                         >
-                          <img :src="image" alt="Thumbnail Image" class="thumbnail-image" />
+                          <img :src="image" alt="Thumbnail Image" class="thumbnail-image !rounded-lg !max-w-[100px]" />
                         </div>
                       </template>
                     </Slide>
@@ -114,7 +114,7 @@
                     <div v-html="product.description.substring(0, 500)" class=" min-h-[100px]"></div>
                     <div class="flex flex-col gap-3 flew-wrap text-sm text-gray-400">
                         <span><i class="bi bi-tag mr-1"></i>{{ product.category }}</span>
-                        <span v-if="shop_location"><i class="bi bi-geo-alt mr-1"></i>{{ shop_location.address }}, {{  shop_location.state }}</span>
+                        <!-- <span v-if="shop_location"><i class="bi bi-geo-alt mr-1"></i>{{ shop_location.address }}, {{  shop_location.state }}</span> -->
                         <span><i class="bi bi-eye mr-1"></i>{{ product.views }} views</span>
                     </div>
                 </div>
@@ -122,7 +122,25 @@
                     <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold" @click="proceed_to_buy = !proceed_to_buy">Buy now</button>
                 </div>
             </div>
-        </div>
+      </div>
+
+      <!-- SIMILAR ITEMS YOU MAY LIKE -->
+      <h2 class=" font-bold mt-12">Similar items you may like</h2>
+      <div class="flex flex-row overflow-x-auto mt-3 flex-wrap pt-5 gap-3">
+      <!-- similar products: {{ similar_products }} -->
+      <ProductCard v-for="(item, index) in similar_products" class=" -mt-[15px] !w-[150px]"
+              :hasLikedButton="false"
+              :id="item._id"
+              :product_slug="item.slug"
+              :views="item.views"
+              :posted="item.createdAt"
+              :product_price="item.price.toLocaleString()"
+              :shop_name="item.shop.name"
+              @like-product="addProductToLikes(item._id)"
+              :image_url="item.images[0]"
+          >
+        </ProductCard>
+      </div>
     </div>
   </template>
   
@@ -131,6 +149,7 @@
   import { useRoute, useAsyncData, useHead } from '#imports';
   import { Carousel, Slide, Navigation } from 'vue3-carousel';
 
+import axios from 'axios'
 
   // Get current route
   const route = useRoute();
@@ -140,13 +159,7 @@
 
   const product_images = ref([]);
 
-  // Fetch product data before rendering (SSR-compatible)
-  const { data: product } = await useAsyncData('product', async () => {
-    const response = await $fetch(`${config.public.apiBase}/products/${route.params.id}`);
-    shop.value = response.product.shop
-    product_images.value = response.product.images;
-    return response.product;
-  });
+
 
   const currentSlide = ref(0);
   const slideTo = (nextSlide) => (currentSlide.value = nextSlide);
@@ -168,6 +181,27 @@
     gap: 10,
   };
 
+  // Fetch product data before rendering (SSR-compatible)
+  const { data: product } = await useAsyncData('product', async () => {
+    const response = await $fetch(`${config.public.apiBase}/products/${route.params.id}`);
+    shop.value = response.product.shop
+    product_images.value = response.product.images;
+    getSimilarProducts();
+    return response.product;
+  });
+
+  
+  const similar_products = ref([]);
+  async function getSimilarProducts(){
+    try{
+        const response = await axios.get(`${config.public.apiBase}/products/similar/all?keyword=${product.value.name}`, );
+        console.log(" all similar products: ", response);
+        similar_products.value = response.data.products;
+    }catch(error){
+        console.log("error getting similar products: ", error);
+    }
+  }
+
 
   // Set meta tags dynamically (before page is rendered)
   useHead({
@@ -183,5 +217,12 @@
       { name: "twitter:image", content: product.value?.images[0] || "https://example.com/default-image.jpg" }
     ],
   });
+
+  onMounted(()=>{
+    if(product.value){
+      getSimilarProducts();
+    }
+
+  })
   </script>
   

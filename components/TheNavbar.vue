@@ -8,7 +8,7 @@
                     </NuxtLink>
                 </div>
                 <UButton variant="ghost" @click="toggleMenu" color="green" class=" md:hidden inline-block">
-                    <i class="bi bi-three-dots"/>
+                    <i class="bi bi-ui-radios-grid"/>
                 </UButton>
             </div>
 
@@ -33,14 +33,14 @@
                 <!-- auth buttons -->
                 <div class=" flex flex-col md:flex-row gap-3 items-start md:items-center">
                     <NuxtLink to="/login" class=" w-full md:w-fit">
-                        <UButton variant="ghost" color="black" class=" p-3 rounded-md px-6 w-full text-left">Login</UButton>
+                        <button variant="ghost"  class=" p-3 rounded-md px-6 w-full text-left">Login</button>
                     </NuxtLink>
                 
                     <NuxtLink to="/register" class=" w-full md:w-fit">
-                        <button  class=" p-3 rounded-md bg-black text-white px-6 text-nowrap w-full text-left">Sign Up</button>
+                        <button variant="ghost" class=" p-3 rounded-md px-6 text-nowrap w-full text-left">Sign Up</button>
                     </NuxtLink>
                 
-                    <UButton
+                    <UButton class="mx-6"
                         :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
                         color="gray"
                         variant="ghost"
