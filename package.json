@@ -13,7 +13,8 @@
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "^2.21.0",
     "nuxt": "^3.15.4",
-    "vue": "latest"
+    "vue": "latest",
+    "vue3-carousel-nuxt": "^1.1.5"
   },
   "dependencies": {
     "@yeger/vue-masonry-wall": "^5.0.18",

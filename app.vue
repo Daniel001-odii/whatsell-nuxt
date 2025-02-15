@@ -1,7 +1,9 @@
 <template>
   <div class=" dark:bg-[#21262d]">
     <TheNavbar/>
-    <NuxtPage />
+    <div class=" p-6">
+      <NuxtPage />
+    </div>
     <TheFooter/>
   </div>
 </template>

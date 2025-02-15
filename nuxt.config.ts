@@ -4,7 +4,11 @@ config();
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "radix-vue/nuxt"],
+  modules: [
+    "@nuxt/ui", 
+    "radix-vue/nuxt",
+    "vue3-carousel-nuxt",
+  ],
   compatibilityDate: "2025-02-12",
   css: [
     "~/assets/css/main.css",
