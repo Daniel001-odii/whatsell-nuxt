@@ -1,7 +1,7 @@
 <template>
   <div class=" dark:bg-[#21262d]">
     <TheNavbar/>
-    <div class=" p-6">
+    <div class=" container mx-auto my-12">
       <NuxtPage />
     </div>
     <TheFooter/>
