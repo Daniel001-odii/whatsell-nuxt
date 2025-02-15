@@ -1,96 +1,57 @@
 <template>
-    <div>
-       <!-- SHOP DETAIL BANNER -->
-      <div class=" mt-3 border dark:border-gray-600 rounded-lg p-3 flex flex-row items-start justify-between gap-5 flex-wrap shadow-sm">
-                <!-- SJOP IMAGE -->
-                <div class=" flex flex-row gap-3 md:w-fit w-full">
-                    <div class=" min-w-28 w-full md:!w-[200px] h-28 relative rounded-xl border border-gray-300  dark:border-gray-600  overflow-hidden">
-                        <img :src="shop?.profile?.image_url" alt="shop Photo" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex flex-col" v-if="shop?.followers">
-                        <RouterLink :to="`/shops/${shop.name}`">
-                            <span class="text-xl font-bold">{{ shop.name }}</span>
-                        </RouterLink>
-                        <span class="text-md">{{ shop.category }}</span>
-                        <span class="text-sm">Joined {{ shop.createdAt }} ago | {{ shop.followers.length }} followers</span>
-                    </div>
-                </div>
+  <!-- SHARE MODAL -->
+  <UModal v-model="share_modal_open">
+    <div class="p-12 flex flex-col gap-3">
+      <span class=" font-bold text-2xl">Share this product</span>
+      <div class=" mt-3 flex flex-row gap-6">
+        <a :href="`whatsapp://send?text=Hey checkout this product on whatsell ${fullUrl}`" data-action="share/whatsapp/share">
+          <button class=" text-green-500 text-4xl">
+            <i class="bi bi-whatsapp"></i>
+          </button>
+        </a>
 
-                <!-- ACTION BUTTONS -->
-                <div v-if="!isAllowed" class="hidden md:flex flex-row gap-3 flex-wrap border-red-30 items-center justify-center">
-                    <!-- <button @click="followShop(shop._id)" class=" text-sm border hover:border-gray-300 hover:bg-slate-100 rounded-full p-3 px-8 text-black font-medium"> 
-                        <span v-if="!shop.followers.includes(user)"><i class="bi bi-plus mr-1"></i>follow</span>
-                        <span v-else>following</span>
-                    </button> -->
-
-                    <button class="rounded-full h-10 w-10 hover:bg-slate-100 text-xl">
-                            <i class="bi bi-telephone-fill"></i>
-                    </button>
-                    <button class="rounded-full h-10 w-10 hover:bg-slate-100 text-2xl">
-                        <i class="bi bi-whatsapp"></i>
-                    </button>
-                </div>
+        <a target="_blank" :href="`http://www.facebook.com/share.php?u=${fullUrl}&amp;title='${product.name}'`">
+          <button class=" text-blue-500 text-4xl">
+              <i class="bi bi-facebook"></i>
+          </button>
+        </a>
+        <button class=" text-slate-500 text-4xl">
+            <i class="bi bi-twitter"></i>
+        </button>
+        <button class=" text-orange-500 text-4xl">
+            <i class="bi bi-instagram"></i>
+        </button>
       </div>
+    </div>
+  </UModal>
 
+
+
+    <div>
       <!-- PRODUCT DETAIL AREA -->
-      <div class="flex flex-col md:flex-row gap-5 mt-8 flex-wra relative" v-if="product">
-            <!-- <div class="flex flex-col md:flex-row gap-5 mt-8 flex-wra p-5 relative" v-if="product"> -->
-            <div class="flex flex-row gap-4 absolute right-5 text-xl">
-                 <!-- FOR NON AUTH USERS -->
-                 <!-- <Dialog v-if="!user">
-                    <DialogTrigger >
-                        <button class="h-8 w-8 rounded-full bg-white flex justify-center items-center border" :class="checkLikes(product._id) ? 'border-green-500':''">
-                            <i class="bi bi-hand-thumbs-up-fill text-green-500" v-if="checkLikes(product._id)"></i>
-                            <i class="bi bi-hand-thumbs-up" v-else></i>
-                        </button>
-                    </DialogTrigger>
-                    <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Create an account</DialogTitle>
-                        <DialogDescription>Please create an account or <RouterLink to="/login" class="underline text-blue-500"> log in.</RouterLink> 
-                            This will allow you to like like products you are interested in, follow shops, boost your shop, and enjoy other exclusive features.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <DialogFooter>
-                        <RouterLink to="/register">
-                            <button class="btn bg-app_green text-white">Register</button>
-                        </RouterLink>
-                    </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-
-                <button v-else @click="addProductToLikes(product._id)" class="h-8 w-8 rounded-full bg-white flex justify-center items-center border" :class="checkLikes(product._id) ? 'border-green-500':''">
-                    <i class="bi bi-hand-thumbs-up-fill text-green-500" v-if="checkLikes(product._id)"></i>
-                    <i class="bi bi-hand-thumbs-up" v-else></i>
-                </button> -->
-                <button class="h-8 w-8 rounded-full bg-white flex justify-center items-center border text-sm" p-3><i class="bi bi-share"></i></button>
-            </div>
+      <div class="flex flex-col md:flex-row gap-12 mt-8 flex-wra relative" v-if="product">
             <div class="flex flex-col gap-3 md:w-[50%] ">
                 <!-- <div :style="`background-image: url('${main_image}'); background-size: contain;`" class="full-image w-full h-[400px] rounded-md flex justify-center items-center bg-gray-100"></div> -->
-                <div class=""> 
-                  <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
-                    <Slide  v-for="(image, index) in product_images" :key="index">
-                      <img :src="image" alt="Gallery Image" class="gallery-image !rounded-lg" />
-                    </Slide>
-                  </Carousel>
-
-                  <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide" class=" mt-3">
-                    <Slide v-for="(image, index) in product_images" :key="index">
-                      <template #default="{ currentIndex, isActive }">
-                        <div
-                          :class="['thumbnail', { 'is-active': isActive }]"
-                          @click="slideTo(currentIndex)"
-                        >
-                          <img :src="image" alt="Thumbnail Image" class="thumbnail-image !rounded-lg !max-w-[100px]" />
-                        </div>
-                      </template>
-                    </Slide>
-
-                    <template #addons>
-                      <Navigation />
-                    </template>
-                  </Carousel>
+                <div class=" flex flex-col gap-3"> 
+                  <UCarousel 
+                  v-slot="{ item }" :items="product_images" 
+                  :prev-button="{
+                    icon: 'i-heroicons-arrow-left-20-solid',
+                  }"
+                  :next-button="{
+                    icon: 'i-heroicons-arrow-right-20-solid',
+                  }"
+                  :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
+                    <img :src="item" class="w-full !max-h-[800px]" draggable="false">
+                  </UCarousel>
+                <!-- <span>{{ product_images.length }}</span> -->
+                  <div class="flex flex-row gap-3 overflow-hidden relative">
+                    <img v-for="image in product_images" class=" size-[100px] rounded-lg flex-1" :src="image"/>
+                    <!-- EXTRA IMG INDICATOR -->
+                    <div class=" size-[100px] absolute right-0 rounded-lg flex justify-center items-center extra_img_indicator">
+                      <span class=" font-bold text-xl">+1</span>
+                    </div>
+                  </div>
                 </div>
             </div>
             
@@ -105,21 +66,23 @@
                 <div class="flex flex-col gap-2 mt-5">
                     <div class="flex flex-row justify-between">
                         <p class="font-bold text-xl">Product Description</p>
-                        <button @click="show_full_description = true">
-                            <i class="bi bi-arrows-fullscreen"></i>
-                        </button>
-                       
                     </div>
                     
                     <div v-html="product.description.substring(0, 500)" class=" min-h-[100px]"></div>
                     <div class="flex flex-col gap-3 flew-wrap text-sm text-gray-400">
                         <span><i class="bi bi-tag mr-1"></i>{{ product.category }}</span>
-                        <!-- <span v-if="shop_location"><i class="bi bi-geo-alt mr-1"></i>{{ shop_location.address }}, {{  shop_location.state }}</span> -->
+                        <span><i class="bi bi-geo-alt mr-1"></i>{{ product?.shop?.location?.address }}, {{  product?.shop?.location?.state }}</span>
                         <span><i class="bi bi-eye mr-1"></i>{{ product.views }} views</span>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold" @click="proceed_to_buy = !proceed_to_buy">Buy now</button>
+                <div class="mt-3 flex flex-col gap-2">
+                    <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold" @click="proceed_to_buy = !proceed_to_buy">Buy this item</button>
+                    <div class=" flex flex-row justify-between">
+                        <button class="action_btns"><i class="bi bi-shop"></i> Shop</button>
+                        <button class="action_btns border-l"><i class="bi bi-chat-square-quote"></i> Chat</button>
+                        <button class="action_btns border-l"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+                        <button @click="share_modal_open = !share_modal_open" class="action_btns border-l"><i class="bi bi-share"></i> Share</button>
+                    </div>
                 </div>
             </div>
       </div>
@@ -148,8 +111,19 @@
   import { ref } from 'vue';
   import { useRoute, useAsyncData, useHead } from '#imports';
   import { Carousel, Slide, Navigation } from 'vue3-carousel';
+  import {
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogOverlay,
+    DialogPortal,
+    DialogRoot,
+    DialogTitle,
+    DialogTrigger,
+  } from 'radix-vue'
 
 import axios from 'axios'
+import { useRequestURL } from '#app';
 
   // Get current route
   const route = useRoute();
@@ -158,7 +132,10 @@ import axios from 'axios'
   const isAllowed = ref(false);
 
   const product_images = ref([]);
-
+  const share_modal_open = ref(false);
+ 
+  // full path url..
+  const fullUrl = useRequestURL().href;
 
 
   const currentSlide = ref(0);
@@ -226,3 +203,15 @@ import axios from 'axios'
   })
   </script>
   
+
+<style>
+.extra_img_indicator{
+  background: rgb(7,104,184);
+  background: linear-gradient(-270deg, rgba(7,104,184,0) 0%, rgba(0,0,0,1) 56%);
+}
+
+
+.action_btns{
+  @apply  p-5 py-2 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:bg-green-500 hover:bg-opacity-10
+}
+</style>
