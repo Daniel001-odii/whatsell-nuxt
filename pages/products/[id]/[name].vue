@@ -1,9 +1,9 @@
 <template>
   <!-- SHARE MODAL -->
   <UModal v-model="share_modal_open">
-    <div class="p-12 flex flex-col gap-3">
-      <span class=" font-bold text-2xl">Share this product</span>
-      <div class=" mt-3 flex flex-row gap-6">
+    <div class="p-8 flex flex-col gap-3 justify-center text-center">
+      <span class=" font-bold text-xl">Share this product</span>
+      <div class=" mt-1 flex flex-row gap-6 w-full justify-evenly items-center">
         <a :href="`whatsapp://send?text=Hey checkout this product on whatsell ${fullUrl}`" data-action="share/whatsapp/share">
           <button class=" text-green-500 text-4xl">
             <i class="bi bi-whatsapp"></i>
@@ -22,6 +22,18 @@
             <i class="bi bi-instagram"></i>
         </button>
       </div>
+
+      <!-- COPY THE LINK -->
+      <div class=" flex flex-col mt-3">
+        <span class=" font-bold">Copy the link</span>
+        <div class=" mt-3 flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+          <input type="text" class="p-2 w-full outline-none" :value="fullUrl" readonly>
+          <button class="p-2 flex flex-row gap-3" @click="copyPageLink">
+            <i class="bi bi-clipboard"></i>
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
     </div>
   </UModal>
 
@@ -29,7 +41,7 @@
 
     <div>
       <!-- PRODUCT DETAIL AREA -->
-      <div class="flex flex-col md:flex-row gap-12 mt-8 flex-wra relative" v-if="product">
+      <div class="flex flex-col md:flex-row gap-12 flex-wra relative" v-if="product">
             <div class="flex flex-col gap-3 md:w-[50%] ">
                 <!-- <div :style="`background-image: url('${main_image}'); background-size: contain;`" class="full-image w-full h-[400px] rounded-md flex justify-center items-center bg-gray-100"></div> -->
                 <div class=" flex flex-col gap-3"> 
@@ -46,9 +58,9 @@
                   </UCarousel>
                 <!-- <span>{{ product_images.length }}</span> -->
                   <div class="flex flex-row gap-3 overflow-hidden relative">
-                    <img v-for="image in product_images" class=" size-[100px] rounded-lg flex-1" :src="image"/>
+                    <img v-for="image in product_images" class=" size-[100px] rounded-lg " :src="image"/>
                     <!-- EXTRA IMG INDICATOR -->
-                    <div class=" size-[100px] absolute right-0 rounded-lg flex justify-center items-center extra_img_indicator">
+                    <div v-if="product_images > 4" class=" size-[100px] absolute right-0 rounded-lg flex justify-center items-center extra_img_indicator">
                       <span class=" font-bold text-xl">+1</span>
                     </div>
                   </div>
@@ -69,19 +81,31 @@
                     </div>
                     
                     <div v-html="product.description.substring(0, 500)" class=" min-h-[100px]"></div>
-                    <div class="flex flex-col gap-3 flew-wrap text-sm text-gray-400">
+                    <div class="flex flex-row gap-3 flew-wrap text-sm text-gray-400">
                         <span><i class="bi bi-tag mr-1"></i>{{ product.category }}</span>
-                        <span><i class="bi bi-geo-alt mr-1"></i>{{ product?.shop?.location?.address }}, {{  product?.shop?.location?.state }}</span>
+                        <span><i class="bi bi-geo-alt mr-1"></i>{{ shop?.location?.address }}, {{  product?.shop?.location?.state }}</span>
                         <span><i class="bi bi-eye mr-1"></i>{{ product.views }} views</span>
                     </div>
                 </div>
                 <div class="mt-3 flex flex-col gap-2">
                     <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold" @click="proceed_to_buy = !proceed_to_buy">Buy this item</button>
                     <div class=" flex flex-row justify-between">
-                        <button class="action_btns"><i class="bi bi-shop"></i> Shop</button>
-                        <button class="action_btns border-l"><i class="bi bi-chat-square-quote"></i> Chat</button>
-                        <button class="action_btns border-l"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-                        <button @click="share_modal_open = !share_modal_open" class="action_btns border-l"><i class="bi bi-share"></i> Share</button>
+                        <button class="action_btns">
+                          <i class="bi bi-shop"></i> 
+                          <span class="hidden md:flex">Shop</span>
+                        </button>
+                        <button class="action_btns border-l">
+                          <i class="bi bi-chat-square-quote"></i> 
+                          <span class="hidden md:flex">Chat</span>
+                        </button>
+                        <button class="action_btns border-l">
+                          <i class="bi bi-hand-thumbs-up"></i> 
+                          <span class="hidden md:flex">Like</span>
+                        </button>
+                        <button @click="share_modal_open = !share_modal_open" class="action_btns border-l">
+                          <i class="bi bi-share"></i> 
+                          <span class="hidden md:flex">Share</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -91,7 +115,7 @@
       <h2 class=" font-bold mt-12">Similar items you may like</h2>
       <div class="flex flex-row overflow-x-auto mt-3 flex-wrap pt-5 gap-3">
       <!-- similar products: {{ similar_products }} -->
-      <ProductCard v-for="(item, index) in similar_products" class=" -mt-[15px] !w-[150px]"
+      <ProductCard v-for="(item, index) in similar_products" class=" mt-[3px] !w-[150px]"
               :hasLikedButton="false"
               :id="item._id"
               :product_slug="item.slug"
@@ -136,6 +160,16 @@ import { useRequestURL } from '#app';
  
   // full path url..
   const fullUrl = useRequestURL().href;
+  const copied = ref(false);
+  const copyPageLink = async () => {
+    try {
+      await navigator.clipboard.writeText(fullUrl.value);
+      copied.value = true;
+      setTimeout(() => (copied.value = false), 2000); // Hide "Copied" message after 2 sec
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
 
   const currentSlide = ref(0);
@@ -212,6 +246,6 @@ import { useRequestURL } from '#app';
 
 
 .action_btns{
-  @apply  p-5 py-2 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:bg-green-500 hover:bg-opacity-10
+  @apply  px-5 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:text-app_green hover:bg-opacity-10 mt-3
 }
 </style>

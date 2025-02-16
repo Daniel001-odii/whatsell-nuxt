@@ -2,14 +2,15 @@
 
 <ScrollToTop/>
 
-<div class=" min-h-screen p-5">
+<div class=" min-h-screen md:p-0">
 
-  <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden" arrows>
-    <img :src="item" class="w-full !max-h-[800px]" draggable="false">
-  </UCarousel>
+<!-- HERO CAROUSEL -->
+<UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden" arrows>
+  <img :src="item" class="w-full !max-h-[800px]" draggable="false">
+</UCarousel>
 
 
-  <!-- all categories.... -->
+<!-- all categories.... -->
 <h2 class=" font-bold mt-12">Explore Our Categories</h2>
 <!-- {{ categories }} -->
 <div class=" flex flex-row gap-3 overflow-x-auto mt-3">
@@ -17,7 +18,7 @@
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
   :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-image: url('../assets/images/logo/whatsell_gray.png'); background-size: contain;`" 
-  class=" flex justify-center items-center text-sm min-w-[200px] h-16 bg-black bg-opacity-50 text-white rounded-xl">{{ category.category }}</NuxtLink>
+  class=" flex justify-center items-start text-sm min-w-[200px] h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
 </div>
 
 <!-- best deals for your 2morrow -->
@@ -55,6 +56,25 @@
   :image_url="shop?.profile?.image_url"
   :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`"
   />
+</div>
+
+<!-- DISCOUNTS OF THE WEEK -->
+<h2 class=" font-bold mt-12">Discounts of the week</h2>
+<div class=" flex flex-row overflow-x-auto gap-3 mt-3">
+  <div v-for="item in 3" class="bg-[#FFEFE0] rounded-md text-black max-w-[350px] flex flex-col h-[400px] overflow-hidden">
+    <div class=" rounded-md p-5 flex flex-col gap-1 h-[50%]">
+      <span>Get</span>
+      <div class=" text-[#A2764C]">
+        <span class=" font-bold text-3xl mr-3">20%</span>
+        <small>Off</small>
+      </div>
+      <p>Lorem ipsum, dolor sit amet consectetur adipisicing  praesentium.</p>
+      <button class="rounded-full p-3 bg-[#DBC9B35C]">Start Date - End Date</button>
+    </div>
+    <div class=" h-[50%] bg-red-500 ">
+      <img src="https://picsum.photos/1280/720?random=1" class=" h-full"/>
+    </div>
+  </div>
 </div>
 
 
@@ -95,12 +115,12 @@ import { useRoute, useAsyncData, useHead } from '#imports';
 import axios from 'axios'
 
 const items = [
-  'https://picsum.photos/1920/1080?random=1',
-  'https://picsum.photos/1920/1080?random=2',
-  'https://picsum.photos/1920/1080?random=3',
-  'https://picsum.photos/1920/1080?random=4',
-  'https://picsum.photos/1920/1080?random=5',
-  'https://picsum.photos/1920/1080?random=6'
+  'https://picsum.photos/1280/720?random=1',
+  'https://picsum.photos/1280/720?random=2',
+  'https://picsum.photos/1280/720?random=3',
+  'https://picsum.photos/1280/720?random=4',
+  'https://picsum.photos/1280/720?random=5',
+  'https://picsum.photos/1280/720?random=6'
 ]
 
 const config = useRuntimeConfig();
