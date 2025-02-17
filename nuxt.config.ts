@@ -9,6 +9,8 @@ export default defineNuxtConfig({
     "radix-vue/nuxt",
     "vue3-carousel-nuxt",
   ],
+
+  plugins: ['~/plugins/axios.js'],
   compatibilityDate: "2025-02-12",
   css: [
     "~/assets/css/main.css",

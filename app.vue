@@ -1,13 +1,15 @@
 <template>
+  <UNotifications />
   <div class=" dark:bg-[#21262d]">
     <TheNavbar/>
-    <div class=" container mx-auto my-2 p-5">
+    <div class=" container mx-auto">
       <NuxtPage />
     </div>
     <TheFooter/>
   </div>
 </template>
-<script>
+<script setup>
+const toast = useToast()
 </script>
 
 

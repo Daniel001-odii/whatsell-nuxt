@@ -4,7 +4,7 @@
 
 
 .form-input{
-@apply w-full  rounded-md p-3 shadow-md shadow-[#E0F6EA] hover:bg-app_light_green  outline-none border border-gray-300
+@apply w-full  rounded-md p-3 shadow-md shadow-[#E0F6EA] hover:bg-app_light_green  outline-none border border-gray-300 bg-transparent dark:border-gray-600 dark:shadow-gray-700 dark:hover:bg-transparent
 }
 
 .divider-tab{

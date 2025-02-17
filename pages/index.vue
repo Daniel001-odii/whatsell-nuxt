@@ -18,7 +18,7 @@
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
   :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-image: url('../assets/images/logo/whatsell_gray.png'); background-size: contain;`" 
-  class=" flex justify-center items-start text-sm min-w-[200px] h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
+  class=" flex justify-center items-start text-sm min-w-[200px] h-[80px] md:h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
 </div>
 
 <!-- best deals for your 2morrow -->
@@ -59,7 +59,7 @@
 </div>
 
 <!-- DISCOUNTS OF THE WEEK -->
-<h2 class=" font-bold mt-12">Discounts of the week</h2>
+<!-- <h2 class=" font-bold mt-12">Discounts of the week</h2>
 <div class=" flex flex-row overflow-x-auto gap-3 mt-3">
   <div v-for="item in 3" class="bg-[#FFEFE0] rounded-md text-black max-w-[350px] flex flex-col h-[400px] overflow-hidden">
     <div class=" rounded-md p-5 flex flex-col gap-1 h-[50%]">
@@ -75,7 +75,7 @@
       <img src="https://picsum.photos/1280/720?random=1" class=" h-full"/>
     </div>
   </div>
-</div>
+</div> -->
 
 
  <!-- FAQ SECTION -->
@@ -181,5 +181,25 @@ console.log("fetched categories: ", categories.value)
 </script>
 
 <style scoped>
+.question{
+    background: url('../assets/images/questions_yellow.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.coins{
+    background: url('../assets/images/coins_.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.gaurd{
+    background: url('../assets/images/gaurd_.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
 </style>
