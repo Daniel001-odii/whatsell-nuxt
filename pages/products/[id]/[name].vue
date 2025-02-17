@@ -1,6 +1,6 @@
 <template>
   <!-- SHARE MODAL -->
-  <UModal v-model="share_modal_open">
+  <UModal v-model="share_modal_open" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
     <div class="p-8 flex flex-col gap-3 justify-center text-center">
       <span class=" font-bold text-xl">Share this product</span>
       <div class=" mt-1 flex flex-row gap-6 w-full justify-evenly items-center">
@@ -39,7 +39,7 @@
   </UModal>
 
   <!-- PRODUCT LIKE -->
-  <UModal v-model="no_auth_like">
+  <UModal v-model="no_auth_like" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
     <div class="p-12 text-center items-center justify-center flex flex-col gap-3">
       <h1 class=" text-2xl font-bold">Please login to continue</h1>
       <img src="../../../assets/images/auth_pages.png" class=" w-[300px]"/>
