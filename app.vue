@@ -2,7 +2,7 @@
   <UNotifications />
   <div class=" dark:bg-[#21262d]">
     <TheNavbar/>
-    <div class=" container mx-auto">
+    <div class=" container mx-auto p-3">
       <NuxtPage />
     </div>
     <TheFooter/>
