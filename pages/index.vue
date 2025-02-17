@@ -5,7 +5,7 @@
 <div class=" min-h-screen md:p-0">
 
 <!-- HERO CAROUSEL -->
-<UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden" arrows>
+<UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3" arrows>
   <img :src="item" class="w-full !max-h-[800px]" draggable="false">
 </UCarousel>
 
