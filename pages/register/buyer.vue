@@ -1,4 +1,5 @@
 <template>
+
     <div class="min-h-screen flex flex-row">
       <div class="w-full md:w-[50%] min-h-screen flex justify-center items-center p-3 md:p-12">
         <div class="p-3 w-full max-w-lg">
@@ -18,7 +19,7 @@
                 <div class="flex flex-row relative">
                   <!-- <SpinnerComponent v-if="loading_email" class="absolute top-[50%] right-[5%]" /> -->
                   <input id="email" type="email" @change="checkEmail" name="email" placeholder="example@mail.com"
-                    v-model="form.email" class="form-input" :class="errors.email ? 'border-red-400':''" required>
+                    v-model="form.email" class="form-input" :class="errors.email ? '!border-red-400':''" required>
                 </div>
   
                 <small v-if="errors.email" class="text-red-500">{{ errors.email }}</small>
@@ -26,7 +27,7 @@
               <div class="relative">
                 <!-- <SpinnerComponent v-if="loading_phone" class="absolute top-[35%] right-[5%]" /> -->
                 <input type="tel" @change="checkPhone" name="phone" placeholder="081234567890" v-model="form.phone"
-                  class="form-input" :class="errors.phone ? 'border-red-400':''" required>
+                  class="form-input" :class="errors.phone ? '!border-red-400':''" required>
                 <small v-if="errors.phone" class="text-red-500">{{ errors.phone }}</small>
               </div>
               <div>
@@ -63,16 +64,22 @@
                 </div>
               </div>
             </div>
+           
+            <UButton 
+            type="submit" 
+            :loading="loading"
+            loading-icon="svg-spinners:6-dots-scale-middle" 
+            color="green"
+            :disabled="loading || passwordStrength.score < 5 || form_error"
+              class="w-full justify-center p-3 font-bold mt-3">
+              <span>Register</span>
+            </UButton>
+
             <div class="mt-3 text-gray-400">
               <p>Already a member? 
                 <NuxtLink class="text-app_green underline" to="/login">Login</NuxtLink>
             </p>
             </div>
-            <button type="submit" :disabled="loading || passwordStrength.score < 5 || form_error"
-              class="bg-[#37B36E] text-white w-full rounded-md p-3 mt-6 hover:bg-opacity-80 font-bold disabled:cursor-not-allowed disabled:bg-gray-300">
-              <span v-if="loading">loading...</span>
-              <span v-else>Oya let's get started</span>
-            </button>
           </form>
         </div>
       </div>
@@ -93,8 +100,21 @@ definePageMeta({
 
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
+  import axios from 'axios';
   
-  const router = useRouter();
+const router = useRouter();
+const accessToken = useCookie('accessToken', {
+  maxAge: 60 * 60 * 24 * 7, // 7 days
+  httpOnly: false, // Set to true if using from a server route
+  secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+  sameSite: 'strict'
+});
+const refreshToken = useCookie('refreshToken', {
+  maxAge: 60 * 60 * 24 * 100, // 7 days
+  httpOnly: false, // Set to true if using from a server route
+  secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+  sameSite: 'strict'
+});
   
   const form = reactive({
     username: '',
@@ -139,8 +159,29 @@ definePageMeta({
     passwordStrength.label = score <= 2 ? 'Weak' : score <= 4 ? 'Good' : 'Strong';
   };
   
-  const register = () => {
-  console.log('Submitting form:', form);
+const toast = useToast()
+const register = async () => {
+  loading.value = true;
+  errors.value = {
+    username: '',
+    email: '',
+    phone: '',
+    password: '',
+  };
+  try{
+    const res = await axios.post(`${useRuntimeConfig().public.apiBase}/register/primary`, form);
+    console.log("registered: ", res);
+    accessToken.value = res.data.accessToken;
+    refreshToken.value = res.data.refreshToken;
+    toast.add({ title: res.data.message })
+    setTimeout(() => {
+      router.push('/');
+    }, 2000);
+  }catch(error){
+    console.log("error in rgister: ", error);
+    errors[error.response.data.fields] = error.response.data.message;
+  }
+  loading.value = false;
 };
 </script>
 

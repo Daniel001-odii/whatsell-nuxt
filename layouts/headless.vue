@@ -1,6 +1,6 @@
 <template>
     <div class=" relative">
-        <div class=" p-6">
+        <div class=" p-6 absolute">
             <NuxtLink to="/">
                 <img src="../assets/images/logo/whatsell_logo.png"/>
             </NuxtLink>

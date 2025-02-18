@@ -109,15 +109,17 @@
                     <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold" @click="proceed_to_buy = !proceed_to_buy">Buy this item</button>
                     <div class=" flex flex-row justify-evenly">
 
-                      <NuxtLink :to="`/shops/${product?.shop?.name}`" target="_blank">
-                        <button class="action_btns">
+                      <NuxtLink :to="`/shops/${product?.shop?.name}`" target="_blank" class="action_btns">
+                        <button class=" flex gap-3">
                           <i class="bi bi-shop"></i> 
                           <span class="hidden md:flex">Shop</span>
                         </button>
                       </NuxtLink>
 
-                      <a v-if="user && product" :href="product?.shop?.owner?.phone ? `https://wa.me/${product?.shop?.owner?.phone}?text=${wa_message_text}` : '#'">
-                        <button class="action_btns border-l">
+                      <a v-if="user && product" 
+                      class="action_btns border-l"
+                      :href="product?.shop?.owner?.phone ? `https://wa.me/${product?.shop?.owner?.phone}?text=${wa_message_text}` : '#'">
+                        <button class="flex gap-3">
                           <i class="bi bi-chat-square-quote"></i> 
                           <span class="hidden md:flex">Chat</span>
                         </button>
@@ -127,14 +129,11 @@
                           <span class="hidden md:flex">Chat</span>
                       </button>
 
-                        <button @click="" class="action_btns border-l" v-if="user">
-                          <i class="bi bi-hand-thumbs-up"></i> 
-                          <span class="hidden md:flex">Like</span>
-                        </button>
-                        <button @click="no_auth_like = true" class="action_btns border-l" v-else>
-                          <i class="bi bi-hand-thumbs-up"></i> 
-                          <span class="hidden md:flex">Like</span>
-                        </button>
+                      <button @click="addToLikes(product?._id)" class="action_btns border-l" :class="isLiked ? '!text-app_green':''">
+                        <i class="bi" :class=" isLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up'"></i> 
+                        <span class="hidden md:flex" v-if="isLiked">Liked</span>
+                        <span class="hidden md:flex" v-else>Like</span>
+                      </button>
 
                         <button @click="share_modal_open = !share_modal_open" class="action_btns border-l">
                           <i class="bi bi-share"></i> 
@@ -167,8 +166,8 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
-  import { useRoute, useAsyncData, useHead } from '#imports';
+import { ref } from 'vue';
+import { useRoute, useAsyncData, useHead } from '#imports';
 import axios from 'axios'
 const { $axios } = useNuxtApp();
 import { useRequestURL } from '#app';
@@ -178,7 +177,7 @@ import { useRequestURL } from '#app';
   const config = useRuntimeConfig();
   const shop = ref(null);
   const isAllowed = ref(false);
-
+  const isLiked = ref(false);
   const product_images = ref([]);
   const share_modal_open = ref(false);
  
@@ -216,7 +215,27 @@ import { useRequestURL } from '#app';
   };
 
 
-  const product_is_liked = ref(false);
+  const checkLikes = (product_id) => {
+      if(liked_products.value.includes(product_id)){
+          isLiked.value = true;
+      } else {
+          isLiked.value = false;
+      }
+  };
+
+  const addToLikes = async (id) => {
+    try{
+        isLiked.value = !isLiked.value;
+        const res = await $axios.post(`${useRuntimeConfig().public.apiBase}/products/${id}/like`);
+        console.log("tried liking a product: ", res);
+        isLiked.value = res.data.is_liked;
+    }catch(error){
+        console.log("error liking product: ", error);
+    }
+   
+};
+
+
   // Fetch product data before rendering (SSR-compatible)
   const { data: product } = await useAsyncData('product', async () => {
     const response = await $fetch(`${config.public.apiBase}/products/${route.params.id}`);
@@ -226,10 +245,13 @@ import { useRequestURL } from '#app';
   });
   
   const user = ref(null);
+  const liked_products = ref([]);
   const getUserData = async ()=> {
     try{
       const response = await $axios.get(`${config.public.apiBase}/user`);
       user.value = response.data.user;
+      liked_products.value = response.data.user.liked_products;
+      checkLikes(route.params.id);
     }catch(error){
       console.log("error getting user data: ", error);
     }
@@ -289,6 +311,6 @@ import { useRequestURL } from '#app';
 
 
 .action_btns{
-  @apply  px-5 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:text-app_green hover:bg-opacity-10 mt-3
+  @apply  px-5 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:text-app_green hover:bg-opacity-10 mt-3 
 }
 </style>
