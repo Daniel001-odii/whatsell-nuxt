@@ -1,14 +1,12 @@
 <template>
+<div class="dark:bg-[#21262d]">
 <NuxtLayout>
   <UNotifications />
-  <!-- <div class=" dark:bg-[#21262d]"> -->
-    <!-- <TheNavbar/> -->
-    <div class=" container mx-auto">
+    <div class=" ">
       <NuxtPage />
     </div>
-    <!-- <TheFooter/> -->
-  <!-- </div> -->
 </NuxtLayout>
+</div>
 </template>
 <script setup>
 

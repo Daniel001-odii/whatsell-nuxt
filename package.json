@@ -19,9 +19,11 @@
   "dependencies": {
     "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
+    "@pinia/nuxt": "^0.10.1",
     "@yeger/vue-masonry-wall": "^5.0.18",
     "axios": "^1.7.9",
     "radix-vue": "^1.9.14",
+    "vue-advanced-cropper": "^2.8.9",
     "vue-spinner": "^1.0.4",
     "vue3-spinners": "^1.2.2"
   }

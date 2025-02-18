@@ -17,7 +17,10 @@
                 </div>
 
                 <!-- proceed button -->
-                <button @click="proceedToRegisterPage" class="text-center py-3 bg-app_green rounded-lg text-white font-bold" :disabled="!is_selected">Let's moove!</button>
+                <UButton 
+                @click="proceedToRegisterPage" 
+                class="text-center p-3 !bg-app_green rounded-lg justify-center text-white font-bold" 
+                :disabled="!is_selected">Let's moove!</UButton>
             </div>
         </div>
         <div class="bg-[#f1f5f9] hidden md:flex md:w-[50%] min-h-full justify-center items-center">

@@ -112,7 +112,6 @@ const form_error = ref(false);
 const error_message = ref("");
 
 
-{/* <UButton label="Show toast" @click="toast.add({ title: 'Hello world!' })" /> */}
 
 const toast = useToast()
 const login_error = ref(null);

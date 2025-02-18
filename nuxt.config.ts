@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@nuxt/ui", 
     "radix-vue/nuxt",
     "vue3-carousel-nuxt",
+    "@pinia/nuxt",
   ],
 
   plugins: ['~/plugins/axios.js'],
