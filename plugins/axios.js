@@ -1,4 +1,4 @@
-export default defineNuxtPlugin((nuxtApp) => {
+/* export default defineNuxtPlugin((nuxtApp) => {
     const accessToken = useCookie('accessToken');
   
     nuxtApp.hook('app:created', () => {
@@ -11,4 +11,20 @@ export default defineNuxtPlugin((nuxtApp) => {
       });
     });
   });
-  
+   */
+
+import axios from 'axios';
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const accessToken = useCookie('accessToken');
+
+  const api = axios.create({
+    baseURL: useRuntimeConfig().public.apiBase, // Replace with your API
+    headers: {
+      Authorization: accessToken.value ? `Bearer ${accessToken.value}` : '',
+    },
+    credentials: 'true',
+  });
+
+  nuxtApp.provide('axios', api);
+});

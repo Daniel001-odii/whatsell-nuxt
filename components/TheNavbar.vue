@@ -100,17 +100,18 @@
 
                     <div div class="flex gap-2 items-center">
                         <img src="../assets/images/coins_group.png" class=" w-[35px]"/>
-                        <span>{{ user?.credits }}</span>
+                        <span>{{ credits }}</span>
                     </div>
                     <div>
-                        <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }">
-                            <UAvatar :alt="user?.user?.username.toUpperCase()" />
+                        <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }" 
+                        :ui="{ width: 'w-[300px]', background: ' dark:bg-[#21262d]'}">
+                            <UAvatar :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
-                                    <UAvatar :alt="user?.user?.username.toUpperCase()" />
+                                    <UAvatar :alt="user?.username.toUpperCase()" />
                                     <div class=" flex flex-col text-left -gap-1">
-                                        <span class=" font-bold">{{ user?.user?.username}}</span>
-                                        <small>{{ user?.user?.email }}</small>
+                                        <span class=" font-bold">{{ user?.username}}</span>
+                                        <small>{{ user?.email }}</small>
                                     </div>
                                     <!-- <button class=" absolute">></button> -->
                                 </div>
@@ -128,7 +129,7 @@
                     </div>
                 </div>
             </div>
-            <div class="border-t py-3 w-full flex flex-row justify-center items-center dark:border-gray-600 px-3">
+            <div class="border-t py-3 w-full flex flex-row justify-center items-center dark:border-gray-600 px-3 sticky top-0">
                 <form @submit.prevent="handleSearch()" class=" flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center ">
                     <input 
                     v-model="searchQuery"
@@ -203,7 +204,7 @@ const menu_items = [
     iconClass: 'text-red-500',
     class: " py-3 text-red-500",
     click: () => {
-      router.push('/account')
+        logout();
     }
   }]
 ]
@@ -226,16 +227,35 @@ const toggleMenu =()=> {
 
 // get user details...
 const user = ref(null);
+const credits = ref(0);
 const getUserDetails = async()=> {
     try {
-        const res = await $axios(`${useRuntimeConfig().public.apiBase}/user`);
-        user.value = res;
+        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
+        user.value = res.data.user;
+        credits.value = res.data.credits;
         console.log('user: ', res)
     } catch (error) {
         session_expired.value = true;
         console.log(error);
     }
 }
+
+const toast = useToast()
+const accessToken = useCookie('accessToken');
+const refreshToken = useCookie('refreshToken');
+const logout = async () => {
+  try{
+    accessToken.value = "";
+    refreshToken.value = "";
+    toast.add({ title: "You logged out!" })
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+}
+
 
 onMounted(()=> {
     getUserDetails();

@@ -29,6 +29,12 @@
 </template>
 
 <script setup>
+// use headless layout
+definePageMeta({
+  layout: 'headless',
+})
+
+
 import { useRouter } from 'vue-router';
 const router = useRouter();
 

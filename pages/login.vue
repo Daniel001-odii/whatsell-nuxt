@@ -2,6 +2,9 @@
   <div class="min-h-screen flex flex-row">
     <div class="w-full md:w-[50%] min-h-screen flex justify-center items-center p-3 md:p-12">
       <div class="p-3 w-full max-w-lg">
+
+        
+
         <form @submit.prevent="handleLogin" class=" flex flex-col">
           <h1 class="text-4xl font-bold text-app_green">Login</h1>
           <p class=" my-3">Welcome back!</p>
@@ -21,13 +24,12 @@
                         placeholder="Email or phone"
                         v-model="form.emailOrPhone"
                         class="form-input"
+                        :class="{ '!border-red-500': login_error }"
                         required
                         />
                     </div>
 
-                    <small v-if="errors.emailOrPhone" class="text-red-500">{{
-                        errors.emailOrPhone
-                    }}</small>
+                   
                     </div>
                 
                     <div>
@@ -37,13 +39,14 @@
                         placeholder="password"
                         v-model="form.password"
                         class="form-input"
+                        :class="{ '!border-red-500': login_error }"
                         required
                         />
-
-                    </div>
-                    <small v-if="errors.password" class="text-red-500">{{
-                        errors.password
+                        <small v-if="login_error" class="text-red-500">{{
+                        login_error
                     }}</small>
+                    </div>
+
                     </div>
                 </div>
                 
@@ -51,7 +54,9 @@
                 
                 <UButton 
                 @click="handleLogin"
-                loading-icon="i-heroicons-arrow-path-20-solid" 
+                type="submit"
+                :loading="loading"
+                loading-icon="svg-spinners:6-dots-scale-middle" 
                 color="green" 
                 class=" w-full justify-center p-3 font-bold">Login</UButton>
                 <span>Not yet a member? <NuxtLink to="/register" class=" underline text-app_green">join us</NuxtLink></span>
@@ -68,6 +73,12 @@
 </template>
 
 <script setup>
+
+// use headless layout
+definePageMeta({
+  layout: 'headless',
+})
+
 import { ref, reactive } from "vue";
 import { useRoute, useRouter } from "#imports"
 import axios from "axios";
@@ -104,21 +115,27 @@ const error_message = ref("");
 {/* <UButton label="Show toast" @click="toast.add({ title: 'Hello world!' })" /> */}
 
 const toast = useToast()
-
+const login_error = ref(null);
 const handleLogin = async () => {
-    try {
-      const response = await axios.post(`${useRuntimeConfig().public.apiBase}/login`, form);
-      console.log("loggedin :", response);
-      accessToken.value = response.data.accessToken;
-      refreshToken.value = response.data.refreshToken;
-      toast.add({ title: response.data.message })
-      setTimeout(() => {
-        router.push('/');
-      }, 2000);
-    } catch (err) {
-      console.error('Login error:', err);
-    }
-  };
+  login_error.value = null;
+  loading.value = true;
+  try {
+    const response = await axios.post(`${useRuntimeConfig().public.apiBase}/login`, form);
+    console.log("loggedin :", response);
+    accessToken.value = response.data.accessToken;
+    refreshToken.value = response.data.refreshToken;
+    toast.add({ title: response.data.message })
+    setTimeout(() => {
+      router.push('/');
+    }, 2000);
+    // window.location.reload();
+  } catch (err) {
+    console.error('Login error:', err);
+    login_error.value = err.response.data.message;
+  }
+  loading.value = false;
+};
+
 
 </script>
 

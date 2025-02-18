@@ -15,12 +15,18 @@
               <i class="bi bi-facebook"></i>
           </button>
         </a>
-        <button class=" text-slate-500 text-4xl">
-            <i class="bi bi-twitter"></i>
-        </button>
-        <button class=" text-orange-500 text-4xl">
-            <i class="bi bi-instagram"></i>
-        </button>
+
+        <a target="_blank" class="twitter-share-button" :href="`https://twitter.com/intent/tweet?text= Hey checkout this product on whatsell ${fullUrl}`">
+          <button class=" text-slate-500 text-4xl">
+              <i class="bi bi-twitter"></i>
+          </button>
+        </a>
+
+        <a :href="`https://www.instagram.com/stories/create/?url=${fullUrl}`" target="_blank">
+            <button class=" text-orange-500 text-4xl">
+                <i class="bi bi-instagram"></i>
+            </button>
+        </a>
       </div>
 
       <!-- COPY THE LINK -->
@@ -95,7 +101,7 @@
                     <div v-html="product.description.substring(0, 500)" class=" min-h-[100px]"></div>
                     <div class="flex flex-row gap-3 flew-wrap text-sm text-gray-400">
                         <span><i class="bi bi-tag mr-1"></i>{{ product.category }}</span>
-                        <span><i class="bi bi-geo-alt mr-1"></i>{{ product?.shop?.profile?.location?.address }}, {{  product?.shop?.profile?.location?.state }}</span>
+                        <!-- <span v-if="product?.shop"><i class="bi bi-geo-alt mr-1"></i>{{ product?.shop?.profile?.location?.address }}, {{  product?.shop?.profile?.location?.state }}</span> -->
                         <span><i class="bi bi-eye mr-1"></i>{{ product.views }} views</span>
                     </div>
                 </div>
@@ -142,9 +148,9 @@
       <!-- {{ product.shop }} -->
       <!-- SIMILAR ITEMS YOU MAY LIKE -->
       <h2 class=" font-bold mt-12">Similar items you may like</h2>
-      <div class="flex flex-row overflow-x-auto mt-3 flex-wrap pt-5 gap-3">
+      <div class="flex flex-row overflow-x-auto mt-3 pt-5 gap-3">
       <!-- similar products: {{ similar_products }} -->
-      <ProductCard v-for="(item, index) in similar_products" class=" mt-[3px] !w-[150px]"
+      <ProductCard v-for="(item, index) in similar_products" class=" mt-[3px] !min-w-[150px]"
               :hasLikedButton="false"
               :id="item._id"
               :product_slug="item.slug"
@@ -163,19 +169,8 @@
   <script setup>
   import { ref } from 'vue';
   import { useRoute, useAsyncData, useHead } from '#imports';
-  import { Carousel, Slide, Navigation } from 'vue3-carousel';
-  import {
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogOverlay,
-    DialogPortal,
-    DialogRoot,
-    DialogTitle,
-    DialogTrigger,
-  } from 'radix-vue'
-
 import axios from 'axios'
+const { $axios } = useNuxtApp();
 import { useRequestURL } from '#app';
 
   // Get current route
@@ -227,23 +222,23 @@ import { useRequestURL } from '#app';
     const response = await $fetch(`${config.public.apiBase}/products/${route.params.id}`);
     shop.value = response.product.shop
     product_images.value = response.product.images;
-    getSimilarProducts();
     return response.product;
   });
   
   const user = ref(null);
   const getUserData = async ()=> {
     try{
-      const response = await axios.get(`${config.public.apiBase}/user`);
+      const response = await $axios.get(`${config.public.apiBase}/user`);
       user.value = response.data.user;
     }catch(error){
       console.log("error getting user data: ", error);
     }
   };
 
-  
+  const loading_sm_products = ref(false);
   const similar_products = ref([]);
-  async function getSimilarProducts(){
+  const getSimilarProducts = async()=>{
+    loading_sm_products.value = true;
     try{
         const response = await axios.get(`${config.public.apiBase}/products/similar/all?keyword=${product.value.name}`, );
         console.log(" all similar products: ", response);
@@ -251,11 +246,13 @@ import { useRequestURL } from '#app';
     }catch(error){
         console.log("error getting similar products: ", error);
     }
+    loading_sm_products.value = false;
   }
 
 
   const no_auth_like = ref(false);
-  const wa_message_text = `${window.location.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')}${encodeURIComponent('Hi, i am interested in this product')}`;
+  // const wa_message_text = ref(`${window.location.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')}${encodeURIComponent('Hi, i am interested in this product')}`);
+  const wa_message_text = ref(`${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')}${encodeURIComponent('Hi, i am interested in this product')}`);
 
   // Set meta tags dynamically (before page is rendered)
   useHead({

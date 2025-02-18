@@ -32,12 +32,12 @@
     >
       <template #default="{ item, index }">
         <ProductCard class=" mt-[15px]"
-          :has-liked-button="false"
+          :has-liked-button="true"
           :id="item._id"
-          :product_image="item.images[0]"
-          :product_price="item.price"
+          :product_price="(item.price).toLocaleString()"
           :image_url="item.images[0]"
           :views="item.views"
+          :is_liked="checkLikes(item._id)"
           :product_slug="item.slug"
         />
       </template>
@@ -113,6 +113,7 @@
 import { ref } from 'vue'
 import { useRoute, useAsyncData, useHead } from '#imports';
 import axios from 'axios'
+const { $axios } = useNuxtApp();
 
 const items = [
   'https://picsum.photos/1280/720?random=1',
@@ -157,23 +158,37 @@ async function getAllShops(){
 }
 
 
+
+const user = ref(null);
+const credits = ref(0);
+const liked_products = ref([]);
+const getUserDetails = async()=> {
+    try {
+        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
+        user.value = res.data.user;
+        credits.value = res.data.credits;
+        liked_products.value = res.data.user.liked_products;
+        console.log('user: ', res)
+    } catch (error) {
+        session_expired.value = true;
+        console.log(error);
+    }
+}
+
+const checkLikes = (product_id) => {
+    if(liked_products.value.includes(product_id)){
+        return true;
+    } else {
+        return false;
+    }
+};
+
+
 onMounted (()=> {
   getcats();
   getAllShops();
+  getUserDetails();
 })
-// get all categories...
-/* const { data: categories, error: category_error } = await useAsyncData('categories', async ()=> {
-
-  try{
-    const response = await $fetch(`${config.public.apiBase}/categories)`)
-    console.log("catss: ", response);
-    return response.categories
-  }catch(error){
-    console.log("error gettting cats: ", error);
-  }
-
-}) */
-
 
 console.log("Fetched products:", products.value)
 console.log("fetched categories: ", categories.value)

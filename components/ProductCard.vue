@@ -20,7 +20,7 @@
                 <button v-if="hasLikedButton"
                     @click="toggleLike"
                     :class="[
-                        'h-8 w-8 rounded-full bg-white dark:bg-gray-700 flex justify-center items-center border absolute top-3 right-3',
+                        'h-8 w-8 rounded-full bg-white dark:bg-gray-900 dark:border-gray-600 flex justify-center items-center border absolute top-3 right-3',
                         isLiked ? 'border-green-500' : 'border-gray-300'
                     ]"
                 >
@@ -37,108 +37,55 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { isLabeledStatement } from 'typescript';
+import { ref } from 'vue';
+// import { defineProps } from 'vue';
+const { $axios } = useNuxtApp();
+const emit = defineEmits()
 
-export default {
-    name: "ProductCard",
-    props: {
-        hasLikedButton: {
-            type: Boolean,
-            default: true,
-        },
-        id: {
-            type: String,
-            required: true,
-        },
-        product_slug: {
-            type: String,
-            required: true,
-        },
-        product_price: {
-            type: Number,
-            required: true,
-        },
-        product_image: {
-            type: String,
-            default: "",
-        },
-        views: {
-            type: Number,
-            default: 0,
-        },
-        is_liked: {
-            type: Boolean,
-            default: false,
-        },
-        image_url: {
-            type: String,
-            required: true,
-        },
+
+const props = defineProps({
+    hasLikedButton: Boolean,
+    id: String,
+    product_price: String,
+    image_url: String,
+    views: {
+        type: Number,
+        default: 0,
     },
-
-    data() {
-        return {
-            isLiked: this.is_liked, // Local reactive state for like button
-        };
+    product_slug: String,
+    is_liked: {
+        type: Boolean,
+        default: false,
     },
+});
 
-    methods: {
-        async toggleLike(){
-                try{
+const isLiked = ref(props.is_liked);
 
-                    this.isLiked = !this.isLiked;
-                    const response = await axios.post(`/products/${this.id}/like`);
-                    console.log("likes: ", response);
-                    this.$toast.open({
-                        message: `${response.data.message}`,
-                        type: 'default',
-                    });
+const toggleLike = async () => {
+    try{
 
-                    // Example: Emit to parent for API call
-                    this.$emit("update-like", {
-                        productId: this.id,
-                        isLiked: this.isLiked,
-                    });
+        isLiked.value = !isLiked.value;
+        const res = await $axios.post(`${useRuntimeConfig().public.apiBase}/products/${props.id}/like`);
+        console.log("tried liking a product: ", res);
 
-                    this.isLiked = response.data.is_liked;
+        emit('liked', {
+            id: props.id,
+            isLiked: isLiked.value,
+        });
 
-                }catch(error){
-                    this.$toast.open({
-                        message: `${response.data.message}`,
-                        type: 'default',
-                    });
-                }
-        },
+        isLiked.value = res.data.is_liked;
 
-        async toggleLike11() {
-            try {
-                // Emit the like/unlike event to the parent or handle API logic here
-                this.isLiked = !this.isLiked;
-
-                // Example: Emit to parent for API call
-                this.$emit("update-like", {
-                    productId: this.id,
-                    isLiked: this.isLiked,
-                });
-
-                // Example API call logic
-                // await axios.post(`/products/${this.id}/like`, { isLiked: this.isLiked });
-
-            } catch (error) {
-                console.error("Error toggling like:", error);
-                // Revert the state if the API call fails
-                this.isLiked = !this.isLiked;
-            }
-        },
-    },
-
-    watch: {
-        // Ensure reactivity if the `is_liked` prop changes externally
-        is_liked(newVal) {
-            this.isLiked = newVal;
-        },
-    },
+    }catch(error){
+        console.log("error liking product: ", error);
+    }
+   
 };
+
+watch(() => props.is_liked, (newVal) => {
+    isLiked.value = newVal;
+});
 </script>
 
 <style scoped>
