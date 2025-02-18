@@ -194,6 +194,8 @@ console.log("Fetched products:", products.value)
 console.log("fetched categories: ", categories.value)
 
 
+const toast = useToast();
+
 const verifyEmail = async (token) => {
     try{
         const response = await axios.post(`${useRuntimeConfig().public.apiBase}/email_verify`, { token });
