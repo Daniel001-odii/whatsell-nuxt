@@ -11,7 +11,7 @@
         <!-- NON_AUTH NAVBAR -->
         <div v-if="!user" class=" container mx-auto flex md:flex-row flex-col p-5 w-full md:items-center justify-between gap-4 relative">
             <div class=" flex flex-row w-full md:w-fit justify-between">
-                <div class=" w-[150px]">
+                <div class=" w-[120px]">
                     <NuxtLink to="/">
                         <img src="../assets/images/logo/whatsell_logo.png"/>
                     </NuxtLink>
@@ -65,7 +65,7 @@
         <div v-else class="flex flex-col gap-3 justify-center items-center">
             <div class=" container mx-auto flex p-5 w-full items-center justify-between ">
                 <div class=" flex flex-row w-full md:w-fit justify-between">
-                    <div class=" w-[150px]">
+                    <div class=" w-[120px]">
                         <NuxtLink to="/">
                             <img src="../assets/images/logo/whatsell_logo.png"/>
                         </NuxtLink>
@@ -76,7 +76,7 @@
                 <div class=" flex gap-12 items-center justify-evenly">
                 
                     <!-- class="hidden md:inline-block" -->
-                    <div class=" flex font-bold md:justify-between justify-evenly gap-6 md:gap-12 items-center fixed md:relative bottom-0 p-5 md:p-0 left-0 z-[99999] md-0 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                    <div class=" flex font-bold md:justify-between justify-evenly gap-6 md:gap-12 items-center fixed md:relative bottom-0 p-5 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                         <NuxtLink to="/" class=" flex flex-col items-center">
                             <span><i class="md:hidden bi bi-columns-gap"></i></span>
                             <span>Home</span>
@@ -109,16 +109,21 @@
                         <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }" 
                         :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]'}">
                             <UAvatar 
-                            chip-color="red"
+                            :chip-color="has_alerts ? 'green':''"
                             chip-text=""
                             chip-position="top-right"
                             :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
-                                    <UAvatar :alt="user?.username.toUpperCase()" />
+                                    <UAvatar 
+                                    :chip-color="has_alerts ? 'green':''"
+                                    chip-text=""
+                                    chip-position="top-right"
+                                    :alt="user?.username.toUpperCase()" />
                                     <div class=" flex flex-col text-left -gap-1">
                                         <span class=" font-bold">{{ user?.username}}</span>
-                                        <small class="text-orange-500"><i class="bi bi-exclamation-circle-fill "></i> {{ user?.email }}</small>
+                                        <small :class=" !user?.email_verification?.is_verified ? 'text-orange-500':''">
+                                            <i v-if=" !user?.email_verification?.is_verified" class="bi bi-exclamation-circle-fill "></i> {{ user?.email }}</small>
                                     </div>
                                     <button class=" absolute -right-[100px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z"/></svg>
@@ -235,6 +240,7 @@ const toggleMenu =()=> {
 
 
 // get user details...
+const has_alerts = ref(false);
 const user = ref(null);
 const credits = ref(0);
 const getUserDetails = async()=> {
@@ -242,6 +248,11 @@ const getUserDetails = async()=> {
         const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
         user.value = res.data.user;
         credits.value = res.data.credits;
+        
+        const USER = res.data.user;
+        has_alerts.value = !USER.email_verification.is_verified || USER.is_on_hold;
+
+        localStorage.setItem('user', JSON.stringify(USER));
         console.log('user: ', res)
     } catch (error) {
         session_expired.value = true;

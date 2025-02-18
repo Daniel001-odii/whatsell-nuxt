@@ -3,9 +3,9 @@
   <UNotifications />
   <!-- <div class=" dark:bg-[#21262d]"> -->
     <!-- <TheNavbar/> -->
-    <!-- <div class=" container mx-auto p-3"> -->
+    <div class=" container mx-auto">
       <NuxtPage />
-    <!-- </div> -->
+    </div>
     <!-- <TheFooter/> -->
   <!-- </div> -->
 </NuxtLayout>

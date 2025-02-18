@@ -4,10 +4,13 @@
     </div>
 </template>
 
-<script>
-    export default {
-        
-    }
+<script setup>
+// use headless layout
+definePageMeta({
+  layout: 'accounts',
+})
+
+import { ref, reactive } from 'vue';
 </script>
 
 <style scoped>
