@@ -119,7 +119,7 @@
                 />
                 <TheSpinner
                   class="absolute right-5 top-4"
-                  v-if="true"
+                  v-if="email_loading"
                 />
               </div>
 

@@ -193,6 +193,26 @@ onMounted (()=> {
 console.log("Fetched products:", products.value)
 console.log("fetched categories: ", categories.value)
 
+
+const verifyEmail = async (token) => {
+    try{
+        const response = await axios.post(`${useRuntimeConfig().public.apiBase}/email_verify`, { token });
+        console.log("res from email verifi: ", response);
+        toast.add({ title: response.data.message })
+    }catch(error){
+        console.log("error from email verifi: ", error);
+        toast.add({ title: error.response.data.message })
+    }
+};
+
+onMounted(() => {
+  const token = useRoute().query.token;
+  if(token){
+    verifyEmail(token);
+  }
+});
+
+
 </script>
 
 <style scoped>
