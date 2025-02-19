@@ -1,5 +1,5 @@
 <template>
-    <div class=" py-8">
+    <div class="">
         
 
 
@@ -49,7 +49,6 @@
 </template>
 
 <script setup>
-const { $axios } = useNuxtApp();
 const loading = ref(false);
 const products = ref([]);
 
@@ -59,8 +58,8 @@ const products = ref([]);
 const getLikedProducts = async () => {
     loading.value = true;
     try {
-        const response = await $axios(`${useRuntimeConfig().public.apiBase}/user/likes`);
-        products.value = response.data.liked_products;
+        const response = await useNuxtApp().$apiFetch(`/user/likes`);
+        products.value = response.liked_products;
         console.log("products :", response);
     } catch (error) {
         console.log(error);
@@ -72,12 +71,11 @@ const user = ref(null);
 const liked_products = ref([]);
 const getUserDetails = async()=> {
     try {
-        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
-        user.value = res.data.user;
-        liked_products.value = res.data.user.liked_products;
+        const res = await useNuxtApp().$apiFetch(`/user`);
+        user.value = res.user;
+        liked_products.value = res.user.liked_products;
         console.log('user: ', res)
     } catch (error) {
-        session_expired.value = true;
         console.log(error);
     }
 }

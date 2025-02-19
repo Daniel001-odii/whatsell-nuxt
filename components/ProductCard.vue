@@ -67,7 +67,9 @@ const toggleLike = async () => {
     try{
 
         isLiked.value = !isLiked.value;
-        const res = await $axios.post(`${useRuntimeConfig().public.apiBase}/products/${props.id}/like`);
+        const res = await useNuxtApp().$apiFetch(`/products/${props.id}/like`, {
+            method: 'POST',
+        });
         console.log("tried liking a product: ", res);
 
         emit('liked', {

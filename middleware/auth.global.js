@@ -1,29 +1,15 @@
-/* import { useUserStore } from '~/stores/user'
+// middleware/auth.global.ts
+export default defineNuxtRouteMiddleware((to, from) => {
+  const token = useCookie('accessToken').value;
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
-  const userStore = useUserStore()
-
-  // Fetch user details only if not already set
-  if (!userStore.user) {
-    await userStore.getUserDetails()
+  // If the user is logged in, redirect them away from auth pages
+  if (token && (to.path === '/login' || to.path === '/register')) {
+    return navigateTo('/'); // Redirect to the homepage or dashboard
   }
 
-  const isLoggedIn = !!userStore.user // Convert to boolean
-
-
-  // avoid visit to login page is logged in....
-  if (isLoggedIn && to.path == "/login" 
-    || isLoggedIn && to.path == "/register") {
-    return navigateTo("/")
+  // If the user is not logged in, redirect them to the login page
+  if (!token && (to.path === '/account')) {
+    return navigateTo('/login'); // Redirect to the login page
   }
 
-  // Redirect to login page if not logged in and visiting account section
-  if (!isLoggedIn && to.path.startsWith("/account")) {
-    return navigateTo("/login")
-  }
-})
- */
-
-export default defineNuxtRouteMiddleware(()=>{
-
-})
+});
