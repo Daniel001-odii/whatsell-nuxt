@@ -44,6 +44,7 @@ import { ref } from 'vue';
 const { $axios } = useNuxtApp();
 const emit = defineEmits()
 
+const toast = useToast();
 
 const props = defineProps({
     hasLikedButton: Boolean,
@@ -70,6 +71,7 @@ const toggleLike = async () => {
         const res = await useNuxtApp().$apiFetch(`/products/${props.id}/like`, {
             method: 'POST',
         });
+       
         console.log("tried liking a product: ", res);
 
         emit('liked', {
@@ -77,7 +79,10 @@ const toggleLike = async () => {
             isLiked: isLiked.value,
         });
 
-        isLiked.value = res.data.is_liked;
+        isLiked.value = res.is_liked;
+        if(res.is_liked == true){
+            toast.add({ title: res.message })
+        }
 
     }catch(error){
         console.log("error liking product: ", error);

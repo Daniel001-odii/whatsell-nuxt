@@ -173,7 +173,7 @@
             </form>
         </div>
 
-         <!-- REFER CODE AREA -->
+        <!-- REFER CODE AREA -->
         <div class="divider-tab">
             Refer and Earn
         </div>
@@ -185,13 +185,38 @@
                 <span class="font-bold ">Referal Link</span>
                 <div class=" flex flex-row gap-2 w-full">
                     <UInput type="text" class=" w-full" v-model="refferal_link" disabled />
-                    <button class="bg-app_green p-3 rounded-md text-white" @click="copyRefLink">
+                    <UButton
+                    color="blue"
+                    @click="copyRefLink">
                         <i class="bi bi-check" v-if="copied"></i>
                         <i class="bi bi-copy" v-else></i>
-                    </button>
+                    </UButton>
                 </div>
                 
             </div>
+        </div>
+
+        <!-- DELETE ACCOUNT -->
+        <div class="divider-tab">
+            Danger zone
+        </div>
+        <div class=" flex flex-col p-8 rounded-lg mt-3 border text-center gap-3">
+            <UAlert
+                class="text-left !bg-red-700 "
+                icon="material-symbols:warning-rounded"
+                color="red"
+                variant="solid"
+                title="Caution"
+                description="Take note that any action taken here under any circumstance will be irreversible, so tread carefully!"
+            />
+            <span class=" font-bold mt-6">{{ delete_phrase }}</span>
+            <UInput type="text" placeholder="Enter exactly what is written above"/>
+            <UButton
+            color="red"
+            class=" !bg-red-700 self-end"
+            @click="copyRefLink">
+            Delete Account
+            </UButton>
         </div>
 
         
@@ -208,6 +233,7 @@ definePageMeta({
 import NaijaStates from 'naija-state-local-government';
 import { ref, reactive } from 'vue';
 
+const delete_phrase = ref('delete my whatsell account');
 const user = ref(null);
 const state = ref('Abia');
 const LGA = ref('');
