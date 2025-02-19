@@ -22,6 +22,7 @@
     "@pinia/nuxt": "^0.10.1",
     "@yeger/vue-masonry-wall": "^5.0.18",
     "axios": "^1.7.9",
+    "naija-state-local-government": "^1.1.2",
     "radix-vue": "^1.9.14",
     "vue-advanced-cropper": "^2.8.9",
     "vue-spinner": "^1.0.4",

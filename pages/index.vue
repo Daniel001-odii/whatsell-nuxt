@@ -111,9 +111,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute, useAsyncData, useHead } from '#imports';
+import { useRoute, useAsyncData } from '#imports';
 import axios from 'axios'
-const { $axios } = useNuxtApp();
 
 const items = [
   'https://picsum.photos/1280/720?random=1',
@@ -135,7 +134,7 @@ const { data: products, error: products_error } = await useAsyncData('products',
 const categories = ref([]);
 async function getcats(){
   try{
-    const response = await axios.get(`${config.public.apiBase}/categories_image`);
+    const response = await useNuxtApp().$apiFetch(`/categories_image`);
     categories.value = response.data.data;
     console.log("cats: ", response);
   }catch(error){
@@ -148,7 +147,7 @@ const shops = ref([]);
 async function getAllShops(){
   shop_loading.value = true;
   try{
-    const response = await axios.get(`${config.public.apiBase}/shops/list/all`);
+    const response = await auseNuxtApp().$apiFetch(`/shops/list/all`);
     shops.value = response.data.shops;
     console.log("all shops: ", response);
   }catch(error){

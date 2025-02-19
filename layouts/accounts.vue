@@ -55,7 +55,7 @@
 
             <div class="flex flex-col gap-3 w-full pb-12">
                 <div class="font-bold p-3 border rounded-lg text-green-700 bg-white dark:bg-gray-900 dark:border-gray-600">
-                    <span>Route name here</span>
+                    <span>{{ useRouter().currentRoute.value.name }}</span>
                 </div>
                 <slot/>
             </div>
@@ -66,9 +66,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios';
-
-const email_verified = ref(true);
+const email_verified = ref(false);
 const verification_mail_sent = ref(false);
 const toast = useToast();
 const loading = ref(false);
@@ -91,29 +89,37 @@ const countDown = () => {
     }
 }
 
+
+// resend verification mail...
 const resendVerificationMail = async () =>{
-    // loading.value = true;
+    loading.value = true;
     try{
-       /*  const response = await axios.post(`${useRuntimeConfig().public.apiBase}/email_verification/send`, { email: email.value });
+        const response = await useNuxtApp().$apiFetch(`/email_verification/send`, 
+        { 
+            method: 'POST',
+            body: { email: email.value }
+        });
+
         console.log("response from verifying mail: ", response);
         verification_mail_sent.value = true;
-        toast.add({ title: response.data.message }) */
+        toast.add({ title: response.message })
         countDown();
     }catch(error){
-        toast.add({ title: error.response.data.message })
+        toast.add({ title: error.response.message })
         console.log("error resending mail: ", error)
     }
-    // loading.value = false;
+    loading.value = false;
 }
 
-const { $axios } = useNuxtApp();
+
 const user = ref(null);
 const getUserDetails = async()=> {
     try {
-        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
-        user.value = res.data.user;
-        email_verified.value = !res.data.user.email_verification.is_verified;
-        email.value = res.data.user.email;
+        const res = await useNuxtApp().$apiFetch(`/user`);
+        user.value = res.user;
+        email_verified.value = !res.user.email_verification.is_verified;
+        email.value = res.user.email;
+        console.log(" user data from accoumts: ", user.value);
     } catch (error) {
         session_expired.value = true;
         console.log(error);
@@ -124,7 +130,7 @@ onMounted(() => {
     getUserDetails();
 });
 
-computed(() => {
+/* computed(() => {
     return {
         isUserPage: useRoute().name === 'account',
         isShopPage: useRoute().name === 'account-shop',
@@ -132,8 +138,27 @@ computed(() => {
         isUpgradePage: useRoute().name === 'account-subscriptions',
         isNotifyPage: useRoute().name === 'account-notifications',
     }
-})
+}) */
 
+const isUserPage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account";
+});
+
+const isShopPage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account/shop";
+});
+
+const isAnalyticsPage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account/analytics";
+});
+
+const isUpgradePage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account/subscriptions";
+});
+
+const isNotifyPage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account/notifications";
+});
 
 </script>
 

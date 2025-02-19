@@ -52,9 +52,6 @@
 const loading = ref(false);
 const products = ref([]);
 
-
-// const res = await $axios(`${useRuntimeConfig().public.apiBase}/user`);
-
 const getLikedProducts = async () => {
     loading.value = true;
     try {

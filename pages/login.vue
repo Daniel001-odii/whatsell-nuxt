@@ -59,18 +59,6 @@ import { useRoute, useRouter } from "#imports";
 import axios from "axios";
 
 const router = useRouter();
-const accessToken = useCookie("accessToken", {
-  maxAge: 60 * 60 * 24 * 7, // 7 days
-  httpOnly: false, // Set to true if using from a server route
-  secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-  sameSite: "strict",
-});
-const refreshToken = useCookie("refreshToken", {
-  maxAge: 60 * 60 * 24 * 100, // 7 days
-  httpOnly: false, // Set to true if using from a server route
-  secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-  sameSite: "strict",
-});
 
 const form = reactive({
   emailOrPhone: "",
@@ -118,6 +106,7 @@ const handleLogin = async () => {
 
     const token = useCookie("accessToken");
     token.value = res.accessToken;
+    toast.add({ title: res.message })
     router.push("/");
     console.log("from login: ", res);
   } catch (error) {
