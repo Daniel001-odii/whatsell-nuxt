@@ -3,7 +3,7 @@
         <!-- <h1>{{ route.params.name }}</h1> -->
          <img :src="shop?.profile?.image_url" />
          <h1 class=" font-bold text-3xl">{{ shop.name }}</h1>
-         {{ shop.profile }}
+         <div class=" max-w-[200px] overflow-hidden">{{ shop }}</div>
     </div>
 </template>
 
@@ -11,6 +11,25 @@
 import { useRoute, useAsyncData, useHead } from '#imports';
 const route = useRoute();
 const config = useRuntimeConfig();
+const isExpanded = ref(false);
+const shopImage = ref('');
+const shopBoostDuration = ref(1);
+const glipsModal = ref(false);
+const loading = ref(false);
+const currentTab = ref(0);
+const products = ref([]);
+const glips = ref([]);
+const user = ref('');
+const shopId = ref('');
+const shopRating = ref(4);
+const loadingProducts = ref(false);
+const loadingGlips = ref(false);
+const followers = ref([]);
+const boostShopModal = ref(false);
+
+
+
+
 
 // Fetch shop data before rendering (SSR-compatible)
 const { data: shop } = await useAsyncData('shop', async () => {
