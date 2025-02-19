@@ -3,110 +3,28 @@
     <div class="border-b border-gray-300 dark:border-gray-600">
 
 
-        <!-- AUTH NAVBAR -->
-        <div v-if="user" class="flex flex-col gap-3 justify-center items-center">
-            <div class="container mx-auto flex p-5 w-full items-center justify-between">
-                <div class="flex flex-row w-full md:w-fit justify-between">
-                    <div class="w-[120px]">
-                        <NuxtLink to="/">
-                            <img src="../assets/images/logo/whatsell_logo.png" />
-                        </NuxtLink>
-                    </div>
-                </div>
-
-                <!-- search -->
-                <div class="flex gap-12 items-center justify-evenly">
-                    <!-- class="hidden md:inline-block" -->
-                    <div
-                        class="flex font-bold md:justify-between justify-evenly gap-6 md:gap-12 items-center fixed md:relative bottom-0 p-5 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
-                        <NuxtLink to="/" class="flex flex-col items-center">
-                            <span><i class="md:hidden bi bi-columns-gap"></i></span>
-                            <span>Home</span>
-                        </NuxtLink>
-                        <NuxtLink to="/shops" class="flex flex-col items-center">
-                            <span><i class="md:hidden bi bi-shop"></i></span>
-                            <span>Shops</span>
-                        </NuxtLink>
-                        <NuxtLink to="/shops" class="flex flex-col items-center">
-                            <span><i class="md:hidden bi bi-plus-square"></i></span>
-                            <span>Sell</span>
-                        </NuxtLink>
-                        <NuxtLink to="/#" class="flex flex-col items-center">
-                            <span><i class="md:hidden bi bi-camera-reels"></i></span>
-                            <span>Glips</span>
-                        </NuxtLink>
-                        <NuxtLink to="/likes" class="flex flex-col items-center">
-                            <span><i class="md:hidden bi bi-hand-thumbs-up"></i></span>
-                            <span>Likes</span>
-                        </NuxtLink>
-                    </div>
-
-                    <div div class="flex gap-2 items-center">
-                        <img src="../assets/images/coins_group.png" class="w-[35px]" />
-                        <span>{{ credits }}</span>
-                    </div>
-                    <div>
-                        <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
-                            :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
-                            <UAvatar :chip-color="has_alerts ? 'green' : ''" chip-text="" chip-position="top-right"
-                                :alt="user?.username.toUpperCase()" />
-                            <template #user_contents>
-                                <div class="flex gap-3 items-center justify-center text-[14px] relative">
-                                    <UAvatar :chip-color="has_alerts ? 'green' : ''" chip-text=""
-                                        chip-position="top-right" :alt="user?.username.toUpperCase()" />
-                                    <div class="flex flex-col text-left -gap-1">
-                                        <span class="font-bold">{{ user?.username }}</span>
-                                        <small :class="!user?.email_verification?.is_verified
-                                                ? 'text-orange-500'
-                                                : ''
-                                            ">
-                                            <i v-if="!user?.email_verification?.is_verified"
-                                                class="bi bi-exclamation-circle-fill"></i>
-                                            {{ user?.email }}</small>
-                                    </div>
-                                    <button class="absolute -right-[100px]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                            viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
-                            <template #theme>
-                                <button class="" :icon="isDark
-                                        ? 'i-heroicons-moon-20-solid'
-                                        : 'i-heroicons-sun-20-solid'
-                                    " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">
-                                    Theme
-                                </button>
-                            </template>
-                        </UDropdown>
-                    </div>
+        <!-- NAVBAR SKELETON -->
+        <div v-if="loading" class=" container mx-auto gap-3 flex flex-row justify-between items-center p-3">
+            <div class="flex flex-row w-full md:w-fit justify-between">
+                <div class="w-[120px]">
+                    <NuxtLink to="/">
+                        <img src="../assets/images/logo/whatsell_logo.png" />
+                    </NuxtLink>
                 </div>
             </div>
-            <div
-                class="border-t py-3 w-full flex flex-row justify-center items-center dark:border-gray-600 px-3 sticky top-0">
-                <form @submit.prevent="handleSearch()"
-                    class="flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
-                    <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-3 outline-none w-full"
-                        type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
-                    <div class="flex flex-row-reverse justify-between items-center gap-6 flex-1 px-4">
-                        <button @click="openFilter" type="button" class="flex md:hidden">
-                            <i class="bi bi-filter"></i>
-                        </button>
-                        <button type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
+            <div class=" flex flex-row gap-8">
+                <USkeleton class=" w-[80px] h-10 rounded-md" :ui="{ background: 'dark:bg-gray-700' }" />
+                <USkeleton class=" size-[40px] rounded-full" :ui="{ background: 'dark:bg-gray-700' }" />
             </div>
         </div>
+     
+
+      
 
 
         <!-- NON_AUTH NAVBAR -->
         <div v-if="!user"
-            class="container mx-auto flex md:flex-row flex-col p-5 w-full md:items-center justify-between gap-4 relative">
+            class="container mx-auto flex md:flex-row flex-col w-full md:items-center justify-between gap-4 relative p-3">
             <div class="flex flex-row w-full md:w-fit justify-between">
                 <div class="w-[120px]">
                     <NuxtLink to="/">
@@ -156,18 +74,126 @@
             </div>
         </div>
 
+          <!-- AUTH NAVBAR -->
+        <div v-else class="flex flex-col gap-3 justify-center items-center p-3">
+            <div class="container mx-auto flex w-full items-center justify-between">
+                <div class="flex flex-row w-full md:w-fit justify-between">
+                    <div class="w-[120px]">
+                        <NuxtLink to="/">
+                            <img src="../assets/images/logo/whatsell_logo.png" />
+                        </NuxtLink>
+                    </div>
+                </div>
+
+                <!-- search -->
+                <div class="flex gap-12 items-center justify-evenly">
+                    <!-- class="hidden md:inline-block" -->
+                    <div
+                        class="flex font-bold md:justify-between justify-evenly gap-6 md:gap-12 items-center fixed md:relative bottom-0 p-5 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                        <NuxtLink to="/" class="flex flex-col items-center">
+                            <span><i class="md:hidden bi bi-columns-gap"></i></span>
+                            <span>Home</span>
+                        </NuxtLink>
+                        <NuxtLink to="/shops" class="flex flex-col items-center">
+                            <span><i class="md:hidden bi bi-shop"></i></span>
+                            <span>Shops</span>
+                        </NuxtLink>
+                        <NuxtLink to="/shops" class="flex flex-col items-center">
+                            <span><i class="md:hidden bi bi-plus-square"></i></span>
+                            <span>Sell</span>
+                        </NuxtLink>
+                        <NuxtLink to="/#" class="flex flex-col items-center">
+                            <span><i class="md:hidden bi bi-camera-reels"></i></span>
+                            <span>Glips</span>
+                        </NuxtLink>
+                        <NuxtLink to="/likes" class="flex flex-col items-center">
+                            <span><i class="md:hidden bi bi-hand-thumbs-up"></i></span>
+                            <span>Likes</span>
+                        </NuxtLink>
+                    </div>
+
+                    <div div class="flex gap-2 items-center">
+                        <img src="../assets/images/coins_group.png" class="w-[35px]" />
+                        <span>{{ credits }}</span>
+                    </div>
+                    <div>
+                        <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
+                            :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
+                            <UAvatar 
+                            
+                            chip-text="" 
+                            chip-position="top-right"
+                                :alt="user?.username.toUpperCase()" />
+                            <template #user_contents>
+                                <div class="flex gap-3 items-center justify-center text-[14px] relative">
+                                    <UAvatar 
+                                   
+                                    chip-text=""
+                                        chip-position="top-right" :alt="user?.username.toUpperCase()" />
+                                    <div class="flex flex-col text-left -gap-1">
+                                        <span class="font-bold">{{ user?.username }}</span>
+                                        <small :class="!user?.email_verification?.is_verified
+                                                ? 'text-orange-500'
+                                                : ''
+                                            ">
+                                            <i v-if="!user?.email_verification?.is_verified"
+                                                class="bi bi-exclamation-circle-fill"></i>
+                                            {{ user?.email }}</small>
+                                    </div>
+                                    <button class="absolute -right-[100px]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                                            viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </template>
+                            <template #theme>
+                                <button class="" :icon="isDark
+                                        ? 'i-heroicons-moon-20-solid'
+                                        : 'i-heroicons-sun-20-solid'
+                                    " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">
+                                    Theme
+                                </button>
+                            </template>
+                        </UDropdown>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t pt-4 w-full flex flex-row justify-center items-center dark:border-gray-600 px-3 sticky top-0">
+                <form @submit.prevent="handleSearch()"
+                    class="flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
+                    <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-3 outline-none w-full"
+                        type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
+                    <div class="flex flex-row-reverse justify-between items-center gap-6 flex-1 px-4">
+                        <button @click="openFilter" type="button" class="flex md:hidden">
+                            <i class="bi bi-filter"></i>
+                        </button>
+                        <button type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 const { $axios } = useNuxtApp();
 const colorMode = useColorMode();
 const searchQuery = ref("");
 const session_expired = ref(false);
 import { useRouter } from "vue-router";
 const router = useRouter();
-const user = ref(null);
+const user = ref('');
 const credits = ref(0);
+const loading = ref(false);
+
 
 import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
@@ -250,21 +276,18 @@ const toggleMenu = () => {
 // get user details...
 const has_alerts = ref(false);
 
+
 const getUserDetails = async () => {
-    try {
-        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
-        user.value = res.data.user;
-        credits.value = res.data.credits;
-
-        const USER = res.data.user;
-        has_alerts.value = !USER.email_verification.is_verified || USER.is_on_hold;
-
-        localStorage.setItem("user", JSON.stringify(USER));
-        console.log("user: ", res);
-    } catch (error) {
-        // session_expired.value = true;
-        console.log(error);
-    }
+  loading.value = true;
+  try {
+    const res = await useNuxtApp().$apiFetch(`/user`); // Headers are handled by the plugin
+    user.value = res.user;
+    credits.value = res.credits;
+    has_alerts.value = !user.value.email_verification?.is_verified || user.value.is_on_hold;
+  } catch (error) {
+    console.log("Couldn't get user: ", error);
+  }
+  loading.value = false;
 };
 
 const logout = () => {
@@ -272,14 +295,11 @@ const logout = () => {
 };
 
 
-
 onMounted(() => {
     getUserDetails();
+    // alert("hello world")
 });
 
-// onCreated(()=> {
-// getUserDetails();
-// });
 </script>
 
 <style scoped></style>

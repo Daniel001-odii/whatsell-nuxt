@@ -35,7 +35,7 @@
       <ImageCropper @image-uploaded="handleUploadSuccess" />
     </UCard>
   </UModal>
-{{form}}
+<!-- {{form}} -->
   <div class="min-h-screen flex flex-row">
     <div
       class="w-full md:w-[50%] min-h-screen flex justify-center items-center p-3 md:p-12"

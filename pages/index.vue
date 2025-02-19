@@ -164,13 +164,12 @@ const credits = ref(0);
 const liked_products = ref([]);
 const getUserDetails = async()=> {
     try {
-        const res = await $axios.get(`${useRuntimeConfig().public.apiBase}/user`);
-        user.value = res.data.user;
-        credits.value = res.data.credits;
-        liked_products.value = res.data.user.liked_products;
+        const res = await useNuxtApp().$apiFetch(`/user`);
+        user.value = res.user;
+        credits.value = res.credits;
+        liked_products.value = res.user.liked_products;
         console.log('user: ', res)
     } catch (error) {
-        session_expired.value = true;
         console.log(error);
     }
 }
@@ -190,8 +189,8 @@ onMounted (()=> {
   getUserDetails();
 })
 
-console.log("Fetched products:", products.value)
-console.log("fetched categories: ", categories.value)
+// console.log("Fetched products:", products.value)
+// console.log("fetched categories: ", categories.value)
 
 
 const toast = useToast();

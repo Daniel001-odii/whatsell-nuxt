@@ -1,4 +1,4 @@
-import { useUserStore } from '~/stores/user'
+/* import { useUserStore } from '~/stores/user'
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const userStore = useUserStore()
@@ -21,4 +21,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!isLoggedIn && to.path.startsWith("/account")) {
     return navigateTo("/login")
   }
+})
+ */
+
+export default defineNuxtRouteMiddleware(()=>{
+
 })

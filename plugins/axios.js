@@ -1,30 +1,22 @@
-/* export default defineNuxtPlugin((nuxtApp) => {
-    const accessToken = useCookie('accessToken');
-  
-    nuxtApp.hook('app:created', () => {
-      nuxtApp.$axios = $fetch.create({
-        baseURL: useRuntimeConfig().public.apiBase,
-        headers: {
-          Authorization: accessToken.value ? `Bearer ${accessToken.value}` : '',
-        },
-        credentials: 'include', // Ensures cookies are sent if backend uses HttpOnly cookies
-      });
-    });
-  });
-   */
-
-import axios from 'axios';
-
+// plugins/apiFetch.js
 export default defineNuxtPlugin((nuxtApp) => {
-  const accessToken = useCookie('accessToken');
-
-  const api = axios.create({
-    baseURL: useRuntimeConfig().public.apiBase, // Replace with your API
-    headers: {
-      Authorization: accessToken.value ? `Bearer ${accessToken.value}` : '',
+  const config = useRuntimeConfig();
+  
+  const axiosInstance = $fetch.create({
+    baseURL: config.public.apiBase,
+    onRequest({ options }) {
+      // Dynamically get the token from the cookie on each request
+      const token = useCookie('accessToken').value;
+      options.headers = {
+        ...options.headers,
+        Authorization: token ? `Bearer ${token}` : '',
+      };
     },
-    credentials: 'true',
   });
 
-  nuxtApp.provide('axios', api);
+  return {
+    provide: {
+      apiFetch: axiosInstance,
+    },
+  };
 });
