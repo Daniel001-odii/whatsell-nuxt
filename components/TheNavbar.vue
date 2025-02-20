@@ -13,17 +13,17 @@
                     </div>
                 </div>
 
-                <!-- search -->
+                <!-- nav links -->
                 <div class="flex gap-12 justify-evenly items-end">
                     <div
-                        class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-5 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                        class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                         <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
                        
-                            <UButton
+                            <UButton 
                             class=" md:hidden"
                             :color="isHomePage ?'green':'white'"
                             icon="iconoir:home-simple"
-                            :variant="isHomePage ? 'solid':'ghost'"
+                            variant="ghost"
                             />
                             <span class="text-[8px] md:text-sm">Home</span>
                         </NuxtLink>
@@ -32,7 +32,7 @@
                             class=" md:hidden"
                             :color="isShopsPage ?'green':'white'"
                             icon="iconoir:shop-window"
-                            :variant="isShopsPage ? 'solid':'ghost'"
+                            variant="ghost"
                             />
                             <span class="text-[8px] md:text-sm">Shops</span>
                         </NuxtLink>
@@ -41,7 +41,7 @@
                             class=" md:hidden"
                             :color="isSellPage ?'green':'white'"
                             icon="iconoir:plus-circle-solid"
-                            :variant="isSellPage ? 'solid':'ghost'"
+                            variant="ghost"
                             />
                             <span class="text-[8px] md:text-sm">Sell</span>
                         </NuxtLink>
@@ -51,7 +51,7 @@
                             class=" md:hidden"
                             :color="isGlipsPage ?'green':'white'"
                             icon="iconoir:media-video-list"
-                            :variant="isGlipsPage ? 'solid':'ghost'"
+                            variant="ghost"
                             />
                             <span class="text-[8px] md:text-sm">Glips</span>
                         </NuxtLink>
@@ -60,7 +60,7 @@
                             class=" md:hidden"
                             :color="isLikesPage ?'green':'white'"
                             icon="iconoir:thumbs-up"
-                            :variant="isLikesPage ? 'solid':'ghost'"
+                            variant="ghost"
                             />
                             <span class="text-[8px] md:text-sm">Likes</span>
                         </NuxtLink>
@@ -168,6 +168,38 @@
                     <UButton class="mx-3" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
                         " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
                 </div>
+            </div>
+
+            <!-- mobile nav links -->
+            <div
+                class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
+                    <UButton 
+                    class=" md:hidden"
+                    :color="isHomePage ?'green':'white'"
+                    icon="iconoir:home-simple"
+                    variant="ghost"
+                    />
+                    <span class="text-[8px] md:text-sm">Home</span>
+                </NuxtLink>
+                <NuxtLink to="/shops" class="flex flex-col items-center" :class="isShopsPage ? 'text-green-500':''">
+                    <UButton
+                    class=" md:hidden"
+                    :color="isShopsPage ?'green':'white'"
+                    icon="iconoir:shop-window"
+                    variant="ghost"
+                    />
+                    <span class="text-[8px] md:text-sm">Shops</span>
+                </NuxtLink>
+                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
+                    <UButton
+                    class=" md:hidden"
+                    :color="isGlipsPage ?'green':'white'"
+                    icon="iconoir:media-video-list"
+                    variant="ghost"
+                    />
+                    <span class="text-[8px] md:text-sm">Glips</span>
+                </NuxtLink>
             </div>
         </div>
 
@@ -349,4 +381,5 @@ const handleSearch = () => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
