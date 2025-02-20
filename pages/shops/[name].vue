@@ -22,9 +22,9 @@
         <!-- SHOP LEFT -->
         <div class=" w-[350px] flex flex-col gap-3 justify-start items-center">
           <div 
-          style="background-size: cover !important; background-position: center; background-repeat: no-repeat;"
+          style="background-size: contain !important; background-position: center; background-repeat: no-repeat;"
           :style="`background: url('${shop?.profile?.image_url}')`"
-          class=" size-[150px] rounded-full border justify-center items-center bg-green-100">
+          class=" size-[150px] rounded-full border-4 justify-center items-center bg-green-100">
             <!-- <img :src="shop?.profile?.image_url" alt="shop_image"/>  -->
           </div>
          
@@ -83,7 +83,7 @@
             <UButton
             @click="currentTab = 0"
             :variant="currentTab == 0 ? 'solid':'ghost'"
-            color="gray"
+            color="green"
             icon="heroicons:squares-plus"
             size="lg" label="Listings" 
             class=" flex-1 justify-center"/>
@@ -91,7 +91,7 @@
             disabled
             @click="currentTab = 1"
             :variant="currentTab == 1 ? 'solid':'ghost'" 
-            color="gray"
+            color="green"
             icon="heroicons:video-camera"
             size="lg" label="Glips" 
             class=" flex-1 justify-center"/>
@@ -154,9 +154,6 @@
 
        
       </div>
-
-      <span>followr? {{ isFollowingShop(followers) }}</span>
-       
     </div>
 </template>
 
