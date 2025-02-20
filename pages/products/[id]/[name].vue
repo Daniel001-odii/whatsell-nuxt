@@ -226,7 +226,9 @@ import { useRequestURL } from '#app';
   const addToLikes = async (id) => {
     try{
         isLiked.value = !isLiked.value;
-        const res = await $axios.post(`${useRuntimeConfig().public.apiBase}/products/${id}/like`);
+        const res = await useNuxtApp().$apiFetch(`/products/${id}/like`, {
+          method: 'POST'
+        });
         console.log("tried liking a product: ", res);
         isLiked.value = res.data.is_liked;
     }catch(error){
@@ -248,9 +250,9 @@ import { useRequestURL } from '#app';
   const liked_products = ref([]);
   const getUserData = async ()=> {
     try{
-      const response = await $axios.get(`${config.public.apiBase}/user`);
-      user.value = response.data.user;
-      liked_products.value = response.data.user.liked_products;
+      const response = await useNuxtApp().$apiFetch(`/user`);
+      user.value = response.user;
+      liked_products.value = response.user.liked_products;
       checkLikes(route.params.id);
     }catch(error){
       console.log("error getting user data: ", error);
@@ -262,9 +264,9 @@ import { useRequestURL } from '#app';
   const getSimilarProducts = async()=>{
     loading_sm_products.value = true;
     try{
-        const response = await axios.get(`${config.public.apiBase}/products/similar/all?keyword=${product.value.name}`, );
+        const response = await useNuxtApp().$apiFetch(`/products/similar/all?keyword=${product.value.name}`, );
         console.log(" all similar products: ", response);
-        similar_products.value = response.data.products;
+        similar_products.value = response.products;
     }catch(error){
         console.log("error getting similar products: ", error);
     }
