@@ -119,7 +119,6 @@ const getUserDetails = async()=> {
         user.value = res.user;
         email_verified.value = !res.user.email_verification.is_verified;
         email.value = res.user.email;
-        console.log(" user data from accoumts: ", user.value);
     } catch (error) {
         session_expired.value = true;
         console.log(error);

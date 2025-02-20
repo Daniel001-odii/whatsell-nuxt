@@ -20,7 +20,7 @@
       <div class="flex flex-col md:flex-row gap-5 relative -top-[80px] w-full">
 
         <!-- SHOP LEFT -->
-        <div class=" w-[350px] flex flex-col gap-3 justify-start items-center">
+        <div class=" md:w-[350px] w-full flex flex-col gap-3 justify-start items-center">
           <div 
           :style="`background: url('${shop?.profile?.image_url}')`"
           class=" size-[150px] rounded-full border-4 justify-center items-center bg-green-100 !bg-cover !bg-center !bg-no-repeat">
@@ -42,9 +42,9 @@
           </div>
 
           <div class=" flex flex-row justify-between flex-wrap text-center w-full">
-            <div>20<br/>Listings</div>
+            <div>X<br/>Listings</div>
             <div>{{ followers.length }}<br/>Followers</div>
-            <div>20<br/>Ratings</div>
+            <div>0<br/>Ratings</div>
           </div>
 
           <!-- ACTION BUTTON -->

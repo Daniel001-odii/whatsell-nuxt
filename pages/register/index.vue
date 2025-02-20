@@ -7,9 +7,9 @@
                 <div class="flex flex-row flex-wrap gap-6">
 
                     <label v-for="user in user_types" 
-                    :class="is_selected == user.type ? 'border-[#47c68f] bg-[#47c68f] bg-opacity-10':''" 
+                    :class="is_selected == user.type ? 'border-[#47c68f] bg-[#47c68f] bg-opacity-10':'dark:border-gray-600'" 
                     
-                    class=" flex flex-col relative flex-1 border p-5 rounded-lg gap-5 min-w-[300px]">
+                    class=" flex flex-col relative flex-1 border p-5 rounded-lg gap-5 min-w-[300px] ">
                         <span class=" font-bold text-xl">{{ user.type }}</span>
                         <p>{{ user.description }}</p>
                         <input type="radio" v-model="is_selected" :value="user.type" class=" absolute top-5 right-5"/>

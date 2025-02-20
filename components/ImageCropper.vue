@@ -1,28 +1,30 @@
 <template>
     <div>
-        <div class="h-[250px] p-3 flex flex-col" :class="image.src ? 'justify-center':'justify-end'">
-            <cropper ref="cropper" :src="image.src" :stencil-props="{
-                aspectRatio: 16 / 9,
-            }" :stencil-component="$options.components.CircleStencil" />
+        <div class="h-[250px] flex flex-col justify-center bg-gray-100 dark:bg-gray-600">
+            <cropper ref="cropper" 
+            :src="image.src || imageSrc"
+            :stencil-component="$options.components.CircleStencil" />
             
-            <div class=" flex flex-row justify-between mt-6 border'">
-                <UButton variant="ghost" color="gray">
-                    <label for="file">
-                        <input id="file" type="file" ref="file" @change="loadImage($event)" accept="image/*"
-                            class="hidden" />
-                        Select image
-                    </label>
-                </UButton>
+            
+        </div>
+        <div class=" flex flex-row justify-between mt-6 border'">
+            <UButton variant="outline" color="gray">
+                <label for="file">
+                    <input id="file" type="file" ref="file" @change="loadImage($event)" accept="image/*"
+                        class="hidden" />
+                    Select image
+                </label>
+            </UButton>
 
-                <UButton 
+            <UButton 
                 v-if="image.src"
-                    color="green"
-                    :loading="loading"
-                    loading-icon="svg-spinners:6-dots-scale-middle"
-                    @click="uploadImage()"
-                    >upload image
-                </UButton>
-            </div>
+                color="green"
+                :loading="loading"
+                icon="hugeicons:image-upload"
+                loading-icon="svg-spinners:6-dots-scale-middle"
+                @click="uploadImage()"
+                label="Upload image"
+                />
         </div>
     </div>
 </template>
@@ -30,7 +32,7 @@
 <script>
 import { Cropper, CircleStencil } from "vue-advanced-cropper";
 import axios from "axios";
-
+import "vue-advanced-cropper/dist/style.css";
 // This function is used to detect the actual image type,
 function getMimeType(file, fallback = null) {
     const byteArray = new Uint8Array(file).subarray(0, 4);
@@ -119,22 +121,6 @@ export default {
                 };
                 // Start the reader job - read file as a data url (base64 format)
                 reader.readAsArrayBuffer(files[0]);
-            }
-        },
-
-        uploadImage33() {
-            const { canvas } = this.$refs.cropper.getResult();
-            if (canvas) {
-                const form = new FormData();
-                canvas.toBlob((blob) => {
-                    form.append("image", blob);
-                    // You can use axios, superagent and other libraries instead here
-                    fetch(`${useRuntimeConfig().public.apiBase}/shop_register/image`, {
-                        method: "POST",
-                        body: form,
-                    });
-                    // Perhaps you should add the setting appropriate file format here
-                }, "image/jpeg");
             }
         },
 

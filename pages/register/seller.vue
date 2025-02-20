@@ -34,7 +34,9 @@
       </template>
       <ImageCropper @image-uploaded="handleUploadSuccess" />
     </UCard>
-  </UModal>
+</UModal>
+
+
 <!-- {{form}} -->
   <div class="min-h-screen flex flex-row">
     <div
@@ -364,10 +366,12 @@
               >
               <div
                 @click="image_cropper = !image_cropper"
-                class="size-40 bg-gray-200 rounded-full relative flex justify-center items-center overflow-hidden outline outline-offset-2 outline-4 outline-green-500"
+                class="size-40 bg-gray-600 rounded-full relative flex justify-center items-center overflow-hidden outline outline-offset-2 outline-4 outline-green-500"
               >
                 <img v-if="form.image" :src="form.image" class="size-full" />
-                <span v-else class="text-gray-400">tap to change</span>
+                <span v-else class="text-gray-400">
+                  <i class="bi bi-camera-fill text-4xl text-white"></i>
+                </span>
               </div>
               <h1 class="font-bold text-lg">{{ form.shop_name }}</h1>
               <p>{{ form.shop_description }}</p>
@@ -429,18 +433,18 @@ definePageMeta({
 
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { Cropper, CircleStencil } from "vue-advanced-cropper";
-import "vue-advanced-cropper/dist/style.css";
+// import { Cropper, CircleStencil } from "vue-advanced-cropper";
+
 import axios from 'axios'
 
 
 const router = useRouter();
-const img = ref(
+/* const img = ref(
   "https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
 );
 const change = ({ coordinates, canvas }) => {
   console.log(coordinates, canvas);
-};
+}; */
 
 const form = reactive({
   username: "",
@@ -487,7 +491,7 @@ const loading = ref(false);
 const form_error = ref(false);
 const error_message = ref("");
 const image_cropper = ref(false);
-const slide = ref(0);
+const slide = ref(2);
 
 const phone_loading = ref(false);
 const email_loading = ref(false);

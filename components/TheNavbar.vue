@@ -16,7 +16,7 @@
                 <!-- nav links -->
                 <div class="flex gap-12 justify-evenly items-end">
                     <div
-                        class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                        class="flex  font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                         <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
                        
                             <UButton 
@@ -36,7 +36,7 @@
                             />
                             <span class="text-[8px] md:text-sm">Shops</span>
                         </NuxtLink>
-                        <NuxtLink to="/sell" class="flex flex-col items-center" :class="isSellPage ? 'text-green-500':''">
+                        <NuxtLink v-if="user.account_type == 'seller'" to="/sell" class="flex flex-col items-center" :class="isSellPage ? 'text-green-500':''">
                             <UButton
                             class=" md:hidden"
                             :color="isSellPage ?'green':'white'"
@@ -151,28 +151,10 @@
                         </div>
                     </form>
                 </div>
-                <!-- auth buttons -->
-                <div class="flex flex-col md:flex-row gap-3 items-start md:items-center">
-                    <NuxtLink to="/login" class="w-full md:w-fit">
-                        <button variant="ghost" class="p-3 rounded-md px-6 w-full text-left">
-                            Login
-                        </button>
-                    </NuxtLink>
 
-                    <NuxtLink to="/register" class="w-full md:w-fit">
-                        <button variant="ghost" class="p-3 rounded-md px-6 text-nowrap w-full text-left">
-                            Sign Up
-                        </button>
-                    </NuxtLink>
-
-                    <UButton class="mx-3" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
-                        " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
-                </div>
-            </div>
-
-            <!-- mobile nav links -->
-            <div
-                class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-[99999] md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                <!-- mobile nav links -->
+             <div
+                class="md:mr-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                 <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
                     <UButton 
                     class=" md:hidden"
@@ -191,16 +173,45 @@
                     />
                     <span class="text-[8px] md:text-sm">Shops</span>
                 </NuxtLink>
-                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
+                <NuxtLink to="/#" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
                     <UButton
                     class=" md:hidden"
                     :color="isGlipsPage ?'green':'white'"
                     icon="iconoir:media-video-list"
                     variant="ghost"
+                    disabled
                     />
                     <span class="text-[8px] md:text-sm">Glips</span>
                 </NuxtLink>
             </div>
+
+                <!-- auth buttons -->
+                <div class="flex flex-col md:flex-row-reverse items-start md:items-center font-bold gap-3">
+                    <NuxtLink to="/login" class="w-full md:w-fit">
+                        <UButton 
+                        color="gray"
+                        label="Login"
+                        class=" font-bold"
+                        variant="ghost"/>
+                    </NuxtLink>
+
+                    <NuxtLink to="/register" class="w-full md:w-fit">
+                        <UButton 
+                        color="gray"
+                        class="text-nowrap font-bold"
+                        label="Join now"
+                        variant="ghost"/>
+                    </NuxtLink>
+
+                    <UButton class="mx-3" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
+                        " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
+                    
+                   
+                </div>
+            </div>
+            
+
+            
         </div>
 
         

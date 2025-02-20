@@ -3,7 +3,7 @@
       <button
         v-if="isVisible"
         @click="scrollToTop"
-        class="z-50 fixed bottom-5 right-5 bg-app_green text-white border-2 border-app_green size-12 rounded-full shadow-lg transition-all duration-300"
+        class="z-50 fixed bottom-20 right-5 bg-app_green text-white border-2 border-app_green size-12 rounded-full shadow-lg transition-all duration-300"
       >
          <i class="bi bi-arrow-up"></i>
       </button>

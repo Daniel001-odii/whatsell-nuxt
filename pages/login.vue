@@ -31,7 +31,10 @@
 
             <NuxtLink to="/forgot_password" class="text-app_green underline">Forgot password</NuxtLink>
 
-            <UButton @click="handleLogin" type="submit" :loading="loading" loading-icon="svg-spinners:bars-rotate-fade"
+            <UButton 
+            @click="handleLogin" type="submit" 
+            :loading="loading" 
+            loading-icon="svg-spinners:bars-rotate-fade"
               color="green" class="w-full justify-center p-3 font-bold">Login</UButton>
             <span>Not yet a member?
               <NuxtLink to="/register" class="underline text-app_green">join us</NuxtLink>

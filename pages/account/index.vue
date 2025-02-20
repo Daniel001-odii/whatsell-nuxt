@@ -49,7 +49,7 @@
                 <div class="flex flex-col justify-center items-start gap-3 w-full">
                     <span class="font-bold ">state<span class="text-red-500 ml-1">*</span></span>
                     <USelect 
-                     :size="'xl'"
+                    :size="'xl'"
                     v-model="state" 
                     :options="NaijaStates.all()"
                     value-attribute="state"

@@ -8,7 +8,7 @@
 }
 
 .divider-tab{
-@apply font-bold p-3 border rounded-lg mt-6 capitalize text-green-700
+@apply font-bold p-3 border rounded-lg mt-6 capitalize text-green-700 dark:border-gray-600 mb-3
 }
 
 button:disabled{
