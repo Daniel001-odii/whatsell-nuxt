@@ -164,7 +164,7 @@ const isNotifyPage = computed(() => {
 
 <style scoped>
    .nav-items{
-        @apply p-3 rounded-md hover:bg-slate-500 hover:bg-opacity-15
+        @apply p-2 rounded-md hover:bg-slate-500 hover:bg-opacity-15
     }
 
     .active-nav{

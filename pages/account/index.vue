@@ -96,22 +96,22 @@
             <div class="font-bold text-lg mt-3">Add Social Media Channel</div>
        
             <div class="flex flex-row flex-wrap gap-3 mt-3">
-                <UButton 
+              <!--   <UButton 
                 :variant="socials.whatsapp ? 'solid':'ghost'"
                 color="green"
                 @click="whatsapp_field = !whatsapp_field" class="social-btn">
                     <i class="bi bi-whatsapp"></i>
                     WhatsApp
                     <i v-if="!socials.whatsapp" class="bi bi-plus"></i>
-                </UButton>
-                <UButton 
+                </UButton> -->
+                <!-- <UButton 
                 :variant="socials.youtube ? 'solid':'ghost'"
                 color="red"
                 @click="youtube_field = !youtube_field" class="social-btn">
                     <i class="bi bi-youtube"></i>
                     Youtube
                     <i v-if="!socials.youtube" class="bi bi-plus"></i>
-                </UButton>
+                </UButton> -->
                 <UButton 
                 :variant="socials.facebook ? 'solid':'ghost'"
                 color="blue"
@@ -202,7 +202,7 @@
         </div>
         <div class=" flex flex-col p-8 rounded-lg mt-3 border text-center gap-3">
             <UAlert
-                class="text-left !bg-red-700 "
+                class="text-left "
                 icon="material-symbols:warning-rounded"
                 color="red"
                 variant="solid"
@@ -213,7 +213,7 @@
             <UInput type="text" placeholder="Enter exactly what is written above"/>
             <UButton
             color="red"
-            class=" !bg-red-700 self-end"
+            class="self-end"
             @click="copyRefLink">
             Delete Account
             </UButton>

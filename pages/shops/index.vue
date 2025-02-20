@@ -11,17 +11,17 @@
         <!-- SHOP PREVIEW IF USER IS SELLER -->
         <div v-if="!loading_user && user && shop" class=" flex flex-col">
             <h2 class=" font-bold mt-12">Your Shop</h2>
-            <div class= " flex gap-3 p-3 border dark:border-gray-600 rounded-md mt-3 hover:border-green-500">
+            <div class= "h-[150px] flex gap-3 p-3 border dark:border-gray-600 rounded-md mt-3 hover:border-green-500">
                 <NuxtLink :to="`/shops/${shop.name}`">
                     <div 
                     :style="`background: url(${shop?.profile?.image_url});`"
-                    style="background-position: center; background-size: contain; background-repeat: no-repeat;"
-                    class=" w-[150px] h-[70px] md:w-[200px] md:h-[120px] rounded-md bg-gray-600 border dark:border-gray-600">
+                    style="background-position: center; background-size: cover; background-repeat: no-repeat;"
+                    class=" h-full w-[150px] md:w-[200px] rounded-md bg-gray-600 border dark:border-gray-600">
                         <!-- <img :src="shop?.profile?.image_url" alt="shop image"/> -->
                     </div>
                 </NuxtLink>
                 <div class=" flex flex-col">
-                    <NuxtLink :to="`/shops/${shop.name}`" class=" font-bold">{{ shop.name }}</NuxtLink>
+                    <NuxtLink :to="`/shops/${shop.name}`" class=" font-bold text-xl capitalize">{{ shop.name }}</NuxtLink>
                     <span>{{ shop.category }}</span>
                     <small>joined: {{ shop.createdAt }}</small>
                 </div>
@@ -32,9 +32,10 @@
         <!-- SHOPS NEAR YOU -->
         <h2 class=" font-bold mt-12">Shops near you</h2>
         <!-- -{{ followed_shops }} -->
-        <div class=" flex flex-row gap-3 mt-3  overflow-x-auto">
+        <div class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
             <ShopCard
             v-for="shop in followed_shops"
+            :header_image="shop.headerImage"
             :name="shop.name"
             :category="shop.category"
             :image_url="shop?.profile?.image_url"
@@ -82,10 +83,11 @@
         <!-- BEST SELLING -->
         <h2 class=" font-bold mt-12">All shops</h2>
         <!-- {{ all_shops }} -->
-        <div class=" flex flex-row gap-3 mt-3 overflow-x-auto">
+        <div class=" flex flex-row gap-3 mt-3 overflow-x-auto py-5">
             <ShopCard
             v-for="shop in all_shops"
             :name="shop.name"
+            :header_image="shop.headerImage"
             :category="shop.category"
             :image_url="shop?.profile?.image_url"
             :location="shop?.profile?.location"

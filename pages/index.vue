@@ -51,6 +51,7 @@
   <ShopCard 
   v-for="(shop, index) in shops"
   :key="index"
+  :header_image="shop.headerImage"
   :name="shop?.name"
   :category="shop?.category"
   :image_url="shop?.profile?.image_url"
@@ -135,7 +136,7 @@ const categories = ref([]);
 async function getcats(){
   try{
     const response = await useNuxtApp().$apiFetch(`/categories_image`);
-    categories.value = response.data.data;
+    categories.value = response.data;
     console.log("cats: ", response);
   }catch(error){
     console.log("erro getting categories: ", error);
@@ -147,8 +148,8 @@ const shops = ref([]);
 async function getAllShops(){
   shop_loading.value = true;
   try{
-    const response = await auseNuxtApp().$apiFetch(`/shops/list/all`);
-    shops.value = response.data.shops;
+    const response = await useNuxtApp().$apiFetch(`/shops/list/all`);
+    shops.value = response.shops;
     console.log("all shops: ", response);
   }catch(error){
     console.log("error getting categories: ", error);
