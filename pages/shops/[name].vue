@@ -23,7 +23,7 @@
         <div class=" w-[350px] flex flex-col gap-3 justify-start items-center">
           <div 
           style="background-size: contain !important; background-position: center; background-repeat: no-repeat;"
-          :style="`background: url('${shop?.profile?.image_url}')`"
+          :style="shop?.profile?.image_url ? `background: url('${shop?.profile?.image_url}'); background-size: contain !important; background-position: center; background-repeat: no-repeat;`:''"
           class=" size-[150px] rounded-full border-4 justify-center items-center bg-green-100">
             <!-- <img :src="shop?.profile?.image_url" alt="shop_image"/>  -->
           </div>
