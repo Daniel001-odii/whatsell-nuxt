@@ -7,6 +7,7 @@
         :style="getBackgroundImage(shop.is_verified)"
         class=" h-[200px] md:h-[300px] w-full bg-gray-500 bg-opacity-15 relative">
         
+        <NuxtLink to="/account/shop">
         <UButton
           v-if="isAllowed"
           icon="material-symbols:edit-rounded"
@@ -14,6 +15,7 @@
           class="absolute top-5 right-5"
           variant="solid"
           color="gray"/>
+        </NuxtLink>
       </div>
       
       <!-- LOWER SECTION -->

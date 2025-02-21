@@ -198,13 +198,26 @@
         />
       </div>
 
-      <UButton 
-      :loading="loading_shop"
-      type="submit"
-      class=" !bg-app_green self-end mt-4"
-      loading-icon="svg-spinners:bars-rotate-fade"
-      label="Save Edits"
-      />
+      <div class=" flex gap-3 justify-between">
+        <NuxtLink :to="`/shops/${shop.name}`" target="_blank">
+          <UButton 
+          :loading="loading_shop"
+          type="button"
+          variant="link"
+          color="gray"
+          icon="iconoir:shop"
+          label="Go to shop"
+          />
+        </NuxtLink>
+      
+        <UButton 
+        :loading="loading_shop"
+        type="submit"
+        class=" !bg-app_green self-end mt-4"
+        loading-icon="svg-spinners:bars-rotate-fade"
+        label="Save Edits"
+        />
+    </div>
     </form>
 
 
@@ -221,6 +234,10 @@
       :rows="products" 
       :columns="columns"
       >
+        <template #images-data="{ row }">
+          <img :src="row.images[0]" alt="product_image" class=" size-[30px] rounded-lg"/>
+        </template>
+
         <template #actions-data="{ row }">
           <UDropdown :items="items(row)">
             <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
@@ -229,7 +246,13 @@
         <template #empty-state>
           <div class="flex flex-col items-center justify-center py-6 gap-3">
             <span class="italic text-sm">No Products Listings Yet!</span>
-            <UButton label="Add Product" />
+            <NuxtLink to="/sell">
+              <UButton 
+              icon="material-symbols:box-add-sharp"
+              label="Add Product" 
+              color="green"
+              />
+            </NuxtLink>
           </div>
         </template>
       </UTable>
@@ -280,6 +303,7 @@
             <span>Increase your shop visibility for a specific time frame</span>
           </div>
           <UToggle
+            @click="boost_shop_modal = true"
             color="green"
             on-icon="i-heroicons-check-20-solid"
             off-icon="i-heroicons-x-mark-20-solid"
@@ -381,8 +405,11 @@
           @click="boost_shop_modal = false"
           />
           <UButton
+          @click="boostShop"
+          :loading="boosting_shop"
+          loading-icon="svg-spinners:12-dots-scale-rotate"
           variant="solid"
-          color="green"
+          color="purple"
           icon="hugeicons:cash-01"
           label="Pay"
           />
@@ -410,6 +437,9 @@ const shop = reactive({
   image: ''
 })
 const columns = [
+  {
+    key: 'images',
+  },
 {
   key: 'name',
   label: 'Name',
@@ -458,7 +488,7 @@ const items = row => [
   }]
 ]
 
-const boost_shop_modal = ref(true);
+const boost_shop_modal = ref(false);
 
 const product_edit_modal = ref(false);
 const product_delete_modal = ref(false);
@@ -582,6 +612,26 @@ const handleUploadSuccess = (image) => {
   updateShop();
   image_cropper.value = false;
 };
+
+const boosting_shop = ref(false);
+const boostShop = async()=>{
+  boosting_shop.value = true;
+  try{
+    const res = await useNuxtApp().$apiFetch('/shops/boost_shop', {
+      body: { 
+        duration: shop_boost_duration.value 
+      },
+      method: 'POST'
+    });
+    boost_shop_modal.value = false;
+    toast.add({ title: res.message });
+    console.log("boost shop ", res);
+  }catch(err){
+    // toast.add({ title: err.res.message });
+    console.log("err boost shop ", err);
+  }
+  boosting_shop.value = false;
+}
 
 </script>
 
