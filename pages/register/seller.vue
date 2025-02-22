@@ -1,10 +1,4 @@
 <template>
-  <!--   <cropper 
-  class=" size-[600px]"
-  :src="img"
-  :stencil-component="CircleStencil"
-	@change="change"
-/> -->
   <UModal
     :ui="{ container: 'flex items-center justify-center min-h-screen' }"
     v-model="image_cropper"

@@ -2,7 +2,7 @@
     <div class="relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:border-green-500 hover:shadow-md border border-transparent h-fit w-fit">
         <!-- IMAGE -->
         <div class="overflow-hidden rounded-2xl">
-            <NuxtLink v-if="product_slug" :to="`/products/${id}/${product_slug}`" class="text-sm clamp-4">
+            <NuxtLink v-if="product_slug" :to="id ? `/products/${id}/${product_slug}`:'#'" class="text-sm clamp-4">
                 <img :src="image_url" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer md:max-w-[280px]" />
                 <img v-if="!image_url" src="../assets/images/logo/whatsell_gray.png" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer" />
             </NuxtLink>
@@ -10,7 +10,7 @@
 
         <!-- TEXT AND WRITE-UPS -->
         <div class="p-2">
-            <NuxtLink v-if="product_slug" :to="`/products/${id}/${product_slug}`" class="text-sm clamp-4">
+            <NuxtLink v-if="product_slug" :to="id ? `/products/${id}/${product_slug}`:'#'" class="text-sm clamp-4">
                 {{ product_slug }}
             </NuxtLink>
             <div class="flex justify-between items-center">
