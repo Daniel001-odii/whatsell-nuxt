@@ -33,6 +33,7 @@
             <small>Click below to see your product page</small>
         </div>
         <ProductCard
+        :class="uploaded_product ? 'border border-app_green':''"
         class=" !min-w-[200px] !w-[200px]"
         :id="uploaded_product ? uploaded_product._id:null"
         :product_slug="product.name"
@@ -98,27 +99,33 @@
                     <UInput
                     :maxlength="30"
                     v-model="product.name"
-                    placeholder="Iphone 16 SE"
+                    placeholder="Iphone 12 pro max"
                     required/>
                 </div>
                 <div class=" flex flex-col gap-2">
                     <span class=" font-bold">Product description</span>
+                    <div class="relative w-full">
                     <textarea 
                     v-model="product.description" required
-                    class="border dark:border-gray-600 p-5 h-[200px]" 
-                    placeholder="iphone 12 pro /n battery health 80%...">
+                    class="border dark:border-gray-600 p-5 h-[200px] w-full rounded-md outline-none" 
+                    placeholder="iphone 12 pro...
+battery health 80%
+True tone
+128GB ROM">
                     </textarea>
+                    <UButton
+                    size="2xs"
+                    disabled
+                    class="absolute right-2 bottom-5"
+                    variant="solid"
+                    color="yellow"
+                    label="Generate (beta)"
+                    icon="hugeicons:ai-brain-03"
+                    />
+                </div>
                 </div>
                 <div class=" flex flex-col gap-2">
                     <b>Product category</b>
-                   <!--  <USelect
-                    :size="'xl'"
-                    model-value="other"
-                    v-model="product.category" 
-                    :options="categories" 
-                    option-attribute="name"
-                    required
-                    /> -->
                     <select v-model="product.category" class="p-3 rounded-md">
                         <option disabled value="">select category</option>
                         <option v-for="cat in categories">{{ cat.name }}</option>
@@ -155,8 +162,8 @@
                                 size="2xs"
                                 color="red"
                                 square
-                                icon="hugeicons:cancel-circle"
-                                variant="link"
+                                icon="hugeicons:cancel-01"
+                                variant="soft"
                                 type="button" @click="removeImage(image.filePath, index)" class="absolute top-1 right-1"/>
                             </div>
                         </div>
@@ -165,6 +172,7 @@
 
                 <div class="flex">
                     <UButton
+                    :disabled="!product.name || !product.description || !product.category || product.images.length == 0"
                     class=" w-full justify-center"
                     label="Next"
                     color="green"
@@ -182,13 +190,6 @@
                         <option disabled value="">select condition</option>
                         <option v-for="item in product_condition">{{ item }}</option>
                     </select>
-                   <!--  <USelect
-                    :size="'xl'"
-                    model-value="brand new"
-                    v-model="product.condition" 
-                    :options="product_condition" 
-                    required
-                    /> -->
                 </div>
                 <div class=" flex flex-col gap-2">
                     <span class=" font-bold">Product price</span>
@@ -202,12 +203,6 @@
                         <option disabled value="">select...</option>
                         <option v-for="item in yes_no">{{ item }}</option>
                     </select>
-                   <!--  <USelect
-                    :size="'xl'"
-                    v-model="product.charge_for_delivery" 
-                    :options="yes_no"
-                    required
-                    /> -->
                 </div>
                 <div class=" flex flex-col gap-2" v-if="product.charge_for_delivery == 'yes'">
                     <span class=" font-bold">Delivery Fee</span>
@@ -230,7 +225,7 @@
                     /> -->
                 </div>
 
-                <div class=" flex flex-col gap-2 opacity-50">
+                <div class=" flex flex-col gap-2 opacity-80">
                     <UCheckbox label="Auto-post this product (beta)" required :model-value="false" disabled/>
                     <div class=" flex gap-3 ml-8">
                         <i class="bi bi-whatsapp"></i>
@@ -248,6 +243,7 @@
                     @click="current_slide--"
                     />
                     <UButton
+                    :disabled="!product.condition || !product.price || !product.charge_for_delivery || !product.price_negotiable"
                     @click="listing_modal = true"
                     class="flex-1 justify-center"
                     label="Complete"
@@ -340,6 +336,7 @@ const uploadFile = async (file) => {
     const result = {
         status: 'uploading',
         image_preview: '',
+        filePath: '',
     };
 
     const url = URL.createObjectURL(file);
@@ -365,6 +362,7 @@ const uploadFile = async (file) => {
             // update upload status here...
             upload_image_results.value[index].status = "done";
             product.images.push(res.result.url)
+            result.filePath = res.result.url
             // upload_image_results.push()
 
         }
@@ -396,7 +394,7 @@ const deleteImage = async (filePath)=> {
         console.log("Attempting to delete: ", extractedPath);
 
         const response = await useNuxtApp().$apiFetch(`/products/image/delete`, {
-            data: { filePath: extractedPath },
+            body: { filePath: extractedPath },
             method: 'DELETE',
         });
         console.log("deleting image: ", response);
@@ -407,6 +405,8 @@ const deleteImage = async (filePath)=> {
 
 const uploading_product = ref(false)
 const uploaded_product = ref(null);
+
+const toast = useToast()
 const postProduct = async ()=> {
     uploading_product.value = true;
     try{
@@ -429,6 +429,7 @@ const postProduct = async ()=> {
         }
     }catch(err){
         console.log("err in product upload: ", err);
+        toast.add({ title: err.res.message });
     }
     uploading_product.value = false;
 }

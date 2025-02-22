@@ -1,334 +1,69 @@
 <template>
-
-<!-- SHOP IMAGE MODAL -->
-<UModal
-    :ui="{ container: 'flex items-center justify-center min-h-screen' }"
-    v-model="image_cropper"
+<!-- NEW SHOP MODAL -->
+ <UModal
+ :ui="{ container: 'flex items-center justify-center min-h-screen' }"
+    v-model="new_shop_modal"
     prevent-close
   >
-    <UCard
-      :ui="{
-        ring: '',
-        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-      }"
-    >
-      <template #header>
+  <UCard>
+    <template #header>
         <div class="flex items-center justify-between">
           <h3
             class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
           >
-            Select a shop image
+            Create a new shop
           </h3>
           <UButton
             color="gray"
             variant="ghost"
             icon="i-heroicons-x-mark-20-solid"
             class="-my-1"
-            @click="image_cropper = false"
+            @click="new_shop_modal = false"
           />
         </div>
-      </template>
-      <ImageCropper 
-      :image-src="blobUrl"
-      @image-uploaded="handleUploadSuccess" />
-    </UCard>
-</UModal>
-
-  <!-- DELETE PRODUCT -->
-  <UModal 
-  :ui="{ container: 'flex items-center justify-center min-h-screen' }"
-  v-model="product_delete_modal" prevent-close>
-    <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-            Delete product
-          </h3>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="product_delete_modal = false" />
-        </div>
-      </template>
-      <div class="flex flex-row gap-3">
-        <img :src="current_product.images[0]" class=" w-[100px] rounded-md"/>
-        <div class=" flex flex-col">
-          <span>Are you sure you want to this product?</span>
-          <span class="text-2xl">{{ current_product.name }}</span>
-          <span class=" font-bold">NGN {{ current_product.price.toLocaleString() }}</span>
-        </div>
-      </div>
-      <template #footer>
-        <div class=" flex flex-row justify-between">
-          <UButton
-          @click="product_delete_modal = false"
-          label="cancel"
-          color="gray"
-          variant="outline"
-          />
-          <UButton
-          @click="deleteProduct(current_product._id)"
+    </template>
+      <div class=" flex flex-col gap-3">
+        <UAlert
+          v-if="error_creating_shop"
+          icon="hugeicons:alert-02"
           color="red"
           variant="solid"
-          loading-icon="svg-spinners:bars-rotate-fade"
-          :loading="deleting_prod"
-          icon="hugeicons:delete-02"
-          label="Delete"
-          />
-        </div>
-      </template>
-     
-    </UCard>
-  </UModal>
-
-  <!-- EDIT PRODUCT MODAL -->
-  <UModal 
-  :ui="{ container: 'flex items-center justify-center min-h-screen' }"
-  v-model="product_edit_modal" prevent-close>
-    <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-            Edit Product
-          </h3>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="product_edit_modal = false" />
-        </div>
-      </template>
-      <div class="flex flex-col gap-3">
-        <div class="flex flex-row gap-3">
-          <img :src="current_product.images[0]" class=" w-[100px] rounded-md"/>
-          <div class=" flex flex-col">
-            <span class="text-2xl font-bold">{{ current_product.name }}</span>
-            <span class="text-sm text-green-500">{{ current_product.category }}</span>
-            <div class= "flex gap-2 mt-3">
-              <img  v-for="image in current_product.images" :src="image" class=" w-[45px] rounded-md"/>
-            </div>
-          </div>
-        </div>
-        <form @submit.prevent="updateProduct" class=" flex flex-col gap-3">
-          <div class=" flex flex-col">
-            <b>Product name</b>
-            <UInput v-model="current_product.name" placeholder="product price" required=""/>
-          </div>
-        
-          <div class=" flex flex-col">
-            <b>Product price</b>
-            <UInput v-model="current_product.price" placeholder="product price" required/>
-          </div>
-
-          <div class=" flex flex-col">
-            <b>Product description</b>
-            <textarea class="border dark:border-gray-600 p-3" v-model="current_product.description" placeholder="product description" required/>
-          </div>
-
-          <div class=" flex flex-col">
-            <b>Product category</b>
-            <USelect
-            :size="'xl'"
-            v-model="current_product.category" 
-            :options="categories" 
-            option-attribute="name" 
-            required
-            />
-          </div>
-
-          <div class=" flex flex-col">
-            <b>Charge for delivery</b>
-            <USelect
-            :size="'xl'"
-            v-model="current_product.charge_for_delivery" 
-            :options="prod_delivery_charge"  
-            />
-          </div>
-
-        </form>
-      </div>
-      <template #footer>
-        <div class=" w-full flex">
-          <UButton
-          @click="updateProduct"
-          class="!self-end"
-          color="green"
-          variant="solid"
-          label="Update"
-          loading-icon="svg-spinners:bars-rotate-fade"
-          :loading="editing_prod"
-          />
-        </div>
-      </template>
-    </UCard>
-  </UModal>
-
-  <div>
-    <!-- SHOP EDIT  -->
-    <form @submit.prevent="updateShop" class="border dark:border-gray-600 rounded-lg flex flex-col p-5 gap-3">
-      <div class=" flex justify-center items-center mt-6">
-        <div @click="image_cropper = true"
-            :style="`background: url(${shop.image})`"
-            class=" size-[100px] border rounded-full dark:border-gray-600 !bg-cover !bg-center !bg-no-repeat 
-            relative overflow-hidden group
-            ">
-            <div class=" h-full w-full absolute top-0 bg-black bg-opacity-30 group-hover:flex hidden justify-center items-center">
-              <i class=" bi bi-camera-fill text-white text-2xl"></i>
-            </div>
-          
-        </div>
-      </div>
-
-      <div class=" flex flex-col gap-3 mt-4">
-        <span>Shop or business name</span>
-        <UInput 
-        placeholder="Enter shop name" v-model="shop.name" disabled/>
-        <small class=" text-blue-500"><i class="bi bi-exclamation-circle"></i> Please contact support if you would want to change your shop name</small>
-      </div>
-
-      <div class=" flex flex-col gap-3 ">
-        <span>Shop description</span>
-        <UInput 
-        type="textarea"
-        placeholder="Enter shop name" v-model="shop.description"/>
-      </div>
-
-      <!-- {{ shop.category }} -->
-      <div class=" flex flex-col gap-3 ">
-        <span>Shop category</span>
-        <USelect
-        search
-        :size="'xl'"
-        v-model="shop.category" 
-        :options="categories" 
-        option-attribute="name" 
+          title="Error!"
+          :description="error_creating_shop"
         />
-      </div>
 
-      <div class=" flex gap-3 justify-between">
-        <NuxtLink :to="`/shops/${shop.name}`" target="_blank">
-          <UButton 
-          :loading="loading_shop"
-          type="button"
-          variant="link"
-          color="gray"
-          icon="iconoir:shop"
-          label="Go to shop"
-          />
-        </NuxtLink>
-      
-        <UButton 
-        :loading="loading_shop"
-        type="submit"
-        class=" !bg-app_green self-end mt-4"
+        <div class=" flex flex-col gap-2">
+          <b>Shop name</b>
+          <UInput v-model="new_shop.name" placeholder="sammy_sales" required/>
+        </div>
+        <div class=" flex flex-col gap-2">
+          <b>Shop description</b>
+          <textarea v-model="new_shop.description" class="h-[200px] rounded-md p-3 border dark:border-gray-600 outline-none" placeholder="We sell all kinds of things..." required></textarea>
+        </div>
+        <div class=" flex flex-col gap-2">
+            <b>Shop category</b>
+            <select v-model="new_shop.category" class="p-3 border dark:border-gray-600 rounded-md">
+              <option value="" disabled>Select shop category</option>
+              <option v-for="cat in categories">{{ cat.name }}</option>
+            </select>
+          </div>
+      </div>
+    <template #footer>
+      <UButton
+        :disabled="!new_shop.name || !new_shop.description || !new_shop.category"
+        @click="createNewShop"
+        color="green"
+        :loading="new_shopping"
         loading-icon="svg-spinners:bars-rotate-fade"
-        label="Save Edits"
-        />
-    </div>
-    </form>
-
-
-    <!-- PROUDUCTS -->
-    <div class="divider-tab">
-        My Products
-    </div>
-    <div class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
-      
-      <UTable
-      :loading="loading_products"
-      :loading-state="{ icon: 'svg-spinners:bars-rotate-fade', label: 'Loading Your Products...' }"
-      :progress="{ color: 'primary', animation: 'carousel' }"
-      :rows="products" 
-      :columns="columns"
-      >
-        <template #images-data="{ row }">
-          <img :src="row.images[0]" alt="product_image" class=" size-[30px] rounded-lg"/>
-        </template>
-
-        <template #actions-data="{ row }">
-          <UDropdown :items="items(row)">
-            <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-          </UDropdown>
-        </template>
-        <template #empty-state>
-          <div class="flex flex-col items-center justify-center py-6 gap-3">
-            <span class="italic text-sm">No Products Listings Yet!</span>
-            <NuxtLink to="/sell">
-              <UButton 
-              icon="material-symbols:box-add-sharp"
-              label="Add Product" 
-              color="green"
-              />
-            </NuxtLink>
-          </div>
-        </template>
-      </UTable>
-
-      <!-- current_page, total_page, getShopProducts -->
-        <!-- pagination for products -->
-      <div class=" flex gap-6 mt-1 w-full justify-center items-center" v-if="products.length > 0">
-            <UButton
-            :loading="loading_products"
-            loading-icon="svg-spinners:bars-rotate-fade"
-            :disabled="current_page == 1"
-            variant="ghost"
-            color="green"
-            @click="[current_page --, getShopProducts()]"
-            icon="heroicons:arrow-small-left"
-            />
-            <span>{{ current_page }} of {{ total_page }}</span>
-            <UButton
-            :loading="loading_products"
-            loading-icon="svg-spinners:bars-rotate-fade"
-            variant="ghost"
-            color="green"
-            :disabled="current_page == total_page"
-            icon="heroicons:arrow-small-right"
-            @click="[current_page ++, getShopProducts()]"
-            />
-      </div>
-    </div>
-
-    <!-- SPECIAL ACTIONS -->
-      <!-- PROUDUCTS -->
-    <div class="divider-tab">
-        Special Actions
-    </div>
-    <div class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
-      <UAlert
-        icon="hugeicons:swipe-right-07"
-        color="orange"
-        variant="solid"
-        title="Heads up!"
-        description="By toggling any of these special actions you can perform the listed transactions. Follow the steps carefully to carry out each action successfully."
+        label="Create Shop"
       />
+    </template>
+</UCard>
 
-      <div class=" mt-4 flex flex-col gap-4">
-        <div class=" flex flex-row justify-between items-center">
-          <div class=" flex flex-col">
-            <b class="text-xl">Boost your shop</b>
-            <span>Increase your shop visibility for a specific time frame</span>
-          </div>
-          <UToggle
-            @click="boost_shop_modal = true"
-            color="green"
-            on-icon="i-heroicons-check-20-solid"
-            off-icon="i-heroicons-x-mark-20-solid"
-            v-model="shop.is_boosted"
-          />
-        </div>
-        <div class=" flex flex-row justify-between items-center">
-          <div class=" flex flex-col">
-            <b class="text-xl">Advertise a service/event</b>
-            <span>Expand reach with front row billboard access, pay per ad click</span>
-          </div>
-          <UToggle
-            disabled
-            color="green"
-            on-icon="i-heroicons-check-20-solid"
-            off-icon="i-heroicons-x-mark-20-solid"
-            :model-value="false"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+ </UModal>
 
-  <!-- SHOP BOOST MODAL -->
-  <UModal
+<!-- SHOP BOOST MODAL -->
+<UModal
   :ui="{ container: 'flex items-center justify-center min-h-screen' }"
     v-model="boost_shop_modal"
     prevent-close
@@ -418,7 +153,360 @@
      
     </template>
   </UCard>
-  </UModal>
+</UModal>
+
+<!-- SHOP IMAGE MODAL -->
+<UModal
+    :ui="{ container: 'flex items-center justify-center min-h-screen' }"
+    v-model="image_cropper"
+    prevent-close
+  >
+    <UCard
+      :ui="{
+        ring: '',
+        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+      }"
+    >
+      <template #header>
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+          >
+            Select a shop image
+          </h3>
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-x-mark-20-solid"
+            class="-my-1"
+            @click="image_cropper = false"
+          />
+        </div>
+      </template>
+      <ImageCropper 
+      :image-src="blobUrl"
+      @image-uploaded="handleUploadSuccess" />
+    </UCard>
+</UModal>
+
+<!-- DELETE PRODUCT -->
+<UModal 
+:ui="{ container: 'flex items-center justify-center min-h-screen' }"
+v-model="product_delete_modal" prevent-close>
+  <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+          Delete product
+        </h3>
+        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="product_delete_modal = false" />
+      </div>
+    </template>
+    <div class="flex flex-row gap-3">
+      <img :src="current_product.images[0]" class=" w-[100px] rounded-md"/>
+      <div class=" flex flex-col">
+        <span>Are you sure you want to this product?</span>
+        <span class="text-2xl">{{ current_product.name }}</span>
+        <span class=" font-bold">NGN {{ current_product.price.toLocaleString() }}</span>
+      </div>
+    </div>
+    <template #footer>
+      <div class=" flex flex-row justify-between">
+        <UButton
+        @click="product_delete_modal = false"
+        label="cancel"
+        color="gray"
+        variant="outline"
+        />
+        <UButton
+        @click="deleteProduct(current_product._id)"
+        color="red"
+        variant="solid"
+        loading-icon="svg-spinners:bars-rotate-fade"
+        :loading="deleting_prod"
+        icon="hugeicons:delete-02"
+        label="Delete"
+        />
+      </div>
+    </template>
+    
+  </UCard>
+</UModal>
+
+<!-- EDIT PRODUCT MODAL -->
+<UModal 
+:ui="{ container: 'flex items-center justify-center min-h-screen' }"
+v-model="product_edit_modal" prevent-close>
+  <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+          Edit Product
+        </h3>
+        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="product_edit_modal = false" />
+      </div>
+    </template>
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-row gap-3">
+        <img :src="current_product.images[0]" class=" w-[100px] rounded-md"/>
+        <div class=" flex flex-col">
+          <span class="text-2xl font-bold">{{ current_product.name }}</span>
+          <span class="text-sm text-green-500">{{ current_product.category }}</span>
+          <div class= "flex gap-2 mt-3">
+            <img  v-for="image in current_product.images" :src="image" class=" w-[45px] rounded-md"/>
+          </div>
+        </div>
+      </div>
+      <form @submit.prevent="updateProduct" class=" flex flex-col gap-3">
+        <div class=" flex flex-col">
+          <b>Product name</b>
+          <UInput v-model="current_product.name" placeholder="product price" required=""/>
+        </div>
+      
+        <div class=" flex flex-col">
+          <b>Product price</b>
+          <UInput v-model="current_product.price" placeholder="product price" required/>
+        </div>
+
+        <div class=" flex flex-col">
+          <b>Product description</b>
+          <textarea class="border dark:border-gray-600 p-3" v-model="current_product.description" placeholder="product description" required/>
+        </div>
+
+        <div class=" flex flex-col">
+          <b>Product category</b>
+          <USelect
+          :size="'xl'"
+          v-model="current_product.category" 
+          :options="categories" 
+          option-attribute="name" 
+          required
+          />
+        </div>
+
+        <div class=" flex flex-col">
+          <b>Charge for delivery</b>
+          <USelect
+          :size="'xl'"
+          v-model="current_product.charge_for_delivery" 
+          :options="prod_delivery_charge"  
+          />
+        </div>
+
+      </form>
+    </div>
+    <template #footer>
+      <div class=" w-full flex">
+        <UButton
+        @click="updateProduct"
+        class="!self-end"
+        color="green"
+        variant="solid"
+        label="Update"
+        loading-icon="svg-spinners:bars-rotate-fade"
+        :loading="editing_prod"
+        />
+      </div>
+    </template>
+  </UCard>
+</UModal>
+
+
+<!-- IF USER IS SELLER -->
+<div v-if="user?.account_type == 'seller'">
+  <!-- SHOP EDIT  -->
+  <form @submit.prevent="updateShop" class="border dark:border-gray-600 rounded-lg flex flex-col p-5 gap-3">
+    <div class=" flex justify-center items-center mt-6">
+      <div @click="image_cropper = true"
+          :style="`background: url(${shop.image})`"
+          class=" size-[100px] border rounded-full dark:border-gray-600 !bg-cover !bg-center !bg-no-repeat 
+          relative overflow-hidden group
+          ">
+          <div class=" h-full w-full absolute top-0 bg-black bg-opacity-30 group-hover:flex hidden justify-center items-center">
+            <i class=" bi bi-camera-fill text-white text-2xl"></i>
+          </div>
+        
+      </div>
+    </div>
+
+    <div class=" flex flex-col gap-3 mt-4">
+      <span>Shop or business name</span>
+      <UInput 
+      placeholder="Enter shop name" v-model="shop.name" disabled/>
+      <small class=" text-blue-500"><i class="bi bi-exclamation-circle"></i> Please contact support if you would want to change your shop name</small>
+    </div>
+
+    <div class=" flex flex-col gap-3 ">
+      <span>Shop description</span>
+      <textarea v-model="shop.description" class="h-[200px] rounded-md p-3 border dark:border-gray-600 outline-none" placeholder="We sell all kinds of things..." required></textarea>
+    </div>
+
+    <!-- {{ shop.category }} -->
+    <div class=" flex flex-col gap-3 ">
+      <span>Shop category</span>
+      <!-- <USelect
+      search
+      :size="'xl'"
+      v-model="shop.category" 
+      :options="categories" 
+      option-attribute="name" 
+      /> -->
+      <select v-model="shop.category" class="p-3 border dark:border-gray-600 rounded-md">
+        <option value="" disabled>Select shop category</option>
+        <option v-for="cat in categories">{{ cat.name }}</option>
+      </select>
+    </div>
+
+    <div class=" flex gap-3 justify-between">
+      <NuxtLink :to="`/shops/${shop.name}`" target="_blank">
+        <UButton 
+        :loading="loading_shop"
+        type="button"
+        variant="link"
+        color="gray"
+        icon="iconoir:shop"
+        label="Go to shop"
+        />
+      </NuxtLink>
+    
+      <UButton 
+      :loading="loading_shop"
+      type="submit"
+      class=" !bg-app_green self-end mt-4"
+      loading-icon="svg-spinners:bars-rotate-fade"
+      label="Save Edits"
+      />
+  </div>
+  </form>
+
+
+  <!-- PROUDUCTS -->
+  <div class="divider-tab">
+      My Products
+  </div>
+  <div class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
+    
+    <UTable
+    :loading="loading_products"
+    :loading-state="{ icon: 'svg-spinners:bars-rotate-fade', label: 'Loading Your Products...' }"
+    :progress="{ color: 'primary', animation: 'carousel' }"
+    :rows="products" 
+    :columns="columns"
+    >
+      <template #images-data="{ row }">
+        <img :src="row.images[0]" alt="product_image" class=" size-[30px] rounded-lg"/>
+      </template>
+
+      <template #actions-data="{ row }">
+        <UDropdown :items="items(row)">
+          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+        </UDropdown>
+      </template>
+      <template #empty-state>
+        <div class="flex flex-col items-center justify-center py-6 gap-3">
+          <span class="italic text-sm">No Products Listings Yet!</span>
+          <NuxtLink to="/sell">
+            <UButton 
+            icon="material-symbols:box-add-sharp"
+            label="Add Product" 
+            color="green"
+            />
+          </NuxtLink>
+        </div>
+      </template>
+    </UTable>
+
+    <!-- current_page, total_page, getShopProducts -->
+      <!-- pagination for products -->
+    <div class=" flex gap-6 mt-1 w-full justify-center items-center" v-if="products.length > 0">
+          <UButton
+          :loading="loading_products"
+          loading-icon="svg-spinners:bars-rotate-fade"
+          :disabled="current_page == 1"
+          variant="ghost"
+          color="green"
+          @click="[current_page --, getShopProducts()]"
+          icon="heroicons:arrow-small-left"
+          />
+          <span>{{ current_page }} of {{ total_page }}</span>
+          <UButton
+          :loading="loading_products"
+          loading-icon="svg-spinners:bars-rotate-fade"
+          variant="ghost"
+          color="green"
+          :disabled="current_page == total_page"
+          icon="heroicons:arrow-small-right"
+          @click="[current_page ++, getShopProducts()]"
+          />
+    </div>
+  </div>
+
+  <!-- SPECIAL ACTIONS -->
+    <!-- PROUDUCTS -->
+  <div class="divider-tab">
+      Special Actions
+  </div>
+  <div class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
+    <UAlert
+      icon="hugeicons:swipe-right-07"
+      color="orange"
+      variant="solid"
+      title="Heads up!"
+      description="By toggling any of these special actions you can perform the listed transactions. Follow the steps carefully to carry out each action successfully."
+    />
+
+    <div class=" mt-4 flex flex-col gap-4">
+      <div class=" flex flex-row justify-between items-center">
+        <div class=" flex flex-col">
+          <b class="text-xl">Boost your shop</b>
+          <span>Increase your shop visibility for a specific time frame</span>
+        </div>
+        <UToggle
+          @click="boost_shop_modal = true"
+          color="green"
+          on-icon="i-heroicons-check-20-solid"
+          off-icon="i-heroicons-x-mark-20-solid"
+          v-model="shop.is_boosted"
+        />
+      </div>
+      <div class=" flex flex-row justify-between items-center">
+        <div class=" flex flex-col">
+          <b class="text-xl">Advertise a service/event</b>
+          <span>Expand reach with front row billboard access, pay per ad click</span>
+        </div>
+        <UToggle
+          disabled
+          color="green"
+          on-icon="i-heroicons-check-20-solid"
+          off-icon="i-heroicons-x-mark-20-solid"
+          :model-value="false"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div v-else class="border dark:border-gray-600 rounded-lg flex flex-col p-5 gap-3">
+ 
+  <!-- <ShopCard class=" h-[300px]"/> -->
+  <div class="flex flex-col justify-center items-center text-center">
+    <div class=" flex flex-col justify-center items-center size-[100px] bg-gray-900 bg-opacity-80 rounded-full text-gray-500">
+      <i class="bi bi-shop text-2xl"></i>
+    </div>
+
+    <span class=" font-bold text-3xl mt-3">You do not have a shop yet</span>
+    <p>Do you want to start selling?<br/>Click the button to start now!</p>
+    <UButton
+    @click="new_shop_modal = true"
+    label="Start Selling"
+    class="p-2 mt-3"
+    variant="solid"
+    color="green"
+    icon="hugeicons:delivery-box-02"
+    />
+  </div>
+</div>
+
 </template>
 
 <script setup>
@@ -631,6 +719,33 @@ const boostShop = async()=>{
     console.log("err boost shop ", err);
   }
   boosting_shop.value = false;
+}
+
+const new_shop = reactive({
+  name: '',
+  description: '',
+  category: ''
+});
+const new_shopping = ref(false);
+const new_shop_modal = ref(false);
+const error_creating_shop = ref(null);
+const createNewShop = async()=>{
+  error_creating_shop.value  = null;
+  new_shopping.value = true;
+  try{
+    const res = await useNuxtApp().$apiFetch('/shops/new', {
+      method: 'POST',
+      body: new_shop
+    });
+    new_shop_modal.value = false;
+    toast.add({ title: res.message });
+    getUserDetails();
+
+  }catch(err){
+    // toast.add({ title: err._data.message })
+    error_creating_shop.value = err._data.message;
+  }
+  new_shopping.value = false;
 }
 
 </script>

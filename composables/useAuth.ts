@@ -13,7 +13,7 @@ export const useAuth = () => {
         body: { emailOrPhone, password }
       });
 
-      if (error.value) throw error.value;
+      if (error) throw error;
 
       console.log("loggedin :", data);
       return data.value;

@@ -98,7 +98,7 @@
                         <p class="font-bold text-xl">Product Description</p>
                     </div>
                     
-                    <div v-html="product.description.substring(0, 500)" class=" min-h-[100px]"></div>
+                    <div v-html="formattedDecription" class=" min-h-[100px]"></div>
                     <div class="flex flex-row gap-3 flew-wrap text-sm text-gray-400">
                         <span><i class="bi bi-tag mr-1"></i>{{ product.category }}</span>
                         <!-- <span v-if="product?.shop"><i class="bi bi-geo-alt mr-1"></i>{{ product?.shop?.profile?.location?.address }}, {{  product?.shop?.profile?.location?.state }}</span> -->
@@ -246,6 +246,8 @@ import { useRequestURL } from '#app';
     return response.product;
   });
   
+  const formattedDecription = computed(() => product.value.description.replace(/\n/g, '<br>'));
+
   const user = ref(null);
   const liked_products = ref([]);
   const getUserData = async ()=> {

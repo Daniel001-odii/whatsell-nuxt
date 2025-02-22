@@ -143,7 +143,6 @@ const getAllProducts = async()=>{
     console.log("erro getting categories: ", error);
   }
 };
-getAllProducts();
 
 const categories = ref([]);
 async function getcats(){
@@ -197,6 +196,8 @@ const checkLikes = (product_id) => {
 
 
 onMounted (()=> {
+  getAllProducts();
+
   getcats();
   getAllShops();
   getUserDetails();

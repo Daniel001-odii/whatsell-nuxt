@@ -45,7 +45,7 @@
                 <div class="p-3  md:sticky top-5  flex flex-col gap-3 border rounded-lg w-full md:w-64 min-w-64 h-fit bg-white dark:bg-gray-900 dark:border-gray-600">
                     <NuxtLink to="/account" class="nav-items"  :class="{'active-nav': isUserPage }" @click="page_visible = !page_visible" id="account_details">Personal details</NuxtLink>
                     <NuxtLink to="/account/shop" class="nav-items" :class="{'active-nav': isShopPage }"  @click="page_visible = !page_visible" id="my_shop">My Shop</NuxtLink>
-                    <NuxtLink to="/account/analytics" class="nav-items" :class="{'active-nav': isAnalyticsPage }" @click="page_visible = !page_visible" id="analytics">Analytics & Insights</NuxtLink>
+                    <NuxtLink v-if="user && user.account_type == 'seller'" to="/account/analytics" class="nav-items" :class="{'active-nav': isAnalyticsPage }" @click="page_visible = !page_visible" id="analytics">Analytics & Insights</NuxtLink>
                     <NuxtLink to="/account/subscriptions" class="nav-items" :class="{'active-nav': isUpgradePage }" @click="page_visible = !page_visible" id="subscriptions">Subscriptions</NuxtLink>
                     <!-- <NuxtLink to="/account/notifications" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">Manage Notifications</NuxtLink> -->
                     <!-- <NuxtLink to="#" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">Manage Notifications</NuxtLink> -->

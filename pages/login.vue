@@ -7,23 +7,22 @@
           <p class="my-3">Welcome back!</p>
 
           <div class="flex flex-col gap-3">
-            <!-- <span class="text-red-500 py-3">{{ error_message }}</span> -->
 
             <div class="flex flex-col gap-3">
               <div>
                 <div class="flex flex-row relative">
                   <!-- <SpinnerComponent v-if="loading_email" class="absolute top-[50%] right-[5%]" /> -->
                   <input id="email" type="email" name="email" placeholder="Email or phone" v-model="form.emailOrPhone"
-                    class="form-input" :class="{ '!border-red-500': login_error }" required />
+                    class="form-input" :class="{ '!border-red-500': error_message }" required />
                 </div>
               </div>
 
               <div>
                 <div class="relative">
                   <input type="password" placeholder="password" v-model="form.password" class="form-input"
-                    :class="{ '!border-red-500': login_error }" required />
-                  <small v-if="login_error" class="text-red-500">{{
-                    login_error
+                    :class="{ '!border-red-500': error_message }" required />
+                  <small v-if="error_message" class="text-red-500">{{
+                    error_message
                   }}</small>
                 </div>
               </div>
@@ -74,33 +73,11 @@ const errors = reactive({
 
 const loading = ref(false);
 const form_error = ref(false);
-const error_message = ref("");
-
 const toast = useToast();
-const login_error = ref(null);
-
-/* const handleLogin = async () => {
-  login_error.value = null;
-  loading.value = true;
-  try {
-    const response = await axios.post(`${useRuntimeConfig().public.apiBase}/login`, form);
-    console.log("loggedin :", response);
-    accessToken.value = response.data.accessToken;
-    refreshToken.value = response.data.refreshToken;
-    toast.add({ title: response.data.message })
-    setTimeout(() => {
-      router.push('/');
-    }, 3000);
-  } catch (err) {
-    console.error('Login error:', err);
-    login_error.value = err.response.data.message;
-    loading.value = false;
-  }
-  
-}; */
-
+const error_message = ref(null);
 const handleLogin = async () => {
   loading.value = true;
+  error_message.value = null;
   try {
     const res = await useNuxtApp().$apiFetch(`/login`, {
       method: "POST",
@@ -113,8 +90,10 @@ const handleLogin = async () => {
     router.push("/");
     console.log("from login: ", res);
   } catch (error) {
-    console.log("Login failed:", error);
+    console.log("Login failed:", error._data.message);
     loading.value = false;
+    // toast.add({ title: error._data.message })
+    error_message.value = error._data.message;
   }
 };
 </script>

@@ -23,7 +23,7 @@
                             class=" md:hidden"
                             :color="isHomePage ?'green':'white'"
                             icon="iconoir:home-simple"
-                            variant="ghost"
+                            variant="link"
                             />
                             <span class="text-[8px] md:text-sm">Home</span>
                         </NuxtLink>
@@ -32,7 +32,7 @@
                             class=" md:hidden"
                             :color="isShopsPage ?'green':'white'"
                             icon="iconoir:shop-window"
-                            variant="ghost"
+                            variant="link"
                             />
                             <span class="text-[8px] md:text-sm">Shops</span>
                         </NuxtLink>
@@ -41,7 +41,7 @@
                             class=" md:hidden"
                             :color="isSellPage ?'green':'white'"
                             icon="iconoir:plus-circle-solid"
-                            variant="ghost"
+                            variant="link"
                             />
                             <span class="text-[8px] md:text-sm">Sell</span>
                         </NuxtLink>
@@ -51,7 +51,7 @@
                             class=" md:hidden"
                             :color="isGlipsPage ?'green':'white'"
                             icon="iconoir:media-video-list"
-                            variant="ghost"
+                            variant="link"
                             />
                             <span class="text-[8px] md:text-sm">Glips</span>
                         </NuxtLink>
@@ -60,7 +60,7 @@
                             class=" md:hidden"
                             :color="isLikesPage ?'green':'white'"
                             icon="iconoir:thumbs-up"
-                            variant="ghost"
+                            variant="link"
                             />
                             <span class="text-[8px] md:text-sm">Likes</span>
                         </NuxtLink>
@@ -74,14 +74,14 @@
                         <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
                             :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
                             <UAvatar 
-                            
+                            :chip-color="!user?.email_verification?.is_verified ? 'green':''"
                             chip-text="" 
                             chip-position="top-right"
                                 :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
                                     <UAvatar 
-                                   
+                                   :chip-color="!user?.email_verification?.is_verified ? 'green':''"
                                     chip-text=""
                                         chip-position="top-right" :alt="user?.username.toUpperCase()" />
                                     <div class="flex flex-col text-left -gap-1">
@@ -107,7 +107,7 @@
                                 <button class="" :icon="isDark
                                         ? 'i-heroicons-moon-20-solid'
                                         : 'i-heroicons-sun-20-solid'
-                                    " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">
+                                    " color="gray" variant="link" aria-label="Theme" @click="isDark = !isDark">
                                     Theme
                                 </button>
                             </template>
@@ -127,8 +127,8 @@
                         <img src="../assets/images/logo/whatsell_logo.png" />
                     </NuxtLink>
                 </div>
-                <UButton variant="ghost" @click="toggleMenu" color="green" class="md:hidden inline-block">
-                    <i class="bi bi-ui-radios-grid" />
+                <UButton variant="link" @click="toggleMenu" color="green" class="md:hidden inline-block">
+                    <i class="bi bi-ui-radios-grid"></i>
                 </UButton>
             </div>
 
@@ -152,15 +152,43 @@
                     </form>
                 </div>
 
-                <!-- mobile nav links -->
-             <div
-                class="md:mr-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+           
+
+                <!-- auth buttons -->
+                <div class="flex flex-col md:flex-row-reverse items-start md:items-center font-bold gap-3 mt-4 md:mt-0">
+                    <NuxtLink to="/login" class="w-full md:w-fit">
+                        <UButton 
+                        color="gray"
+                        label="Login"
+                        class=" font-bold"
+                        variant="link"/>
+                    </NuxtLink>
+
+                    <NuxtLink to="/register" class="w-full md:w-fit">
+                        <UButton 
+                        color="gray"
+                        class="text-nowrap font-bold"
+                        label="Join now"
+                        variant="link"/>
+                    </NuxtLink>
+
+                    <UButton class="" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
+                        " color="gray" variant="link" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
+                    
+                   
+                </div>
+            </div>
+
+            
+            <!-- mobile nav links -->
+            <div
+                class="md:ml-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                 <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
                     <UButton 
                     class=" md:hidden"
                     :color="isHomePage ?'green':'white'"
                     icon="iconoir:home-simple"
-                    variant="ghost"
+                    variant="link"
                     />
                     <span class="text-[8px] md:text-sm">Home</span>
                 </NuxtLink>
@@ -169,7 +197,7 @@
                     class=" md:hidden"
                     :color="isShopsPage ?'green':'white'"
                     icon="iconoir:shop-window"
-                    variant="ghost"
+                    variant="link"
                     />
                     <span class="text-[8px] md:text-sm">Shops</span>
                 </NuxtLink>
@@ -178,36 +206,10 @@
                     class=" md:hidden"
                     :color="isGlipsPage ?'green':'white'"
                     icon="iconoir:media-video-list"
-                    variant="ghost"
-                    disabled
+                    variant="link"
                     />
                     <span class="text-[8px] md:text-sm">Glips</span>
                 </NuxtLink>
-            </div>
-
-                <!-- auth buttons -->
-                <div class="flex flex-col md:flex-row-reverse items-start md:items-center font-bold gap-3">
-                    <NuxtLink to="/login" class="w-full md:w-fit">
-                        <UButton 
-                        color="gray"
-                        label="Login"
-                        class=" font-bold"
-                        variant="ghost"/>
-                    </NuxtLink>
-
-                    <NuxtLink to="/register" class="w-full md:w-fit">
-                        <UButton 
-                        color="gray"
-                        class="text-nowrap font-bold"
-                        label="Join now"
-                        variant="ghost"/>
-                    </NuxtLink>
-
-                    <UButton class="mx-3" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
-                        " color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
-                    
-                   
-                </div>
             </div>
             
 
@@ -270,7 +272,7 @@ const menu_items = [
             label: "inventory",
             icon: "material-symbols:inventory-2-outline-rounded",
             click: () => {
-                router.push("/account");
+                router.push("/account/shop");
             },
         },
         {
@@ -280,13 +282,13 @@ const menu_items = [
                 router.push("/account");
             },
         },
-        {
+      /*   {
             label: "Location",
             icon: "material-symbols:location-on-outline",
             click: () => {
-                router.push("/account");
+                router.push("/account/");
             },
-        },
+        }, */
         {
             label: "Invoice",
             icon: "material-symbols:insert-page-break",

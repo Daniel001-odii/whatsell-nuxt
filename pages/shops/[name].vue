@@ -7,15 +7,26 @@
         :style="getBackgroundImage(shop.is_verified)"
         class=" h-[200px] md:h-[300px] w-full bg-gray-500 bg-opacity-15 relative">
         
-        <NuxtLink to="/account/shop">
-        <UButton
-          v-if="isAllowed"
-          icon="material-symbols:edit-rounded"
-          label="Settings"
-          class="absolute top-5 right-5"
-          variant="solid"
-          color="gray"/>
-        </NuxtLink>
+       
+          <div class="absolute top-5 right-5 flex gap-3">
+            <NuxtLink to="/account/shop">
+              <UButton
+              v-if="isAllowed"
+              icon="material-symbols:edit-rounded"
+              label="Settings"
+              variant="solid"
+              color="gray"/>
+            </NuxtLink>
+            <UButton
+            @click="shareShop"
+            color="green"
+            icon="hugeicons:share-05"
+            variant="solid"
+            />
+          </div>
+       
+       
+
       </div>
       
       <!-- LOWER SECTION -->
@@ -59,6 +70,7 @@
             class=" justify-center w-full"
             variant="outline"
             color="green"
+            @click="useRouter().push('/sell')"
             label="Add Product"
             size="lg"/>
             <UButton
@@ -307,6 +319,22 @@ const followShop = async (shop_id) => {
   loading_fl.value = false;
 }
 
+const shareShop = async () => {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Hi, check this Shop on whatsell!",
+        text: `${shop.value.category}`,
+        url: window.location.href, // Current page URL
+      });
+      console.log("Shared successfully");
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  } else {
+    alert("Your browser does not support the Web Share API.");
+  }
+};
   
   // Set meta tags dynamically (before page is rendered)
   useHead({

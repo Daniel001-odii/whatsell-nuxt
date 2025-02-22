@@ -1,9 +1,9 @@
 <template>
-    
+    <!-- {{ formattedAmount }} -->
         <UInput
         :maxlength="12"
         v-model="formattedAmount"
-        @input="formatAmount"
+        @keyup="formatAmount"
         @blur="onBlur"
         @focus="onFocus"
         type="text"
