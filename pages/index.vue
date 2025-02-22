@@ -127,10 +127,23 @@ const items = [
 const config = useRuntimeConfig();
 
 // Fetch and extract only the `products` array
-const { data: products, error: products_error } = await useAsyncData('products', async () => {
+/* const { data: products, error: products_error } = await useAsyncData('products', async () => {
   const response = await $fetch(`${config.public.apiBase}/products`)
   return response.products // Extracting the nested products array
-})
+}) */
+
+
+const products = ref([]);
+const getAllProducts = async()=>{
+  try{
+    const response = await useNuxtApp().$apiFetch(`/products`);
+    products.value = response.products.reverse();
+    console.log("cats: ", response);
+  }catch(error){
+    console.log("erro getting categories: ", error);
+  }
+};
+getAllProducts();
 
 const categories = ref([]);
 async function getcats(){

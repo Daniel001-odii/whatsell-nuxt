@@ -27,9 +27,14 @@
           />
         </div>
       </template>
-      <div class=" flex justify-center items-center">
+      <div class=" flex flex-col gap-3 justify-center items-center">
+        <div v-if="uploaded_product" class="flex flex-col justify-center items-center text-center">
+            <span class=" font-bold text-3xl text-app_green">Product Uploaded!</span>
+            <small>Click below to see your product page</small>
+        </div>
         <ProductCard
         class=" !min-w-[200px] !w-[200px]"
+        :id="uploaded_product ? uploaded_product._id:null"
         :product_slug="product.name"
         :has-liked-button="false"
         :image_url="product.images[0]"
@@ -39,6 +44,7 @@
       </div>
       <template #footer>
         <UButton
+        v-if="!uploaded_product"
         @click="postProduct"
         color="green"
         size="lg"
@@ -47,11 +53,21 @@
         loading-icon="svg-spinners:6-dots-scale-middle"
         block
         />
+        <!-- `/products/${id}/${product_slug}` -->
+        <NuxtLink  v-else :to="`/products/${uploaded_product._id}/${uploaded_product.slug}`" target="_blank" class="w-full">
+            <UButton
+            icon="hugeicons:delivery-view-01"
+            color="blue"
+            size="lg"
+            label="View Product"
+            block
+            />
+        </NuxtLink>
       </template>
     </UCard>
 </UModal>
 
-{{ product }}
+<!-- {{ product }} -->
 
         <!-- TAB TOGGLES -->
         <div class=" flex flex-row p-1 bg-gray-500 bg-opacity-10 gap-1 rounded-md mt-12 max-w-md mx-auto">
@@ -82,6 +98,7 @@
                     <UInput
                     :maxlength="30"
                     v-model="product.name"
+                    placeholder="Iphone 16 SE"
                     required/>
                 </div>
                 <div class=" flex flex-col gap-2">
@@ -161,13 +178,17 @@
             <div v-if="current_slide == 2" class="flex flex-col gap-5 p-2 w-full">
                 <div class=" flex flex-col gap-2">
                     <b>Product condition</b>
-                    <USelect
+                    <select v-model="product.condition" class="p-3 rounded-md" required>
+                        <option disabled value="">select condition</option>
+                        <option v-for="item in product_condition">{{ item }}</option>
+                    </select>
+                   <!--  <USelect
                     :size="'xl'"
                     model-value="brand new"
                     v-model="product.condition" 
                     :options="product_condition" 
                     required
-                    />
+                    /> -->
                 </div>
                 <div class=" flex flex-col gap-2">
                     <span class=" font-bold">Product price</span>
@@ -177,21 +198,36 @@
                 </div>
                 <div class=" flex flex-col gap-2">
                     <b>Will you charge for delivery</b>
-                    <USelect
+                    <select v-model="product.charge_for_delivery" class="p-3 rounded-md" required>
+                        <option disabled value="">select...</option>
+                        <option v-for="item in yes_no">{{ item }}</option>
+                    </select>
+                   <!--  <USelect
                     :size="'xl'"
                     v-model="product.charge_for_delivery" 
                     :options="yes_no"
                     required
-                    />
+                    /> -->
                 </div>
+                <div class=" flex flex-col gap-2" v-if="product.charge_for_delivery == 'yes'">
+                    <span class=" font-bold">Delivery Fee</span>
+                   <NumberInput
+                   v-model="product.delivery_fee"
+                   />
+                </div>
+                
                 <div class=" flex flex-col gap-2">
                     <b>Are you open for negotiation</b>
-                    <USelect
+                    <select v-model="product.price_negotiable" class="p-3 rounded-md" required>
+                        <option disabled value="">select...</option>
+                        <option v-for="item in yes_no">{{ item }}</option>
+                    </select>
+                   <!--  <USelect
                     :size="'xl'"
                     v-model="product.price_negotiable" 
                     :options="yes_no" 
                     required
-                    />
+                    /> -->
                 </div>
 
                 <div class=" flex flex-col gap-2 opacity-50">
@@ -370,6 +406,7 @@ const deleteImage = async (filePath)=> {
 };
 
 const uploading_product = ref(false)
+const uploaded_product = ref(null);
 const postProduct = async ()=> {
     uploading_product.value = true;
     try{
@@ -377,11 +414,23 @@ const postProduct = async ()=> {
             method: 'POST',
             body: product,
         });
+        uploaded_product.value = res.product;
         console.log('upload red: ', res)
+        product = {
+            name: '',
+            description: '',
+            category: '',
+            images: [],
+            condition: '',
+            price: '',
+            charge_for_delivery: '',
+            delivery_fee: '',
+            price_negotiable: '',
+        }
     }catch(err){
         console.log("err in product upload: ", err);
     }
-    uploading_product.value = true;
+    uploading_product.value = false;
 }
 
 </script>

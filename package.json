@@ -25,6 +25,7 @@
     "naija-state-local-government": "^1.1.2",
     "radix-vue": "^1.9.14",
     "vue-advanced-cropper": "^2.8.9",
+    "vue-draggable-plus": "^0.6.0",
     "vue-spinner": "^1.0.4",
     "vue3-spinners": "^1.2.2"
   }
