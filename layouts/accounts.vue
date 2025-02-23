@@ -35,21 +35,21 @@
        
         <div  class=" container  mx-auto flex md:flex-row gap-5 relative flex-col p-5  min-h-screen">
             <div class="flex flex-col gap-2">
-                <NuxtLink to="/">
+                <!-- <NuxtLink to="/">
                     <button class="flex flex-row gap-1 font-medium text-xl p-3">
                         <i class="bi bi-arrow-left-short"></i>
                         Akount
                     </button>
-                </NuxtLink>
+                </NuxtLink> -->
                 <!-- sticky top-5 -->
                 <div class="p-3  md:sticky top-5  flex flex-col gap-3 border rounded-lg w-full md:w-64 min-w-64 h-fit bg-white dark:bg-gray-900 dark:border-gray-600">
                     <NuxtLink to="/account" class="nav-items"  :class="{'active-nav': isUserPage }" @click="page_visible = !page_visible" id="account_details">Personal details</NuxtLink>
                     <NuxtLink to="/account/shop" class="nav-items" :class="{'active-nav': isShopPage }"  @click="page_visible = !page_visible" id="my_shop">My Shop</NuxtLink>
-                    <NuxtLink to="#" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">My Wallet</NuxtLink>
+                    <NuxtLink to="/account/wallet" class="nav-items" :class="{'active-nav': isWalletPage }" @click="page_visible = !page_visible">My Wallet</NuxtLink>
                     <NuxtLink v-if="user && user.account_type == 'seller'" to="/account/analytics" class="nav-items" :class="{'active-nav': isAnalyticsPage }" @click="page_visible = !page_visible" id="analytics">Analytics & Insights</NuxtLink>
                     <NuxtLink to="/account/subscriptions" class="nav-items" :class="{'active-nav': isUpgradePage }" @click="page_visible = !page_visible" id="subscriptions">Subscriptions</NuxtLink>
                     
-                    <NuxtLink to="#" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">Manage Notifications</NuxtLink>
+                    <NuxtLink to="/account/notifications" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">Manage Notifications</NuxtLink>
                 </div>
             </div>
 
@@ -158,6 +158,10 @@ const isUpgradePage = computed(() => {
 
 const isNotifyPage = computed(() => {
     return useRouter().currentRoute.value.path === "/account/notifications";
+});
+
+const isWalletPage = computed(() => {
+    return useRouter().currentRoute.value.path === "/account/wallet";
 });
 
 </script>
