@@ -23,7 +23,7 @@
             @click="resendVerificationMail"
             class="p-3 !bg-app_green text-white"
             :loading="loading"
-            :loading-icon="`svg-spinners:bars-rotate-fade`"
+            loading-icon="`svg-spinners:bars-rotate-fade`"
             >Re-send verication mail <span v-if="loading">{{ seconds }}</span></UButton>
         </div>
       </UCard>
@@ -47,7 +47,7 @@
                     <NuxtLink to="/account/shop" class="nav-items" :class="{'active-nav': isShopPage }"  @click="page_visible = !page_visible" id="my_shop">My Shop</NuxtLink>
                     <NuxtLink to="#" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">My Wallet</NuxtLink>
                     <NuxtLink v-if="user && user.account_type == 'seller'" to="/account/analytics" class="nav-items" :class="{'active-nav': isAnalyticsPage }" @click="page_visible = !page_visible" id="analytics">Analytics & Insights</NuxtLink>
-                    <NuxtLink to="#" class="nav-items" :class="{'active-nav': isUpgradePage }" @click="page_visible = !page_visible" id="subscriptions">Subscriptions</NuxtLink>
+                    <NuxtLink to="/account/subscriptions" class="nav-items" :class="{'active-nav': isUpgradePage }" @click="page_visible = !page_visible" id="subscriptions">Subscriptions</NuxtLink>
                     
                     <NuxtLink to="#" class="nav-items" :class="{'active-nav': isNotifyPage }" @click="page_visible = !page_visible">Manage Notifications</NuxtLink>
                 </div>
