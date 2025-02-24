@@ -1,7 +1,7 @@
 <template>
     <div class=" flex flex-col">
         <div v-if="loading_user" class= " flex gap-3 p-3 rounded-md h-[150px] mt-12">
-            <USkeleton class="w-[150px] h-full md:w-[200px] md:h-[120px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton class="min-w-[150px] h-full md:w-[200px] md:h-[120px]" :ui="{ background: 'dark:bg-gray-700' }" />
             <div class=" flex flex-col gap-3">
                 <USkeleton class="w-[250px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
                 <USkeleton class="w-[100px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
@@ -79,6 +79,15 @@
             :category="shop.category"
             :image_url="shop?.profile?.image_url"
             />
+            <div v-if="!loading_boosted_shops && boosted_shops.length == 0" class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">There are limited slots available,<br/> be the first to take an available slot. <br/> 
+                <NuxtLink v-if="user.shop" :to="`/account/shop`">
+                    <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">Boost Your Shop Now! <i class="bi bi-rocket-fill ml-3"></i></button>
+                </NuxtLink>
+
+                <NuxtLink v-else to="/account/shop">
+                    <button class="rounded-full bg-black text-white p-3 px-6 mt-6 font-bold">Create Your shop</button>
+                </NuxtLink>
+            </div>
         </div>
 
         <!-- BEST SELLING -->
@@ -147,8 +156,10 @@ const getAllShops = async()=>{
 }
 getAllShops();
 
+const loading_boosted_shops = ref(false);
 const boosted_shops = ref([]);
 const getBoostedShops = async()=>{
+    loading_boosted_shops.value = true
     try{
         const res = await useNuxtApp().$apiFetch('/shops/boosted/all');
         boosted_shops.value = res.shops;
@@ -156,6 +167,7 @@ const getBoostedShops = async()=>{
     }catch(err){
         console.log("err getting boosted shops: ", err);
     }
+    loading_boosted_shops.value = false
 }
 getBoostedShops();
 

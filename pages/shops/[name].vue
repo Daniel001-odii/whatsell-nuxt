@@ -4,25 +4,14 @@
       <div 
       
         style="background-size: cover !important; background-position: center; background-repeat: no-repeat;"
-        :style="getBackgroundImage(shop.is_verified)"
+        :style="[getBoostedShopImage(shop.is_boosted)]"
         class=" h-[200px] md:h-[300px] w-full bg-gray-500 bg-opacity-15 relative">
         
        
           <div class="absolute top-5 right-5 flex gap-3">
-            <NuxtLink to="/account/shop">
-              <UButton
-              v-if="isAllowed"
-              icon="material-symbols:edit-rounded"
-              label="Settings"
-              variant="solid"
-              color="gray"/>
-            </NuxtLink>
-            <UButton
-            @click="shareShop"
-            color="green"
-            icon="hugeicons:share-05"
-            variant="solid"
-            />
+            <UDropdown :items="isAllowed ? items_allowed:items" :popper="{ placement: 'bottom-start' }">
+              <UButton color="white" icon="iconoir:more-horiz" />
+            </UDropdown>
           </div>
        
        
@@ -36,17 +25,21 @@
         <div class=" md:w-[350px] w-full flex flex-col gap-3 justify-start items-center">
           <div 
           :style="`background: url('${shop?.profile?.image_url}')`"
-          class=" size-[150px] rounded-full border-4 justify-center items-center bg-green-100 !bg-cover !bg-center !bg-no-repeat">
+          :class="[shop.is_boosted ? 'border-purple-500':'', shop.is_verified ? 'border-green-500':'']"
+          class=" size-[150px] rounded-full border-[8px] justify-center items-center bg-green-100 !bg-cover !bg-center !bg-no-repeat relative">
             <!-- <img :src="shop?.profile?.image_url" alt="shop_image"/>  -->
+            <span v-if="shop.boosted" class=" absolute size-[30px] -right-0 bottom-2 text-white rounded-full flex justify-center items-center bg-purple-500 p-3">
+              <i class="bi bi-rocket-takeoff-fill"></i>
+            </span>
           </div>
          
           <div class=" flex flex-col text-center">
-            <span class=" font-bold text-xl">{{ shop.name }}</span>
+            <span class=" font-bold text-xl">{{ shop.name }} <i class="bi text-app_green" :class="shop.is_verified ? 'bi-patch-check-fill':''"></i></span>
             <small>{{ shop.category }}</small>
             <span class=" mt-3">{{ shopDescription }} 
               <UButton 
               v-if="shop.description.length > 200"
-              color="green"
+              :color="shop.is_boosted ? 'purple':'green'"
               @click="des_expanded = !des_expanded" 
               :label="des_expanded ? 'see less':'see more'" variant="link"/>
             </span>
@@ -55,7 +48,7 @@
           </div>
 
           <div class=" flex flex-row justify-between flex-wrap text-center w-full">
-            <div>X<br/>Listings</div>
+            <div>{{ shop.listings }}<br/>Listings</div>
             <div>{{ followers.length }}<br/>Followers</div>
             <div>0<br/>Ratings</div>
           </div>
@@ -69,7 +62,7 @@
             icon="material-symbols:box-add-sharp"
             class=" justify-center w-full"
             variant="outline"
-            color="green"
+            :color="shop.is_boosted ? 'purple':'green'"
             @click="useRouter().push('/sell')"
             label="Add Product"
             size="lg"/>
@@ -81,7 +74,7 @@
             loading-icon="svg-spinners:bars-rotate-fade"
             class=" justify-center w-full"
             :variant="isFollowingShop(followers) ? 'solid':'outline'"
-            color="green"
+            :color="shop.is_boosted ? 'purple':'green'"
             :label="isFollowingShop(followers) ? 'Following':'Follow'"
             size="lg"/>
           </div>
@@ -96,7 +89,7 @@
             <UButton
             @click="currentTab = 0"
             :variant="currentTab == 0 ? 'solid':'ghost'"
-            color="green"
+            :color="shop.is_boosted ? 'purple':'green'"
             icon="heroicons:squares-plus"
             size="lg" label="Listings" 
             class=" flex-1 justify-center"/>
@@ -104,7 +97,7 @@
             disabled
             @click="currentTab = 1"
             :variant="currentTab == 1 ? 'solid':'ghost'" 
-            color="green"
+            :color="shop.is_boosted ? 'purple':'green'"
             icon="heroicons:video-camera"
             size="lg" label="Glips" 
             class=" flex-1 justify-center"/>
@@ -145,7 +138,7 @@
                   loading-icon="svg-spinners:bars-rotate-fade"
                   :disabled="current_page == 1"
                   variant="ghost"
-                  color="green"
+                   :color="shop.is_boosted ? 'purple':'green'"
                   @click="[current_page --, getShopProducts()]"
                   icon="heroicons:arrow-small-left"
                   />
@@ -154,7 +147,7 @@
                   :loading="loadingProducts"
                   loading-icon="svg-spinners:bars-rotate-fade"
                   variant="ghost"
-                  color="green"
+                   :color="shop.is_boosted ? 'purple':'green'"
                   :disabled="current_page == total_page"
                   icon="heroicons:arrow-small-right"
                   @click="[current_page ++, getShopProducts()]"
@@ -192,10 +185,16 @@ const boostShopModal = ref(false);
 const liked_products = ref([]);
 // const shop = ref('');
 
-import verifiedShop from '@/assets/images/verified_shop.png';
-import nonVerifiedShop from '@/assets/images/non_verified_shop.png';
+// import verifiedShop from '@/assets/images/verified_shop.png';
+import normalShop from '@/assets/images/non_verified_shop.png';
+import boostedShopImage from '@/assets/images/boosted_shop.png';
 
-const getBackgroundImage = (isVerified) => `background-image: url(${isVerified ? verifiedShop : nonVerifiedShop})`;
+/* const getBackgroundImage = computed((isVerified)=>{
+return `background-image: url(${isVerified ? normalShop : normalShop})`
+}); */
+
+// const getBackgroundImage = (isVerified) => `background-image: url(${isVerified ? normalShop : normalShop})`;
+const getBoostedShopImage = (isBoosted) => `background-image: url(${isBoosted ? boostedShopImage:normalShop})`;
 
 
 // Fetch shop data before rendering (SSR-compatible)
@@ -335,6 +334,37 @@ const shareShop = async () => {
     alert("Your browser does not support the Web Share API.");
   }
 };
+
+const items = [
+  [{
+    label: 'Share',
+    icon: 'hugeicons:share-05',
+    click: () => {
+      shareShop()
+    }
+  }],
+  [{
+    label: 'Report',
+    icon: 'hugeicons:flag-03',
+    disabled: true
+  }]
+];
+
+const items_allowed = [
+  [{
+    label: 'Share',
+    icon: 'hugeicons:share-05',
+    click: () => {
+      shareShop()
+    }
+  }, {
+    label: 'Settings',
+    icon: 'hugeicons:settings-02',
+    click: () => {
+      useRouter().push('/account/shop')
+    }
+  }]
+]
   
   // Set meta tags dynamically (before page is rendered)
   useHead({

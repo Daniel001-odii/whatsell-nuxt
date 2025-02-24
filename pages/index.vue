@@ -17,7 +17,7 @@
   <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
-  :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-image: url('../assets/images/logo/whatsell_gray.png'); background-size: contain;`" 
+  :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-image: url('${require('../assets/images/logo/whatsell_gray.png')}); background-size: contain;`" 
   class=" flex justify-center items-start text-sm min-w-[200px] h-[80px] md:h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
 </div>
 
@@ -127,22 +127,10 @@ const items = [
 const config = useRuntimeConfig();
 
 // Fetch and extract only the `products` array
-/* const { data: products, error: products_error } = await useAsyncData('products', async () => {
+const { data: products, error: products_error } = await useAsyncData('products', async () => {
   const response = await $fetch(`${config.public.apiBase}/products`)
   return response.products // Extracting the nested products array
-}) */
-
-
-const products = ref([]);
-const getAllProducts = async()=>{
-  try{
-    const response = await useNuxtApp().$apiFetch(`/products`);
-    products.value = response.products.reverse();
-    console.log("cats: ", response);
-  }catch(error){
-    console.log("erro getting categories: ", error);
-  }
-};
+})
 
 const categories = ref([]);
 async function getcats(){
@@ -196,8 +184,6 @@ const checkLikes = (product_id) => {
 
 
 onMounted (()=> {
-  getAllProducts();
-
   getcats();
   getAllShops();
   getUserDetails();

@@ -14,7 +14,7 @@
                 </div>
 
                 <!-- nav links -->
-                <div class="flex gap-12 justify-evenly items-end">
+                <div class="flex gap-12 justify-evenly items-center">
                     <div
                         class="flex  font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
                         <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
@@ -66,10 +66,17 @@
                         </NuxtLink>
                     </div>
 
-                    <div div class="flex gap-2 items-center">
+                    <UButton
+                    @click="useRouter().push('/account/shop')"
+                    icon="mingcute:coin-3-fill"
+                    :label="credits.toString()"
+                    color="black"
+                    variant="ghost"
+                    />
+                    <!-- <div div class="flex gap-2 items-center">
                         <img src="../assets/images/coins_group.png" class="w-[35px]" />
                         <span>{{ credits }}</span>
-                    </div>
+                    </div> -->
                     <div>
                         <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
                             :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
@@ -94,7 +101,7 @@
                                                 class="bi bi-exclamation-circle-fill"></i>
                                             {{ user?.email }}</small>
                                     </div>
-                                    <button class="absolute -right-[100px]">
+                                    <button class="absolute -right-[130px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
                                             viewBox="0 0 24 24">
                                             <path fill="currentColor"
@@ -279,7 +286,7 @@ const menu_items = [
             label: "Wallet",
             icon: "material-symbols:account-balance-wallet-outline",
             click: () => {
-                router.push("/account");
+                router.push("/account/wallet");
             },
         },
       /*   {

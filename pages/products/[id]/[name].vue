@@ -1,4 +1,32 @@
 <template>
+  <!-- PRODUCT IMAGE MODAL -->
+  <UModal v-model="preview_image" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
+  <div class=" flex flex-col">
+    <div class=" flex flex-col bg-gray-500 px-6 min-h-[300px] justify-center items-center">
+      <img :src="selected_image"/>
+      </div>
+     <!--  <div class=" flex w-full justify-between mt-3">
+        <UButton
+        @click="previousImage"
+        size="lg"
+        icon="mingcute:arrow-left-line"
+        class=" rounded-full"
+        color="gray"
+        variant="solid"
+        />
+        <UButton
+        @click="nextImage"
+        size="lg"
+        icon="mingcute:arrow-right-line"
+        class=" rounded-full"
+        color="gray"
+        variant="solid"
+        />
+    </div> -->
+  </div>
+    
+  </UModal>
+  
   <!-- SHARE MODAL -->
   <UModal v-model="share_modal_open" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
     <div class="p-8 flex flex-col gap-3 justify-center text-center">
@@ -59,6 +87,7 @@
 
     <div class=" p-5">
       <!-- PRODUCT DETAIL AREA -->
+        
       <div class="flex flex-col md:flex-row gap-12 flex-wra relative" v-if="product">
             <div class="flex flex-col gap-3 md:w-[50%] ">
                 <!-- <div :style="`background-image: url('${main_image}'); background-size: contain;`" class="full-image w-full h-[400px] rounded-md flex justify-center items-center bg-gray-100"></div> -->
@@ -76,7 +105,7 @@
                   </UCarousel>
                 <!-- <span>{{ product_images.length }}</span> -->
                   <div class="flex flex-row gap-3 overflow-hidden relative">
-                    <img v-for="image in product_images" class=" size-[50px] rounded-lg " :src="image"/>
+                    <img v-for="image in product_images" class=" size-[50px] rounded-lg " :src="image"  @click="previewImage(image)"/>
                     <!-- EXTRA IMG INDICATOR -->
                     <div v-if="product_images > 4" class=" size-[100px] absolute right-0 rounded-lg flex justify-center items-center extra_img_indicator">
                       <span class=" font-bold text-xl">+1</span>
@@ -168,8 +197,6 @@
   <script setup>
 import { ref } from 'vue';
 import { useRoute, useAsyncData, useHead } from '#imports';
-import axios from 'axios'
-const { $axios } = useNuxtApp();
 import { useRequestURL } from '#app';
 
   // Get current route
@@ -294,6 +321,34 @@ import { useRequestURL } from '#app';
       { name: "twitter:image", content: product.value?.images[0] || "https://example.com/default-image.jpg" }
     ],
   });
+
+const preview_image = ref(false);
+const selected_image = ref(null);
+
+const previewImage = (image) => {
+  console.log('image clicked: ', image);
+  selected_image.value = image;
+  preview_image.value = true;
+}
+
+let index = 0;
+const previousImage = ()=>{
+  index = Number(index) - 1
+  if(index > 0){
+    selected_image.value = product.value.images[index]
+    console.log("viewing: ", selected_image.value)
+  }
+}
+
+const nextImage = ()=>{
+    index = Number(index) + 1
+    if(index < product.value.images.length){
+      selected_image.value = product.value.images[index]
+      console.log("viewing: ", selected_image.value)
+    }
+}
+
+
 
   onMounted(()=>{
       // get user data...
