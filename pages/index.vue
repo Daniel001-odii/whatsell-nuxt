@@ -17,7 +17,7 @@
   <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
-  class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-800 text-white rounded-xl font-bold">{{ category.category }}</NuxtLink>
+  class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-800 rounded-xl font-bold">{{ category.category }}</NuxtLink>
  <!--  <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
