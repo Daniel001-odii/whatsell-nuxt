@@ -17,8 +17,12 @@
   <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
-  :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-image: url('${require('../assets/images/logo/whatsell_gray.png')}); background-size: contain;`" 
-  class=" flex justify-center items-start text-sm min-w-[200px] h-[80px] md:h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
+  class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-800 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink>
+ <!--  <NuxtLink 
+  target="_blank"
+  :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
+  :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-size: contain;`" 
+  class=" flex justify-center items-start text-sm min-w-[200px] h-[80px] md:h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink> -->
 </div>
 
 <!-- best deals for your 2morrow -->

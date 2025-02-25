@@ -1,10 +1,5 @@
 <template>
-\<div class="reels-container">
-    <!-- <GlipComponent
-      v-for="(video, index) in videos"
-      :key="index"
-      :video-src="video"
-    /> -->
+<div>
     <ReelsContainer
     :videos="videos"
     />
