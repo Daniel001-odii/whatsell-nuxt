@@ -208,7 +208,7 @@
                     />
                     <span class="text-[8px] md:text-sm">Shops</span>
                 </NuxtLink>
-                <NuxtLink to="/#" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
+                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
                     <UButton
                     class=" md:hidden"
                     :color="isGlipsPage ?'green':'white'"
