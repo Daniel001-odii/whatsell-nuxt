@@ -1,17 +1,54 @@
 <template>
-    <div class="video-reel" ref="videoContainer">
-        <video ref="video" :src="videoSrc" @timeupdate="updateProgress" @error="handleError" loop playsinline
-            webkit-playsinline  muted></video>
-        <div class="controls">
-            <button @click="togglePlay">
-                {{ userPaused ? 'Play' : 'Pause' }}
-            </button>
-            <button @click="toggleMute">
-                {{ isMuted ? 'Unmute' : 'Mute' }}
-            </button>
+    <div class="video-reel md:rounded-lg overflow-hidden" ref="videoContainer">
+        <video ref="video" @click="togglePlay" :src="videoSrc" @timeupdate="updateProgress" @error="handleError" loop
+            playsinline webkit-playsinline  muted></video>
 
-            <progress :value="progress" max="100"></progress>
+        <!-- MUTE AUDIO BUTTON -->
+        <div class="absolute top-0 p-5">
+            <button @click="toggleMute" class=" bg-black bg-opacity-50 rounded-full p-4 justify-center items-center">
+                <i class="bi text-xl" :class="isMuted ? 'bi-volume-mute' : 'bi-volume-down'"></i>
+            </button>
         </div>
+
+        <!-- PAUSE PLAY BUTTON -->
+        <transition name="fade">
+            <div v-if="userPaused" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125">
+                <button @click="togglePlay" class=" bg-black bg-opacity-50 rounded-full size-14 justify-center items-center ">
+                    <i class="bi bi-play-fill text-2xl"></i>
+                </button>
+            </div>
+        </transition>
+
+        <div class=" flex flex-col gap-3 absolute right-0 top-[55%] -translate-y-1/2 p-5">
+            <button class=" bg-black bg-opacity-50 rounded-full p-4 justify-center items-center">
+                <i class="bi bi-shop text-xl"></i>
+            </button>
+            <button class=" bg-black bg-opacity-50 rounded-full p-4 justify-center items-center">
+                <i class="bi bi-share text-xl"></i>
+            </button>
+        </div>
+
+        <!-- PRODUCT AND DESCRIPTION -->
+        <div class="absolute flex flex-col gap-2 bottom-[0px] left-[0px] right-[0px] p-5 bottom-part">
+            <span>Product Name</span>
+            <span class=" font-bold text-2xl">NGN Product Price</span>
+            <span>product description...</span>
+            <UButton
+            color="green"
+            variant="solid"
+            class=" w-full justify-center p-3 mb-4"
+            label="Buy"
+            />
+            <!-- VID PROGRESS BAR -->
+            <div>
+                <UProgress color="green" size="sm" :value="progress" :max="100" />
+            </div>
+        </div>
+
+
+       <!--  <div class="absolute bottom-[10px] left-[10px] right-[10px] flex items-center">
+            
+        </div> -->
     </div>
 </template>
 
@@ -44,8 +81,14 @@ export default {
                 video.play().catch((err) => {
                     console.error('Error playing video:', err);
                 });
+
+                // testing auto unmute.....
+                video.muted = false;
+                this.isMuted = false;
             } else {
                 video.pause();
+                video.muted = true;
+                this.isMuted = true;
             }
         },
     },
@@ -92,7 +135,7 @@ export default {
 
 <style scoped>
 .video-reel {
-    height: 100vh;
+    height: 100%;
     scroll-snap-align: start;
     position: relative;
 }
@@ -103,21 +146,30 @@ export default {
     object-fit: cover;
 }
 
-.controls {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 button {
     padding: 5px 10px;
 }
 
-progress {
-    width: 70%;
+.bottom-part{
+    background: rgb(7,104,184);
+    background: linear-gradient(180deg, rgba(7,104,184,0) 0%, rgba(0,0,0,1) 100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease-in-out, visibility 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+    visibility: visible;
 }
 </style>

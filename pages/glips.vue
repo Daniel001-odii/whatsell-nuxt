@@ -1,16 +1,14 @@
 <template>
-   <!-- TEST COMPONENT STARTS HERE -->
-<!-- GROK - WORKS!   -->
-<div class="reels-container">
-    <GlipComponent
+\<div class="reels-container">
+    <!-- <GlipComponent
       v-for="(video, index) in videos"
       :key="index"
       :video-src="video"
+    /> -->
+    <ReelsContainer
+    :videos="videos"
     />
-  </div>
-
-  <!-- <GlipComponent :videos="videos"/> -->
-<!-- TEST COMPONENT ENDS HERE -->
+</div>
 
     <!-- <div> -->
         <h1>From Shops youre following</h1>
@@ -100,16 +98,12 @@ const videos = [
   const response = await $fetch(`${config.public.apiBase}/products`)
   return response.products // Extracting the nested products array
 }) */
+
+const glips_modal = ref(true);
 </script>
 
 <style scoped>
-.reels-container {
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  position: fixed;
-  z-index: 999999;
-  top: 0px;
-}
+
+/* @apply h-[95vh] overflow-y-auto fixed z-[9] top-[0] left-1/2 -translate-x-1/2  w-full md:w-fit */
 
 </style>
