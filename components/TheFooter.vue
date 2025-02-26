@@ -26,7 +26,7 @@
 
 
       <!-- Categories Section -->
-      <div class="flex flex-col gap-3 flex-1">
+      <!-- <div class="flex flex-col gap-3 flex-1">
         <h3 class="text-lg font-semibold mb-2">Categories</h3>
         <ul class=" space-y-2">
           <li>Electronics & Gadgets</li>
@@ -45,10 +45,10 @@
           <li>Baby Products</li>
           <li>Travel & Luggage</li>
         </ul>
-      </div>  
+      </div>  --> 
 
       <!-- Quick Links Section -->
-      <div class="flex flex-col gap-3 flex-1">
+      <!-- <div class="flex flex-col gap-3 flex-1">
         <h3 class="text-lg font-semibold mb-2">Quick Links</h3>
         <ul class=" space-y-2">
           <li>Market</li>
@@ -62,7 +62,7 @@
           <li>FAQ's</li>
           <li>Help</li>
         </ul>
-      </div>
+      </div> -->
 
       <!-- Contact Us Section -->
       <div class="flex flex-col gap-3 flex-1">
