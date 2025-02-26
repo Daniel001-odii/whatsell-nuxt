@@ -3,7 +3,7 @@
         <div v-if="loading_user" class= " flex gap-3 p-3 rounded-md h-[150px] mt-12">
             <USkeleton class="min-w-[150px] h-full md:w-[200px] md:h-[120px]" :ui="{ background: 'dark:bg-gray-700' }" />
             <div class=" flex flex-col gap-3">
-                <USkeleton class="w-[250px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
+                <USkeleton class="w-[200px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
                 <USkeleton class="w-[100px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
                 <USkeleton class="w-[80px] h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
             </div>
