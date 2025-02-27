@@ -24,6 +24,7 @@
     "@yeger/vue-masonry-wall": "^5.0.18",
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
+    "gsap": "^3.12.7",
     "naija-state-local-government": "^1.1.2",
     "radix-vue": "^1.9.14",
     "vue-advanced-cropper": "^2.8.9",

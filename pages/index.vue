@@ -5,19 +5,20 @@
 <div class=" min-h-screen md:p-0">
 
 <!-- HERO CAROUSEL -->
-<UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3" arrows>
-  <img :src="item" class="w-full !max-h-[800px]" draggable="false">
+<!-- <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
+  <img :src="item" class="w-full " draggable="false">
 </UCarousel>
-
+ -->
+<HeroSection/>
 
 <!-- all categories.... -->
 <h2 class=" font-bold mt-12">Explore Our Categories</h2>
 <!-- {{ categories }} -->
-<div class=" flex flex-row gap-3 overflow-x-auto mt-3">
+<div class=" flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
   <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
-  class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-800 rounded-xl font-bold">{{ category.category }}</NuxtLink>
+  class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">{{ category.category }}</NuxtLink>
  <!--  <NuxtLink 
   target="_blank"
   :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
@@ -27,7 +28,17 @@
 
 <!-- best deals for your 2morrow -->
 <h2 class=" font-bold mt-12">Best Deals for you today</h2>
-<div class=" flex flex-row flex-wrap gap-3">
+<div v-if="loading" class=" mt-12 flex flex-wrap gap-3">
+            <!-- dummy product card -->
+            <div v-for="card in 10"
+                class=" flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md">
+                <USkeleton class="w-full h-[50%]" :ui="{ background: 'dark:bg-gray-700' }" />
+                <USkeleton class="w-[80%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+                <USkeleton class="w-full h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
+                <USkeleton class="w-[70%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            </div>
+        </div>
+<div v-else class=" flex flex-row flex-wrap gap-3">
     <MasonryWall
     :items="products"
     :ssr-columns="1"
@@ -55,7 +66,7 @@
   <ShopCard 
   v-for="(shop, index) in shops"
   :key="index"
-  :header_image="shop.headerImage"
+  :header_image="shop?.headerImage"
   :name="shop?.name"
   :category="shop?.category"
   :image_url="shop?.profile?.image_url"
@@ -130,9 +141,12 @@ const items = [
 
 const config = useRuntimeConfig();
 
+const loading = ref(false);
 // Fetch and extract only the `products` array
 const { data: products, error: products_error } = await useAsyncData('products', async () => {
-  const response = await $fetch(`${config.public.apiBase}/products`)
+  loading.value = true;
+  const response = await $fetch(`${config.public.apiBase}/products`);
+  loading.value = false;
   return response.products // Extracting the nested products array
 })
 
@@ -240,6 +254,20 @@ onMounted(() => {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.cat_box {
+  overflow: auto;
+  /* or scroll */
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer and Edge */
+}
+
+.cat_box::-webkit-scrollbar {
+  display: none;
+  /* For Chrome, Safari, and newer Edge */
 }
 
 </style>

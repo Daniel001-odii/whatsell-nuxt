@@ -24,7 +24,7 @@
             name: String,
             category: String,
             image_url: String,
-            header_image: String,
+            header_image: Array,
             location: String,
         }
     }

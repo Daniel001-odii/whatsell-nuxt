@@ -1,7 +1,15 @@
 <template>
     <div class="video-reel flex justify-center items-center bg-black" ref="videoContainer">
-        <video ref="video" class="max-w-[400px]" :src="videoSrc" @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop
+        <video ref="video" class="max-w-[400px]" :src="videoSrc" 
+        @waiting="isLoading = true"
+        @canplay="isLoading = false"
+        @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop
             playsinline webkit-playsinline></video>
+
+        <!-- VIDEO LOADING -->
+        <div v-if="isLoading" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125">
+           <span>loading...</span>
+        </div>
 
 
         <!-- VIDEO VOERLAYS HERE -->
@@ -14,6 +22,7 @@
                 </button>
             </div>
         </transition>
+        
 
         <!-- PRODUCT AND DESCRIPTION -->
         <div class="absolute flex flex-col gap-2 bottom-[0px] left-[0px] right-[0px] p-5 bottom-part text-white">
@@ -122,6 +131,7 @@ export default {
             observer: null,
             des_expanded: false,
             isMuted: false,
+            isLoading: true,
         };
     },
     computed: {

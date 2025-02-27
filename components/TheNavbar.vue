@@ -1,4 +1,27 @@
 <template>
+    <!-- CREDIT ALERT -->
+    <UModal v-model="low_credits_modal" :ui="{ width: 'w-[400px]' }">
+        <UCard>
+            <template #header>
+                <h1 class=" font-bold text-xl text-app_green">Low credits alert</h1>
+            </template>
+
+            <div class=" flex flex-col gap-3 justify-center items-center text-center py-6">
+                <img src="../assets/images/low_credit.png" class=" w-[200px]" />
+                <span class=" font-bold text-lg">You are running low on credits</span>
+                <small>Top up your wallet to continue enjoying our services</small>
+            </div>
+
+            <div class=" flex justify-between">
+                <UButton label="Cancel" variant="outline" color="gray" class="p-3" @click="low_credits_modal = false" />
+
+                <UButton color="green" variant="solid" class="p-3" label="Top-up now" @click="[navigateTo('/account/subscriptions'), low_credits_modal = false]" />
+            </div>
+        </UCard>
+    </UModal>
+
+
+
     <!-- USER SESSION EXPIRED -->
     <div class="border-b border-gray-300 dark:border-gray-600">
 
@@ -341,13 +364,14 @@ const toggleMenu = () => {
 // get user details...
 const has_alerts = ref(false);
 
-
+const low_credits_modal = ref(false);
 const getUserDetails = async () => {
   loading.value = true;
   try {
     const res = await useNuxtApp().$apiFetch(`/user`); // Headers are handled by the plugin
     user.value = res.user;
     credits.value = res.credits;
+    res.credits <= 5 ? (low_credits_modal.value = true) : (low_credits_modal.value = false);
     has_alerts.value = !user.value.email_verification?.is_verified || user.value.is_on_hold;
   } catch (error) {
     console.log("Couldn't get user: ", error);
