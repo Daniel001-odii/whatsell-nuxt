@@ -251,7 +251,7 @@
     
 
     <div v-if="user"
-        class="pt-4 w-full flex flex-row justify-center items-center dark:border-gray-600 sticky top-0 mx-auto border-t mb-4">
+        class=" px-3 pt-4 w-full flex flex-row justify-center items-center dark:border-gray-600 sticky top-0 mx-auto border-t mb-4">
         <form @submit.prevent="handleSearch()"
             class="flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
             <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-2 outline-none w-full"
@@ -415,11 +415,23 @@ const isLikesPage = computed(() => {
 });
 
 const handleSearch = () => {
-    if (searchQuery.value) {
-        router.push(`/search?q=${searchQuery.value}`);
-    }
-};
+    if (!searchQuery.value.trim()) return;
+  
+  try {
+      console.log("searching...")
+    // Navigate to the results page with query and results as route params
+    
+    router.push({
+      path: '/search',
+      query: { find: searchQuery.value }, // Passing results through state (optional, depending on your use case)
+    });
 
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+  } finally {
+    loading.value = false;
+  }
+};
 
 
 

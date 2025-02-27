@@ -23,9 +23,49 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      script: [
-        {}
-      ]
-    }
+      title: 'WhatSell Online Store', // Default title
+      meta: [
+        // Standard SEO meta tags
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'Discover the best deals and shop your favorite products on WhatSell. Join our community and enjoy exclusive offers and updates.' },
+        { name: 'keywords', content: 'WhatSell, online store, e-commerce, shopping, deals, offers' },
+        { name: 'author', content: 'WhatSell' },
+        { name: 'robots', content: 'index, follow' },
+
+        // Open Graph / Facebook
+        { property: 'og:type', content: 'website' },
+        { property: 'og:url', content: 'https://whatsell.store' },
+        { property: 'og:title', content: 'WhatSell Online Store' },
+        { property: 'og:description', content: 'Discover the best deals and shop your favorite products on WhatSell. Join our community and enjoy exclusive offers and updates.' },
+        { property: 'og:image', content: 'https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png' },
+
+        // Twitter
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:url', content: 'https://whatsell.store' },
+        { name: 'twitter:title', content: 'WhatSell Online Store' },
+        { name: 'twitter:description', content: 'Discover the best deals and shop your favorite products on WhatSell. Join our community and enjoy exclusive offers and updates.' },
+        { name: 'twitter:image', content: 'https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png' },
+      ],
+      link: [
+        // Favicon
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        // Google Fonts: Poppins
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap',
+        },
+      ],
+      style: [
+        // Apply Poppins as the default font globally
+        {
+          children: `
+            body {
+              font-family: 'Poppins', sans-serif;
+            }
+          `,
+        },
+      ],
+    },
   },
 })
