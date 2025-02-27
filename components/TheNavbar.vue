@@ -81,14 +81,14 @@
                         <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
                             :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
                             <UAvatar 
-                            :chip-color="!user?.email_verification?.is_verified ? 'green':''"
+                            :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
                             chip-text="" 
                             chip-position="top-right"
                                 :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
                                     <UAvatar 
-                                   :chip-color="!user?.email_verification?.is_verified ? 'green':''"
+                                   :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
                                     chip-text=""
                                         chip-position="top-right" :alt="user?.username.toUpperCase()" />
                                     <div class="flex flex-col text-left -gap-1">

@@ -17,6 +17,7 @@
     "vue3-carousel-nuxt": "^1.1.5"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
     "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
     "@pinia/nuxt": "^0.10.1",

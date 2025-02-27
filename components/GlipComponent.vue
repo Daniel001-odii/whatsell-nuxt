@@ -1,7 +1,7 @@
 <template>
-    <div class="video-reel" ref="videoContainer">
-        <video ref="video" :src="videoSrc" @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop playsinline
-            webkit-playsinline></video>
+    <div class="video-reel flex justify-center items-center bg-black" ref="videoContainer">
+        <video ref="video" class="max-w-[400px]" :src="videoSrc" @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop
+            playsinline webkit-playsinline></video>
 
 
         <!-- VIDEO VOERLAYS HERE -->
@@ -20,13 +20,10 @@
             <span>{{ glip.name }}</span>
             <span class=" font-bold text-2xl">NGN {{ glip.price?.toLocaleString() }}</span>
             <div class=" flex flex-col">
-            <div class=" w-[80%] text-wrap" v-html="productDescription()"></div>
-            <UButton 
-              v-if="glip.description.length > 50"
-              class=" !w-fit"
-              color="green"
-              @click="des_expanded = !des_expanded" 
-              :label="des_expanded ? 'see less':'see more'" variant="link"/>
+                <div class=" w-[80%] text-wrap" v-html="productDescription()"></div>
+                <UButton v-if="glip.description.length > 50" class=" !w-fit" color="green"
+                    @click="des_expanded = !des_expanded" :label="des_expanded ? 'see less' : 'see more'"
+                    variant="link" />
             </div>
 
             <UButton color="green" variant="solid" class=" w-full justify-center !p-3 mb-4" label="Buy" />
@@ -59,7 +56,7 @@
                     </button>
 
                     <!-- VISIT SHOP -->
-                    <NuxtLink :to="`/shops/${shop.name}`">
+                    <NuxtLink :to="`/shops/${glip?.shop?.name}`">
                         <button class="  rounded-full p-4 justify-center items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                 <g fill="none" stroke="#ffffff" stroke-width="1.5">
@@ -80,7 +77,7 @@
                     </NuxtLink>
 
                     <!-- SHARE -->
-                    <button class=" rounded-full p-4 justify-center items-center">
+                    <button class=" rounded-full p-4 justify-center items-center" @click="shareGlip">
                         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                             <g fill="none" stroke="#ffffff" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -109,13 +106,12 @@ export default {
             type: String,
             required: true,
         },
-         glip: {
+        glip: {
             type: Object,
             required: true,
         },
         shop: {
             type: Object,
-            required: true,
         }
     },
     data() {
@@ -139,6 +135,11 @@ export default {
             if (newVal) {
                 video.play().catch((err) => {
                     console.error('Error playing video:', err);
+                });
+                navigateTo({
+                    query: {
+                    id: this.glip._id,
+                    },
                 });
             } else {
                 video.pause();
@@ -188,9 +189,43 @@ export default {
             } else {
                 return this.glip.description.slice(0, 50) + '...';
             }
+        },
+
+        async shareGlip() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: "Hi, check out this glip!",
+                        text: `${this.glip.name}`,
+                        url: window.location.href, // Current page URL
+                    });
+                    console.log("Shared successfully");
+                } catch (error) {
+                    console.error("Error sharing:", error);
+                }
+            } else {
+                alert("Your browser does not support the Web Share API.");
+            }
         }
     },
 };
+
+/* const shareShop = async () => {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Hi, check this Shop on whatsell!",
+        text: `${shop.value.category}`,
+        url: window.location.href, // Current page URL
+      });
+      console.log("Shared successfully");
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  } else {
+    alert("Your browser does not support the Web Share API.");
+  }
+}; */
 </script>
 
 <style scoped>
@@ -201,9 +236,9 @@ export default {
 }
 
 .video-reel video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    /* width: 100%;
+    height: 100%;*/
+    object-fit: cover; 
 }
 
 button {

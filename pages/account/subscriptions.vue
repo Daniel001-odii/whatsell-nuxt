@@ -14,7 +14,7 @@
       <div class=" text-orange-500 flex flex-col text-center" v-if="payment_success == null">
         <span class="font-bold text-2xl">Payment processing</span>
         <div class="p-4 mt-2">
-          <SpinnerComponent />
+          <TheSpinner />
         </div>
 
       </div>
