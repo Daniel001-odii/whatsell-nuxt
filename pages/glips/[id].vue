@@ -11,7 +11,7 @@
     <!-- </div> -->
     <!-- </div> -->
     <div
-        class=" bg-black fixed border-t top-0 md:top-[80px] left-0 border-b-4 border-green-500 h-[95%] md:h-full w-full flex justify-center items-center">
+        class=" bg-black fixed border-t top-0 left-0 border-b-4 border-green-500 h-[95%] md:h-full w-full flex justify-center items-center z-10">
         <UButton
         @click="useRouter().push('/glips')"
         color="green" class="absolute top-5 left-5 z-10 rounded-full" icon="material-symbols:chevron-left"
@@ -53,7 +53,7 @@ const { data: glips, error: glips_error } = await useAsyncData(`glips`, async ()
       { name: "twitter:image", content: glips.value[0]?.thumbnail || "https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png" },
       { name: "twitter:title", content: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title" },
       { name: "twitter:description", content: glips.value[0]?.description || "Default glip Description" }, 
-      
+
     ],
   });
 
