@@ -493,7 +493,7 @@ True tone
 <script setup>
 const glips_modal = ref(false);
 const char_size = 500;
-const currentTab = ref(1);
+const currentTab = ref(0);
 const current_slide = ref(1);
 const product_category = ref('');
 const product = reactive({

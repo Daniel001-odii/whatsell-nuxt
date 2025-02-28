@@ -38,7 +38,7 @@
                 <USkeleton class="w-[70%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
             </div>
         </div>
-<div v-else class=" flex flex-row flex-wrap gap-3">
+<div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
     <MasonryWall
     :items="products"
     :ssr-columns="1"

@@ -163,7 +163,7 @@ import heroImage3 from '@/assets/images/hero/hero_image_3.jpg';
     /* background-color: #ff6f61; */
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s, background-color 0.3s;
   }
@@ -177,13 +177,13 @@ import heroImage3 from '@/assets/images/hero/hero_image_3.jpg';
     flex: 1;
     display: flex;
     justify-content: flex-end;
+    width: 400px;
+    height: 250px;
   }
   
   .hero-img {
-    width: 400px;
-    height: 250px;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); */
   }
   </style>

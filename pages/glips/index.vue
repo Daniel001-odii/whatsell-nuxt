@@ -5,6 +5,7 @@
         <ReelsContainer :glips="currrent_glip" :is-open="glip_preview_modal" @close="glip_preview_modal = false" />
     </div>
 
+    <!-- {{ currrent_glip?.glips[0]?._id }} -->
     <!-- <div> -->
     <h1 class=" font-bold text-lg">From Shops youre following</h1>
     <div class=" flex overflow-x-auto py-3 gap-3">
@@ -19,10 +20,12 @@
             <span class=" text-sm text-white absolute bottom-5">New glip</span>
         </div>
 
-
+        <!-- @click="openGlipPreview(item)" -->
         <!-- GLIPS LIST -->
-        <div v-for="item in grouped_glips" @click="openGlipPreview(item)"
-            :Style="`background-image: url(${item?.shop?.profile?.image_url})`"
+        <div v-if="user && user.account_type == 'seller'" v-for="item in grouped_glips" 
+       
+        @click="useRouter().push(`/glips/${item?.glips[0]?._id}`)"
+            :style="`background-image: url(${item?.shop?.profile?.image_url})`"
             class=" bg-center bg-no-repeat bg-cover overflow-hidden relative min-w-[130px] w-[130px] h-[200px] flex justify-center items-center rounded-lg bg-gray-500 ">
             <div class=" h-full w-full bg-black bg-opacity-50"></div>
             <div class=" size-14 rounded-full bg-green-500 overflow-hidden absolute border-4 border-app_green">
@@ -34,7 +37,8 @@
 
     <h2 class=" font-bold text-lg mt-12">Deals from other shops</h2>
     <div class=" flex flex-wrap mt-4 gap-1">
-        <div v-for="item in glips" @click="openGlipPreview(item)"
+        <div v-for="item in glips" 
+         @click="useRouter().push(`/glips/${item?.glips[0]?._id}`)"
             :Style="`background-image: url(${item?.shop?.profile?.image_url})`"
             class=" bg-center bg-no-repeat bg-cover overflow-hidden relative flex-1 md:flex-0 md:max-w-[130px] w-[130px] h-[200px] flex justify-center items-center rounded-lg bg-gray-500 ">
             <div class=" h-full w-full bg-black bg-opacity-50"></div>
@@ -71,6 +75,7 @@ const getUserDetails = async () => {
         console.log(error);
     }
 }
+getUserDetails();
 
 const checkLikes = (product_id) => {
     if (liked_glips.value.includes(product_id)) {
@@ -109,11 +114,12 @@ const glip_preview_modal = ref(false);
 const openGlipPreview = (item) => {
     currrent_glip.value = item;
     console.log("current glip: ", item)
-    glip_preview_modal.value = true;
+    // glip_preview_modal.value = true;
 
 }
 
 const glips_modal = ref(true);
+
 
 
 const getGlipById = async(glip_id)=> {
@@ -130,6 +136,7 @@ const getGlipById = async(glip_id)=> {
         console.log('err getting glip detail: ', err);
     }
 }
+
 
 onMounted(()=>{
     const glip_id_in_route = useRoute().query.id

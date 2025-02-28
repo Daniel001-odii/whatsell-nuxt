@@ -1,14 +1,12 @@
 <template>
     <div class="video-reel flex justify-center items-center bg-black" ref="videoContainer">
-        <video ref="video" class="max-w-[400px]" :src="videoSrc" 
-        @waiting="isLoading = true"
-        @canplay="isLoading = false"
-        @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop
+        <video ref="video" class="max-w-[400px]" :src="videoSrc" @waiting="isLoading = true"
+            @canplay="isLoading = false" @click="togglePlay" @timeupdate="updateProgress" @error="handleError" loop
             playsinline webkit-playsinline></video>
 
         <!-- VIDEO LOADING -->
         <div v-if="isLoading" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125">
-           <span>loading...</span>
+            <span>loading...</span>
         </div>
 
 
@@ -22,7 +20,7 @@
                 </button>
             </div>
         </transition>
-        
+
 
         <!-- PRODUCT AND DESCRIPTION -->
         <div class="absolute flex flex-col gap-2 bottom-[0px] left-[0px] right-[0px] p-5 bottom-part text-white">
@@ -146,9 +144,26 @@ export default {
                 video.play().catch((err) => {
                     console.error('Error playing video:', err);
                 });
+                // useRouter().push(`/glips/${this.glip._id}`);
+
+                // USE SEO FOR ALL GLIPS>>>
+                // this.glip?.video_url.split('/').pop().split('?')[0];
+                useHead({
+                    title: `${this.glip?.name} - NGN${this.glip?.price.toLocaleString()}` || "Default glip Title",
+                    meta: [
+                        { name: 'description', content: this.glip?.description || 'Default description' },
+                        { property: "og:title", content: `${this.glip?.name} - NGN${this.glip?.price.toLocaleString()}` || "Default glip Title" },
+                        { property: "og:description", content: this.glip?.description || "Default glip Description" },
+                        { property: "og:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${this.glip?.video_url.split('/').pop().split('?')[0]}.jpg` },
+                        { property: "og:type", content: "glip" },
+                        { property: "og:url", content: `https://wha-sell.vercel.app/glips/${useRoute().params.id}` },
+                        { name: "twitter:card", content: "summary_large_image" },
+                        { name: "twitter:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${this.glip?.video_url.split('/').pop().split('?')[0]}.jpg` },
+                    ],
+                });
                 navigateTo({
                     query: {
-                    id: this.glip._id,
+                        id: this.glip._id,
                     },
                 });
             } else {
@@ -248,7 +263,7 @@ export default {
 .video-reel video {
     /* width: 100%;
     height: 100%;*/
-    object-fit: cover; 
+    object-fit: cover;
 }
 
 button {
