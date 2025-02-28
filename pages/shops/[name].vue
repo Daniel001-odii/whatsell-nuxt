@@ -94,8 +94,7 @@
             size="lg" label="Listings" 
             class=" flex-1 justify-center"/>
             <UButton
-            disabled
-            @click="currentTab = 1"
+            @click="[currentTab = 1, getShopGlips(shop._id)]"
             :variant="currentTab == 1 ? 'solid':'ghost'" 
             :color="shop.is_boosted ? 'purple':'green'"
             icon="heroicons:video-camera"
@@ -155,6 +154,15 @@
             </div>
 
           </div>
+          <div v-if="currentTab === 1" class="h-[500px] overflow-y-auto flex flex-wrap w-full gap-3">
+            <USkeleton v-if="loading_glips" v-for="glip in 10" class=" flex-1 w-[130px] h-[200px] min-w-[130px]"
+            :ui="{ background: 'dark:bg-gray-700' }" />
+            <GlipCard
+            v-else
+            :item="item"
+            v-for="item in glips"
+            />
+          </div>
           
         </div>
 
@@ -174,7 +182,6 @@ const glipsModal = ref(false);
 const loading = ref(false);
 const currentTab = ref(0);
 const products = ref([]);
-const glips = ref([]);
 const user = ref('');
 const shopId = ref('');
 const shopRating = ref(4);
@@ -365,6 +372,19 @@ const items_allowed = [
     }
   }]
 ]
+
+const glips = ref([]);
+const loading_glips = ref(false)
+const getShopGlips = async(shop_id)=>{
+  loading_glips.value = true;
+  try{
+    const res = await useNuxtApp().$apiFetch(`/products/glips/${shop_id}/all`);
+    glips.value = res.glips
+  }catch(err){
+    console.log('err getting glips: ', err);
+  }
+  loading_glips.value = false;
+}
   
   // Set meta tags dynamically (before page is rendered)
   useHead({

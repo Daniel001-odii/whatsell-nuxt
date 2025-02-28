@@ -6,7 +6,7 @@
 
         <!-- VIDEO LOADING -->
         <div v-if="isLoading" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125">
-            <span>loading...</span>
+            <TheSpinner/>
         </div>
 
 
@@ -33,7 +33,10 @@
                     variant="link" />
             </div>
 
-            <UButton color="green" variant="solid" class=" w-full justify-center !p-3 mb-4" label="Buy" />
+            <!-- BUY BUTTON -->
+            <a :href="glip?.shop?.owner?.phone ? `https://wa.me/${glip?.shop?.owner?.phone}/?text=${wa_message_text}`:'#'" >
+                <UButton v-if="glip?.shop?.owner?.phone" color="green" variant="solid" class=" w-full justify-center !p-3 mb-4" label="Buy" />
+            </a>
             <!-- VID PROGRESS BAR -->
             <div class=" relative">
                 <div class=" flex flex-col-reverse gap-4 absolute bottom-[80px] right-0 items-center">
@@ -130,6 +133,7 @@ export default {
             des_expanded: false,
             isMuted: false,
             isLoading: true,
+            wa_message_text: `${window.location.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${this.glip?.shop?.owner?.username}, I want to buy this product`,
         };
     },
     computed: {
@@ -144,7 +148,7 @@ export default {
                 video.play().catch((err) => {
                     console.error('Error playing video:', err);
                 });
-                useRouter().push(`/glips/${this.glip._id}`);
+                // useRouter().push(`/glips/${this.glip._id}`);
 
                 // USE SEO FOR ALL GLIPS>>>
                 // this.glip?.video_url.split('/').pop().split('?')[0];
@@ -161,11 +165,11 @@ export default {
                         { name: "twitter:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${this.glip?.video_url.split('/').pop().split('?')[0]}.jpg` },
                     ],
                 }); */
-               /*  navigateTo({
+                navigateTo({
                     query: {
                         id: this.glip._id,
                     },
-                }); */
+                });
             } else {
                 video.pause();
             }

@@ -155,6 +155,56 @@
   </UCard>
 </UModal>
 
+<!-- CANCEL SHOP BOOST MODAL -->
+<UModal
+  :ui="{ container: 'flex items-center justify-center min-h-screen' }"
+    v-model="cancel_boost_modal"
+    prevent-close
+  >
+  <UCard>
+    <template #header>
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+          >
+            Cancel Your shop boosting
+          </h3>
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-x-mark-20-solid"
+            class="-my-1"
+            @click="cancel_boost_modal = false"
+          />
+        </div>
+    </template>
+    <div class="text-center">
+      <span class=" text-3xl font-bold">Are you sure you want to cancel your shop boosting?</span>
+      <span>Canceling your shop boosting means your shop will be removed from highlights and customers will stop seeing your shop visibly</span>
+    </div>
+    <template #footer>
+      <div class=" flex items-center justify-end gap-6">
+        <UButton
+          variation="soft"
+          color="gray"
+          label="Cancel"
+          @click="cancel_boost_modal = false"
+          />
+          <UButton
+          @click="[boostShop, cancel_boost_modal = false]"
+          :loading="boosting_shop"
+          loading-icon="svg-spinners:12-dots-scale-rotate"
+          variant="solid"
+          color="purple"
+          label="Cancel Boost"
+          />
+      </div>
+
+     
+    </template>
+  </UCard>
+</UModal>
+
 <!-- SHOP IMAGE MODAL -->
 <UModal
     :ui="{ container: 'flex items-center justify-center min-h-screen' }"
@@ -381,10 +431,25 @@ v-model="product_edit_modal" prevent-close>
 
 
   <!-- PROUDUCTS -->
-  <div class="divider-tab">
-      My Products
+  <div class="flex p-3 gap-3 border dark:border-gray-600 rounded-lg my-4">
+      <UButton
+      @click="[currentTab = 'listings', useRoute().query.tab = 'listings']"
+      label="Listings"
+      color="green"
+      icon="hugeicons:delivery-box-01"
+      :variant="currentTab == 'listings' ? 'solid':'soft'"
+      />
+      <UButton
+      @click="[currentTab = 'glips', useRoute().query.tab = 'glips', getShopGlips(shop.id)]"
+      label="GLips"
+      color="green"
+      icon="hugeicons:video-replay"
+      :variant="currentTab == 'glips' ? 'solid':'soft'"
+      />
   </div>
-  <div class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
+
+  <!-- LISTINGS -->
+  <div v-if="currentTab == 'listings'" class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
     
     <UTable
     :loading="loading_products"
@@ -441,6 +506,40 @@ v-model="product_edit_modal" prevent-close>
     </div>
   </div>
 
+  <!-- GLIPS -->
+  <div v-if="currentTab == 'glips'" class="border dark:border-gray-600 rounded-lg flex flex-col p-5">
+    <UTable
+    :loading="loading_glips"
+    :loading-state="{ icon: 'svg-spinners:bars-rotate-fade', label: 'Loading Your Products...' }"
+    :progress="{ color: 'primary', animation: 'carousel' }"
+    :rows="glips" 
+    :columns="glip_columns"
+    >
+      <template #thumbnail-data="{ row }">
+        <img :src="row.thumbnail" alt="product_image" class=" size-[30px] rounded-lg"/>
+      </template>
+
+      <template #actions-data="{ row }">
+        <UDropdown :items="glip_items(row)">
+          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+        </UDropdown>
+      </template>
+      <template #empty-state>
+        <div class="flex flex-col items-center justify-center py-6 gap-3">
+          <span class="italic text-sm">No GLips Yet!</span>
+          <NuxtLink to="/sell">
+            <UButton 
+            icon="material-symbols:box-add-sharp"
+            label="Add Product" 
+            color="green"
+            />
+          </NuxtLink>
+        </div>
+      </template>
+    </UTable>
+  </div>
+
+  <!-- {{shop}} -->
   <!-- SPECIAL ACTIONS -->
     <!-- PROUDUCTS -->
   <div class="divider-tab">
@@ -462,7 +561,7 @@ v-model="product_edit_modal" prevent-close>
           <span>Increase your shop visibility for a specific time frame</span>
         </div>
         <UToggle
-          @click="boost_shop_modal = true"
+          @click.prevent="shop.is_boosted ? (cancel_boost_modal = true) : (boost_shop_modal = true)"
           color="green"
           on-icon="i-heroicons-check-20-solid"
           off-icon="i-heroicons-x-mark-20-solid"
@@ -516,13 +615,19 @@ definePageMeta({
 })
 import { useRouter } from "vue-router";
 
+const currentTab = ref('listings');
+const cancel_boost_modal = ref(false);
+
+
 const shop_boost_duration = ref(1);
 const router = useRouter();
 const shop = reactive({
+  id: '',
   name: '',
   category: '',
   description: '',
-  image: ''
+  image: '',
+  is_boosted: '',
 })
 const columns = [
   {
@@ -533,8 +638,29 @@ const columns = [
   label: 'Name',
   sortable: true
 }, {
-  key: 'category',
-  label: 'Category',
+  key: 'views',
+  label: 'Views',
+  sortable: true
+}, {
+  key: 'price',
+  label: 'Price',
+  sortable: true
+},{
+  key: 'actions'
+}
+];
+
+const glip_columns = [
+  {
+    key: 'thumbnail',
+  },
+{
+  key: 'name',
+  label: 'Name',
+  sortable: true
+}, {
+  key: 'views',
+  label: 'Views',
   sortable: true
 }, {
   key: 'price',
@@ -575,6 +701,28 @@ const items = row => [
     }
   }]
 ]
+
+const glip_items = row => [
+  [
+  {
+    label: 'view',
+    icon: 'hugeicons:delivery-view-02',
+    click: () => {
+      router.push(`/glips/${row._id}?id=${row._id}`)
+    }
+  }],
+  [{
+    label: 'Delete',
+    iconClass: 'text-red-500 dark:text-red-500',
+    class: 'text-red-500 dark:text-red-500',
+    icon: 'hugeicons:delete-02',
+    click: () => {
+      deleteGlip(row._id);
+      getShopGlips(shop.id)
+    }
+  }]
+]
+
 
 const boost_shop_modal = ref(false);
 
@@ -630,10 +778,12 @@ const getUserDetails = async()=> {
     try {
         const res = await useNuxtApp().$apiFetch(`/user`);
         user.value = res.user;
+        shop.id = res.user.shop._id;
         shop.name = res.user.shop.name;
         shop.category = res.user.shop.category;
         shop.description = res.user.shop.description;
         shop.image = res.user.shop.profile.image_url;
+        shop.is_boosted = res.user.shop.is_boosted;
         getShopProducts(res.user.shop.name);
         console.log('user: ', res)
     } catch (error) {
@@ -713,6 +863,7 @@ const boostShop = async()=>{
     });
     boost_shop_modal.value = false;
     toast.add({ title: res.message });
+    getUserDetails();
     console.log("boost shop ", res);
   }catch(err){
     // toast.add({ title: err.res.message });
@@ -748,6 +899,42 @@ const createNewShop = async()=>{
   new_shopping.value = false;
 }
 
+
+const glips = ref([]);
+const loading_glips = ref(false)
+const getShopGlips = async(shop_id)=>{
+  loading_glips.value = true;
+  try{
+    const res = await useNuxtApp().$apiFetch(`/products/glips/${shop_id}/all`);
+    glips.value = res.glips
+    console.log('glips: ', res)
+  }catch(err){
+    console.log('err getting glips: ', err);
+  }
+  loading_glips.value = false;
+}
+
+const deleteGlip = async(glip_id)=>{
+  try{
+    const res =  await useNuxtApp().$apiFetch(`/products/glips/${glip_id}/delete`, 
+      {
+        method: 'DELETE'
+      }
+    );
+    alert('glip deleted!')
+  }catch(err){
+    console.log('err :', err)
+  }
+}
+
+onMounted(()=>{
+/*   if(useRoute().query.tab == 'listings'){
+    currentTab.value = 'listings'
+  } else if(useRoute().query.tab == 'glips'){
+    currentTab.value = 'glips'
+  } */
+})
+  
 </script>
 
 <style scoped>

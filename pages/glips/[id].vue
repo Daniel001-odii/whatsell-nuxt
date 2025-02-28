@@ -34,7 +34,7 @@ const route = useRoute();
 const config = useRuntimeConfig();
 
 const { data: glips, error: glips_error } = await useAsyncData(`glips`, async () => {
-    const response = await $fetch(`${config.public.apiBase}/products/glips/details/${route.query.id || route.params.id}`);
+    const response = await $fetch(`${config.public.apiBase}/products/glips/details/${route.query.id}`);
     console.log('glips details: ', response.result);
     return response.result; // Extracting the nested glips array
 });

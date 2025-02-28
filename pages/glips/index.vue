@@ -6,6 +6,7 @@
     </div> -->
 
     <div>
+        {{ fullPath }}
         <div v-if="user">
             <h1 class=" font-bold text-lg">From Shops youre following</h1>
             <div class=" flex overflow-x-auto py-3 gap-3">
@@ -25,7 +26,8 @@
                 <!-- GLIPS FROM SHOPS YOU ARE FOLLOWING LIST -->
                 <USkeleton v-if="loading_fl_glips" v-for="glip in 5" class=" min-w-[130px] w-[130px] h-[200px]"
                     :ui="{ background: 'dark:bg-gray-700' }" />
-                <div v-for="item in grouped_glips" @click="useRouter().push(`/glips/${item?.glips[0]?._id}`)"
+                <div v-for="item in grouped_glips"
+                    @click="useRouter().push(`/glips/${item?.glips[0]?._id}?id=${item?.glips[0]?._id}`)"
                     :style="`background-image: url(${item?.shop?.profile?.image_url})`"
                     class=" bg-center bg-no-repeat bg-cover overflow-hidden relative min-w-[130px] w-[130px] h-[200px] flex justify-center items-center rounded-lg bg-gray-500 ">
                     <div class=" h-full w-full bg-black bg-opacity-50"></div>
@@ -42,11 +44,7 @@
             <USkeleton v-if="loading_glips" v-for="glip in 10" class=" flex-1 w-[130px] h-[200px] min-w-[130px]"
                 :ui="{ background: 'dark:bg-gray-700' }" />
 
-            <div v-for="item in glips" @click="useRouter().push(`/glips/${item?._id}`)"
-                :Style="`background-image: url(${item?.thumbnail || item?.shop?.profile?.image_url})`"
-                class=" bg-center bg-no-repeat bg-cover overflow-hidden relative flex-1 md:flex-0 md:max-w-[130px] w-[130px] h-[200px] min-w-[130px] flex justify-center items-center rounded-lg bg-gray-500 ">
-                <div class=" absolute bottom-2 text-sm left-0 px-2 text-white [text-shadow:_0_2px_8px_#000]">{{ item?.name }}</div>
-            </div>
+            <GlipCard v-else :item="item" v-for="item in glips" />
 
             <!-- GLIP WITH SHOP PICTURE USED B4 -->
             <!-- <div v-for="item in glips" @click="useRouter().push(`/glips/${item?._id}`)"
@@ -64,6 +62,7 @@
 </template>
 
 <script setup>
+
 const currrent_glip = ref(null);
 const user = ref(null);
 const credits = ref(0);
@@ -128,13 +127,13 @@ const openGlipPreview = (item) => {
 
 }
 
-const getAllGlips = async ()=> {
+const getAllGlips = async () => {
     loading_glips.value = true;
-    try{
+    try {
         const res = await useNuxtApp().$apiFetch('/products/glips/all');
         glips.value = res.glips;
         console.log('all glips: ', res);
-    }catch(err){
+    } catch (err) {
         console.log('err getting all glips: ', err);
     }
     loading_glips.value = false;

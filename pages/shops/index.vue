@@ -70,7 +70,7 @@
 
         
 
-        <!-- BEST SELLING -->
+        <!-- BOOSTED SHOPS -->
         <h2 class=" font-bold mt-12">Boosted shops</h2>
         <div class=" flex flex-wrap gap-3 mt-3">
             <BoostedShopCard

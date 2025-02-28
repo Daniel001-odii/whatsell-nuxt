@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   // If the user is not logged in, redirect them to the login page
-  if (!token && (to.path === '/account')) {
+  if (!token && (to.path === '/account' || to.path === '/sell' || to.path === '/likes')) {
     return navigateTo('/login'); // Redirect to the login page
   }
 
