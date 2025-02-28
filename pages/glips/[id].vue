@@ -46,11 +46,14 @@ const { data: glips, error: glips_error } = await useAsyncData(`glips`, async ()
       { name: 'description', content: glips.value[0]?.description || 'Default description' },
       { property: "og:title", content: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title" },
       { property: "og:description", content: glips.value[0]?.description || "Default glip Description" },
-      { property: "og:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${glips.value[0]?.video_url.split('/').pop().split('?')[0]}.jpg` },
+      { property: "og:image", content: glips.value[0]?.thumbnail || "https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png" },
       { property: "og:type", content: "glip" },
       { property: "og:url", content: `https://wha-sell.vercel.app/glips/${route.params.id}` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${glips.value[0]?.video_url.split('/').pop().split('?')[0]}.jpg` },
+      { name: "twitter:image", content: glips.value[0]?.thumbnail || "https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png" },
+      { name: "twitter:title", content: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title" },
+      { name: "twitter:description", content: glips.value[0]?.description || "Default glip Description" }, 
+      
     ],
   });
 

@@ -102,7 +102,7 @@
             <small>Click below to see your product page</small>
         </div>
         <div class=" flex relative justify-center items-center">
-            <img :src="thumbnail" class=" w-[150px] rounded-md"/>
+            <img :src="product.thumbnail" class=" w-[150px] rounded-md"/>
             <span class="absolute text-white text-xl">
                 <i class="bi bi-play-circle-fill"></i>
             </span>
@@ -509,6 +509,7 @@ const product = reactive({
 
     // FOR GLIPS...
     video_url: '',
+    thumbnail: '',
 });
 
 
@@ -572,7 +573,8 @@ const uploadVideoFile = async (file)=> {
             method: 'POST'
         });
         console.log("video uploaded: ", res);
-        product.video_url = res.result;
+        product.video_url = res.videoUrl;
+        product.thumbnail = res.thumbnailUrl;
     }catch(err){
         console.log("err uploading video: ", err);
     }

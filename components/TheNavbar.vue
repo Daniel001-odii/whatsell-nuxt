@@ -106,14 +106,15 @@
                             <UAvatar 
                             :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
                             chip-text="" 
-                            chip-position="top-right"
+                            :chip-position="user?.email_verification?.is_verified ? 'top-right':''"
                                 :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
                                     <UAvatar 
                                    :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
                                     chip-text=""
-                                        chip-position="top-right" :alt="user?.username.toUpperCase()" />
+                                    :chip-position="user?.email_verification?.is_verified ? 'top-right':''" 
+                                    :alt="user?.username.toUpperCase()" />
                                     <div class="flex flex-col text-left -gap-1">
                                         <span class="font-bold">{{ user?.username }}</span>
                                         <small :class="!user?.email_verification?.is_verified
@@ -124,13 +125,13 @@
                                                 class="bi bi-exclamation-circle-fill"></i>
                                             {{ user?.email }}</small>
                                     </div>
-                                    <button class="absolute -right-[130px]">
+                                    <!-- <button class="absolute -right-[150px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
                                             viewBox="0 0 24 24">
                                             <path fill="currentColor"
                                                 d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
                                         </svg>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </template>
                             <template #theme>
