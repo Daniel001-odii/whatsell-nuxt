@@ -40,19 +40,19 @@ const { data: glips, error: glips_error } = await useAsyncData(`glips`, async ()
 });
 
   // Set meta tags dynamically (before page is rendered)
- /*  useHead({
+  useHead({
     title: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title",
     meta: [
       { name: 'description', content: glips.value[0]?.description || 'Default description' },
       { property: "og:title", content: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title" },
       { property: "og:description", content: glips.value[0]?.description || "Default glip Description" },
-    //   { property: "og:image", content: glips.value[0]?.images[0] || "https://example.com/default-image.jpg" },
+      { property: "og:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${glips.value[0]?.video_url.split('/').pop().split('?')[0]}.jpg` },
       { property: "og:type", content: "glip" },
       { property: "og:url", content: `https://wha-sell.vercel.app/glips/${route.params.id}` },
       { name: "twitter:card", content: "summary_large_image" },
-    //   { name: "twitter:image", content: glips.value[0]?.images[0] || "https://example.com/default-image.jpg" }
+      { name: "twitter:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${glips.value[0]?.video_url.split('/').pop().split('?')[0]}.jpg` },
     ],
-  }); */
+  });
 
 </script>
 

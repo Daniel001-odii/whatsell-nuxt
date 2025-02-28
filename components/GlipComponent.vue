@@ -144,11 +144,11 @@ export default {
                 video.play().catch((err) => {
                     console.error('Error playing video:', err);
                 });
-                // useRouter().push(`/glips/${this.glip._id}`);
+                useRouter().push(`/glips/${this.glip._id}`);
 
                 // USE SEO FOR ALL GLIPS>>>
                 // this.glip?.video_url.split('/').pop().split('?')[0];
-                useHead({
+               /*  useHead({
                     title: `${this.glip?.name} - NGN${this.glip?.price.toLocaleString()}` || "Default glip Title",
                     meta: [
                         { name: 'description', content: this.glip?.description || 'Default description' },
@@ -160,12 +160,12 @@ export default {
                         { name: "twitter:card", content: "summary_large_image" },
                         { name: "twitter:image", content: `https://res.cloudinary.com/djyopolxa/video/upload/so_5,vc_auto,w_800/${this.glip?.video_url.split('/').pop().split('?')[0]}.jpg` },
                     ],
-                });
-                navigateTo({
+                }); */
+               /*  navigateTo({
                     query: {
                         id: this.glip._id,
                     },
-                });
+                }); */
             } else {
                 video.pause();
             }
