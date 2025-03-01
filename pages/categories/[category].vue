@@ -6,7 +6,15 @@
             <div class=" absolute h-full w-full bg-black bg-opacity-40 top-0"></div>
         </div>
 
+        <h2 class=" font-bold mt-12">Explore Other Categories</h2>
+        <div class=" flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
+            <NuxtLink target="_blank" :to="`/categories/${category.category}`" v-for="(category, index) in categories"
+                class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">
+                {{ category.category }}</NuxtLink>
+        </div>
 
+
+        <h2 class=" font-bold mt-12">Products under this category</h2>
         <div v-if="loading" class=" mt-12 flex flex-wrap gap-3">
             <!-- dummy product card -->
             <div v-for="card in 10"
@@ -27,8 +35,8 @@
             </MasonryWall>
         </div>
 
-        <div class= " flex flex-col justify-center items-center text-xl text-center mt-24">
-            <img src="../../assets/images/went_wrong.png" alt="no items" class=" h-[220px] mb-3"/>
+        <div v-else class=" flex flex-col justify-center items-center text-xl text-center mt-24">
+            <img src="../../assets/images/went_wrong.png" alt="no items" class=" h-[220px] mb-3" />
             <span class=" font-bold"> No Items in this category yet</span>
             <small>checkout <NuxtLink to="/" class=" text-underline text-blue-500">other categories</NuxtLink></small>
         </div>
@@ -63,7 +71,7 @@ getProductsByCategory();
 
 
 const checkLikes = (product_id) => {
-    if(liked_products.value.includes(product_id)){
+    if (liked_products.value.includes(product_id)) {
         return true;
     } else {
         return false;
@@ -73,7 +81,7 @@ const checkLikes = (product_id) => {
 const user = ref(null);
 const credits = ref(0);
 const liked_products = ref([]);
-const getUserDetails = async()=> {
+const getUserDetails = async () => {
     try {
         const res = await useNuxtApp().$apiFetch(`/user`);
         user.value = res.user;
@@ -85,6 +93,19 @@ const getUserDetails = async()=> {
     }
 }
 getUserDetails();
+
+
+const categories = ref([]);
+const getcats = async () => {
+    try {
+        const response = await useNuxtApp().$apiFetch(`/categories_image`);
+        categories.value = response.data;
+        console.log("cats: ", response);
+    } catch (error) {
+        console.log("erro getting categories: ", error);
+    }
+};
+getcats();
 
 </script>
 

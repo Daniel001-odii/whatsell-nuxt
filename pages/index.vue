@@ -155,7 +155,7 @@ const { data: products, error: products_error } = await useAsyncData('products',
 })
 
 const categories = ref([]);
-async function getcats() {
+const getcats = async() => {
   try {
     const response = await useNuxtApp().$apiFetch(`/categories_image`);
     categories.value = response.data;
@@ -277,17 +277,5 @@ onMounted(() => {
   background-position: center;
 }
 
-.cat_box {
-  overflow: auto;
-  /* or scroll */
-  scrollbar-width: none;
-  /* For Firefox */
-  -ms-overflow-style: none;
-  /* For Internet Explorer and Edge */
-}
 
-.cat_box::-webkit-scrollbar {
-  display: none;
-  /* For Chrome, Safari, and newer Edge */
-}
 </style>

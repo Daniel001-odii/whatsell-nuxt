@@ -178,7 +178,7 @@
           />
         </div>
     </template>
-    <div class="text-center">
+    <div class="text-center flex flex-col gap-2">
       <span class=" text-3xl font-bold">Are you sure you want to cancel your shop boosting?</span>
       <span>Canceling your shop boosting means your shop will be removed from highlights and customers will stop seeing your shop visibly</span>
     </div>
@@ -191,7 +191,7 @@
           @click="cancel_boost_modal = false"
           />
           <UButton
-          @click="[boostShop, cancel_boost_modal = false]"
+          @click="[boostShop(), cancel_boost_modal = false]"
           :loading="boosting_shop"
           loading-icon="svg-spinners:12-dots-scale-rotate"
           variant="solid"
@@ -562,7 +562,7 @@ v-model="product_edit_modal" prevent-close>
         </div>
         <UToggle
           @click.prevent="shop.is_boosted ? (cancel_boost_modal = true) : (boost_shop_modal = true)"
-          color="green"
+          color="purple"
           on-icon="i-heroicons-check-20-solid"
           off-icon="i-heroicons-x-mark-20-solid"
           v-model="shop.is_boosted"

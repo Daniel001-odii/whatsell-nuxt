@@ -133,7 +133,7 @@ export default {
             des_expanded: false,
             isMuted: false,
             isLoading: true,
-            wa_message_text: `${window.location.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${this.glip?.shop?.owner?.username}, I want to buy this product`,
+            wa_message_text: `${window?.location?.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${this.glip?.shop?.owner?.username}, I want to buy this product`,
         };
     },
     computed: {

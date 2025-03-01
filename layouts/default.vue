@@ -2,7 +2,7 @@
     <div class=" dark:bg-[#21262d]">
         <TheNavbar/>
         <div class=" container mx-auto p-3 min-h-screen">
-            <!-- <div class=" font-bold text-xl capitalize">{{ useRoute().name }}</div> -->
+            <div class=" font-bold text-xl capitalize my-4">{{ useRoute().name }}</div>
             <slot/>
         </div>
         <TheFooter/>

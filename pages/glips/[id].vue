@@ -13,7 +13,7 @@
     <div
         class=" bg-black fixed border-t top-0 left-0 border-b-4 border-green-500 h-[95%] md:h-full w-full flex justify-center items-center z-10">
         <UButton
-        @click="useRouter().push('/glips')"
+        @click="useRouter().back()"
         color="green" class="absolute top-5 left-5 z-10 rounded-full" icon="material-symbols:chevron-left"
             variant="soft" />
         <div class="md:w-fit w-full overflow-y-auto md:h-[800px] h-full inner">
@@ -48,7 +48,7 @@ const { data: glips, error: glips_error } = await useAsyncData(`glips`, async ()
       { property: "og:description", content: glips.value[0]?.description || "Default glip Description" },
       { property: "og:image", content: glips.value[0]?.thumbnail || "https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png" },
       { property: "og:type", content: "glip" },
-      { property: "og:url", content: `https://wha-sell.vercel.app/glips/${route.params.id}` },
+      { property: "og:url", content: `https://wha-sell.vercel.app/glips/${route.params.id}?id=${route.query.id}` },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: glips.value[0]?.thumbnail || "https://raw.githubusercontent.com/Daniel001-odii/WhaSell/refs/heads/main/src/assets/images/whatsell_email_header.png" },
       { name: "twitter:title", content: `${glips.value[0]?.name} - NGN${glips.value[0]?.price.toLocaleString()}` || "Default glip Title" },
