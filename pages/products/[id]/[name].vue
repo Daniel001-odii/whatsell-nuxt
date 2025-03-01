@@ -369,7 +369,7 @@ const getSimilarProducts = async () => {
 const no_auth_like = ref(false);
 
 
-const wa_message_text = `${window.location.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${product?.shop?.owner?.username}, I want to buy this product`;
+const wa_message_text = `${window?.location?.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${product?.shop?.owner?.username}, I want to buy this product`;
 
 
 // Set meta tags dynamically (before page is rendered)
