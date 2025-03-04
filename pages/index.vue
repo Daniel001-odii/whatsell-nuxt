@@ -130,6 +130,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  name: 'Market'
+})
 import { ref } from 'vue'
 import { useRoute, useAsyncData } from '#imports';
 import axios from 'axios'

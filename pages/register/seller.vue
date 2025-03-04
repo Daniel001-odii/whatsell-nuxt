@@ -485,7 +485,7 @@ const loading = ref(false);
 const form_error = ref(false);
 const error_message = ref("");
 const image_cropper = ref(false);
-const slide = ref(2);
+const slide = ref(0);
 
 const phone_loading = ref(false);
 const email_loading = ref(false);

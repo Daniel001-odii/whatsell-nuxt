@@ -33,8 +33,13 @@
         <!-- SHOPS NEAR YOU -->
         <h2 class=" font-bold mt-12">Shops near you</h2>
         <!-- -{{ followed_shops }} -->
-        <div class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
-            <ShopCard
+        <div v-if="loading_followed_shops" class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+        </div>
+        <div v-else class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
+            <ShopCard 
             v-for="shop in followed_shops"
             :header_image="shop.headerImage"
             :name="shop.name"
@@ -43,8 +48,8 @@
             :location="shop?.profile?.location"
             />
             <div v-if="followed_shops.length === 0" class=" p-12 flex flex-col items-center justify-center w-full gap-3">
-                <i class="bi bi-shop text-4xl"></i>
-                <span>youre not following any shops yet</span>
+                <i class="bi bi-exclamation-circle text-4xl"></i>
+                <span>Not available at this time</span>
             </div>
         </div>
 
@@ -52,7 +57,12 @@
         
         <!-- SHOPS YOU FOLLOW -->
         <h2 class=" font-bold mt-12">Shops you follow</h2>
-        <div class=" flex flex-row gap-3 mt-3  overflow-x-auto">
+        <div v-if="loading_followed_shops" class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+        </div>
+        <div v-else class=" flex flex-row gap-3 mt-3  overflow-x-auto">
             <ShopCard
             v-for="shop in followed_shops"
             :name="shop.name"
@@ -62,7 +72,7 @@
             />
 
             <div v-if="followed_shops.length === 0" class=" p-12 flex flex-col items-center justify-center w-full gap-3">
-                <i class="bi bi-shop text-4xl"></i>
+                <i class="bi bi-exclamation-circle text-4xl"></i>
                 <span>youre not following any shops yet</span>
             </div>
         </div>
@@ -72,14 +82,19 @@
 
         <!-- BOOSTED SHOPS -->
         <h2 class=" font-bold mt-12">Boosted shops</h2>
-        <div class=" flex flex-wrap gap-3 mt-3">
+        <div v-if="loading_boosted_shops" class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+            <USkeleton  class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
+        </div>
+        <div v-else class=" flex flex-wrap gap-3 mt-3">
             <BoostedShopCard
             v-for="shop in boosted_shops"
             :name="shop.name"
             :category="shop.category"
             :image_url="shop?.profile?.image_url"
             />
-            <div v-if="!loading_boosted_shops && boosted_shops.length == 0" class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">There are limited slots available,<br/> be the first to take an available slot. <br/> 
+            <div v-if="boosted_shops.length == 0" class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">There are limited slots available,<br/> be the first to take an available slot. <br/> 
                 <NuxtLink v-if="user.shop" :to="`/account/shop`">
                     <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">Boost Your Shop Now! <i class="bi bi-rocket-fill ml-3"></i></button>
                 </NuxtLink>
@@ -103,7 +118,7 @@
             :location="shop?.profile?.location"
             />
             <div v-if="all_shops.length === 0" class=" p-12 flex flex-col items-center justify-center w-full gap-3">
-                <i class="bi bi-shop text-4xl"></i>
+                <i class="bi bi-exclamation-circle text-4xl"></i>
                 <span>No shops available</span>
             </div>
         </div>
@@ -140,7 +155,7 @@ const getFollowedShops = async()=> {
     }catch(err){
         console.log("error getting followed shops: ", err);
     }
-    loading_followed_shops.value = true;
+    loading_followed_shops.value = false;
 }
 getFollowedShops();
 

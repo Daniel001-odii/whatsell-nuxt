@@ -101,7 +101,7 @@
                     variant="ghost"/>
                 </span>
                 <div class=" font-bold text-2xl text-nowrap">NGN 
-                    <span v-if="show_balance">17,200</span>
+                    <span v-if="show_balance">0.00</span>
                     <span v-else>****</span>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                     variant="ghost"/>
                 </span>
                 <div class=" font-bold text-2xl text-nowrap">NGN 
-                    <span v-if="show_escrow">10,000</span>
+                    <span v-if="show_escrow">0.00</span>
                     <span v-else>****</span>
                 </div>
             </div>
@@ -129,7 +129,7 @@
             <div class="flex gap-3 flex-wrap">
                 <UButton disabled color="red" class="p-5 flex-1 text-nowrap" icon="hugeicons:circle-arrow-down-02"
                     label="Deposit Funds" />
-                <UButton @click="withdrawal_modal = true" color="green" class="p-5 flex-1 text-nowrap"
+                <UButton disabled @click="withdrawal_modal = true" color="green" class="p-5 flex-1 text-nowrap"
                     icon="hugeicons:circle-arrow-up-02" label="withdraw Funds" />
             </div>
         </div>

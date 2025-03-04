@@ -47,7 +47,7 @@
       <template #header>
        <span class=" text-xl font-bold"> {{ product.name }}</span>
       </template>
-      <div v-html="formattedDecription" class=" max-h-[500px] overflow-y-auto"></div>
+      <div v-html="formattedDecription" class=" max-h-[500px] overflow-y-auto inner"></div>
     </UCard>
   </UModal>
 
@@ -171,9 +171,10 @@
         <div class="text-3xl font-bold mt-3 flex flex-col">
           <span>NGN {{ product.price.toLocaleString() }}</span>
           <span class="text-sm" v-if="product.negotiable">Negotiable</span>
-          <small class="text-sm" v-else>Non-negotiable</small>
+          
           <span v-if="product.delivery_fee" class="text-blue-500 text-[20px]">+ NGN{{
             product.delivery_fee.toLocaleString() }} delivery fee</span>
+            <small class="text-sm" v-else>Non-negotiable</small>
         </div>
 
         <div class="flex flex-col gap-2 mt-5">
@@ -427,7 +428,7 @@ onMounted(() => {
 </script>
 
 
-<style>
+<style scoped>
 .extra_img_indicator {
   background: rgb(7, 104, 184);
   background: linear-gradient(-270deg, rgba(7, 104, 184, 0) 0%, rgba(0, 0, 0, 1) 56%);
@@ -436,5 +437,23 @@ onMounted(() => {
 
 .action_btns {
   @apply px-5 text-center flex-1 dark:border-gray-600 flex gap-2 justify-center items-center hover:text-app_green hover:bg-opacity-10 mt-3
+}
+
+.inner {
+  scroll-snap-type: y mandatory;
+}
+
+.inner {
+  overflow: auto;
+  /* or scroll */
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer and Edge */
+}
+
+.inner::-webkit-scrollbar {
+  display: none;
+  /* For Chrome, Safari, and newer Edge */
 }
 </style>

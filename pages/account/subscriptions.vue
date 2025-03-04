@@ -28,18 +28,18 @@
 
   <div>
     <UModal v-model="top_up_modal" prevent-close :ui="{ container: 'flex items-center justify-center min-h-screen' }">
-      <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+      <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }" >
         <template #header>
           <div class="flex items-center justify-between">
             <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
               Topup
             </h3>
-            <UButton @click="top_up_modal" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
+            <UButton @click="top_up_modal = false" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
               class="-my-1" />
           </div>
         </template>
 
-        <div class="flex flex-row flex-wrap mt-4 gap-5">
+        <div class="flex flex-row flex-wrap mt-4 gap-5 max-h-[400px] overflow-y-auto">
           <label :for="'default_coins' + index" v-for="(coin, index) in default_coins"
             :class="coins_input == coin ? 'border-green-500 text-green-700 bg-green-100' : ' dark:border-gray-600'"
             class="flex flex-col flex-1 justify-center items-center bg-gray-100 dark:bg-transparent border rounded-md p-3 px-6 cursor-pointer min-w-[150px] hover:border-green-500"
