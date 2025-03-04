@@ -123,7 +123,7 @@
   <div class=" p-5">
     <!-- SHOP AREA -->
     <div class=" flex flex- gap-3 p-3 border dark:border-gray-600 mb-3 rounded-xl">
-      <div class=" size-[100px]">
+      <div class=" size-[100px] overflow-hidden">
         <img :src="product?.shop?.profile?.image_url" @click="useRouter().push(`/shops/${product?.shop?.name}`)" class=" rounded-md cursor-pointer" />
       </div>
 
