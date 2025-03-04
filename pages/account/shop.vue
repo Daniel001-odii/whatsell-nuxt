@@ -849,6 +849,7 @@ const handleUploadSuccess = (image) => {
   shop.image = image;
   updateShop();
   image_cropper.value = false;
+  window.location.reload();
 };
 
 const boosting_shop = ref(false);

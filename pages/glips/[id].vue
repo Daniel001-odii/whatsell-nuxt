@@ -11,7 +11,7 @@
     <!-- </div> -->
     <!-- </div> -->
     <div
-        class=" bg-black fixed border-t top-0 left-0  h-[93%] md:h-full w-full flex justify-center items-center z-10">
+        class=" bg-black fixed border-t top-0 left-0  h-[90%] md:h-full w-full flex justify-center items-center z-10">
         <UButton
         @click="useRouter().push('/glips')"
         color="green" class="absolute top-5 left-5 z-10 rounded-full" icon="material-symbols:chevron-left"
