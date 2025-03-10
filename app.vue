@@ -9,17 +9,28 @@
 </div>
 </template>
 <script setup>
-
+useHead({
+  script: [
+    {
+      async: true,
+      src: "https://www.googletagmanager.com/gtag/js?id=G-TNS7YNXYQB"
+    },
+    {
+      innerHTML: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-TNS7YNXYQB');
+      `,
+      type: "text/javascript"
+    }
+  ],
+  __dangerouslyDisableSanitizersByTagID: {
+    'google-analytics': ['innerHTML']
+  }
+});
 </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TNS7YNXYQB"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-TNS7YNXYQB');
-</script>
 
 <style>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
