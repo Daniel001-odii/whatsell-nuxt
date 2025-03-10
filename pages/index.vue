@@ -38,7 +38,7 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="products" :ssr-columns="1" :column-width="130" :gap="10">
+      <MasonryWall :items="products.slice(0,20)" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class=" mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="(item.price).toLocaleString()" :image_url="item.images[0]" :views="item.views"
@@ -55,6 +55,15 @@
         :category="shop?.category" :image_url="shop?.profile?.image_url"
         :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
     </div>
+
+    <div class=" flex flex-col gap-3 justify-center items-center h-[300px]">
+      <p class="text-center">Join whatsell and start selling your products to a wide audience.</p>
+      <NuxtLink to="/register/seller">
+        <button class="rounded-full bg-app_green text-white p-3 px-6 font-bold">Become a Vendor Today!</button>
+      </NuxtLink>
+      <span>Are you a regular buyer? <Nuxtlink to="/register/buyer" class=" underline text-blue-500"> signup</Nuxtlink> and start buying!</span>
+    </div>
+
 
     <!-- BOOSTED SHOPS -->
     <h2 class=" font-bold mt-12">Boosted shops</h2>

@@ -7,7 +7,9 @@
           <div class="hero-text">
             <h1 ref="title" class="title">{{ currentTitle }}</h1>
             <p ref="subtitle" class="subtitle">Shop smarter, live better.</p>
-            <button ref="cta" class="cta-button bg-black">Explore Now</button>
+            <nuxt-link to="/register/seller">
+              <button ref="cta" class="cta-button bg-black">Start Selling</button>
+            </nuxt-link>
           </div>
           <div class="hero-images">
             <img
