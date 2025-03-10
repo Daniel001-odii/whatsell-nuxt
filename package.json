@@ -20,6 +20,7 @@
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/google-gtag": "^1.0.4",
     "@pinia/nuxt": "^0.10.1",
     "@yeger/vue-masonry-wall": "^5.0.18",
     "axios": "^1.7.9",
