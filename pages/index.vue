@@ -65,7 +65,7 @@
     </Carousel> -->
     <UCarousel 
     ref="carouselRef"
-    v-slot="{ item }" :items="shops" class=" mt-3" arrows indicators>
+    v-slot="{ item }" :items="shops" class=" mt-3" arrows>
       <ShopCard
       class=" mr-3"
       :header_image="item?.headerImage" :name="item?.name"
@@ -171,18 +171,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup>s
 definePageMeta({
   name: "Market",
 });
 import { ref } from "vue";
 import { useRoute, useAsyncData } from "#imports";
 import axios from "axios";
-
-import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide, Navigation } from 'vue3-carousel';
-
-
 const carouselRef = ref();
 
 onMounted(() => {

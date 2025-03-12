@@ -1,4 +1,17 @@
 <template>
+      <!-- PRODUCT LIKE -->
+  <UModal v-model="no_auth_like" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
+    <div class="p-12 text-center items-center justify-center flex flex-col gap-3">
+      <h1 class=" text-2xl font-bold">Please login to continue</h1>
+      <img src="../../../assets/images/auth_pages.png" class=" w-[300px]" />
+      <NuxtLink to="/login" class=" w-full">
+        <button class=" bg-app_green text-white p-3 rounded-md w-full">Login</button>
+      </NuxtLink>
+    </div>
+  </UModal>
+
+
+
     <div class="min-w-[125px] md:min-w-0 relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:border-green-500 hover:shadow-md border border-transparent h-fit w-fit">
         <!-- IMAGE -->
         <div class="overflow-hidden rounded-2xl">
@@ -7,6 +20,7 @@
                 <img v-if="!image_url" src="../assets/images/logo/whatsell_gray.png" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer" />
             </NuxtLink>
         </div>
+
 
         <!-- TEXT AND WRITE-UPS -->
         <div class="p-2">
@@ -18,7 +32,7 @@
 
                 <!-- Like Button -->
                 <button v-if="hasLikedButton"
-                    @click="toggleLike"
+                    @click="user ? (toggleLike) : (no_auth_like = !no_auth_like)"
                     :class="[
                         'h-8 w-8 rounded-full bg-white dark:bg-gray-900 dark:border-gray-600 flex justify-center items-center border absolute top-3 right-3',
                         isLiked ? 'border-green-500' : 'border-gray-300'
@@ -51,6 +65,7 @@ const props = defineProps({
     id: String,
     product_price: String,
     image_url: String,
+    user: String,
     views: {
         type: Number,
         default: 0,
@@ -61,6 +76,8 @@ const props = defineProps({
         default: false,
     },
 });
+
+const no_auth_like = ref(false);
 
 const isLiked = ref(props.is_liked);
 
