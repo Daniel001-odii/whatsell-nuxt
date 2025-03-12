@@ -47,12 +47,31 @@
 
     <!-- get all shops -->
     <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
-    <!-- shops: {{ shops }} -->
-    <div class="flex flex-row overflow-x-auto gap-3 mt-3">
+   <!--  <div class="flex flex-row overflow-x-auto gap-3 mt-3">
       <ShopCard v-for="(shop, index) in shops" :key="index" :header_image="shop?.headerImage" :name="shop?.name"
         :category="shop?.category" :image_url="shop?.profile?.image_url"
         :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
     </div>
+ -->
+  <!--   <Carousel v-bind="carousel_config">
+      <Slide v-for="shop in shops" :key="shop._id">
+        <ShopCard :header_image="shop?.headerImage" :name="shop?.name"
+        :category="shop?.category" :image_url="shop?.profile?.image_url"
+        :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
+      </Slide>
+      <template #addons>
+        <Navigation />
+      </template>
+    </Carousel> -->
+    <UCarousel 
+    ref="carouselRef"
+    v-slot="{ item }" :items="shops" class=" mt-3" arrows indicators>
+      <ShopCard
+      class=" mr-3"
+      :header_image="item?.headerImage" :name="item?.name"
+        :category="item?.category" :image_url="item?.profile?.image_url"
+        :location="`${item?.owner?.location?.state} | ${item?.owner?.location?.LGA}`" />
+    </UCarousel>
 
     <div v-if="!user" class="flex flex-col gap-3 justify-center items-center h-[300px]">
       <p class="text-center">
@@ -159,6 +178,24 @@ definePageMeta({
 import { ref } from "vue";
 import { useRoute, useAsyncData } from "#imports";
 import axios from "axios";
+
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide, Navigation } from 'vue3-carousel';
+
+
+const carouselRef = ref();
+
+onMounted(() => {
+  setInterval(() => {
+    if (!carouselRef.value) return
+
+    if (carouselRef.value.page === carouselRef.value.pages) {
+      return carouselRef.value.select(0)
+    }
+
+    carouselRef.value.next()
+  }, 3000)
+})
 
 const items = [
   "https://picsum.photos/1280/720?random=1",
