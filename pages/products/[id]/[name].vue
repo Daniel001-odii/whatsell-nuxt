@@ -195,7 +195,7 @@
         </div>
         <div class="mt-3 flex flex-col gap-2">
           <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
-            @click="proceed_to_buy = !proceed_to_buy">Buy this item</button>
+            @click="user ? (proceed_to_buy = !proceed_to_buy) : (no_auth_like = !no_auth_like)">Buy this item</button>
           <div class=" flex flex-row justify-evenly">
 
             <NuxtLink :to="`/shops/${product?.shop?.name}`" target="_blank" class="action_btns">
@@ -370,7 +370,7 @@ const getSimilarProducts = async () => {
 const no_auth_like = ref(false);
 
 
-const wa_message_text = `${window?.location?.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${product?.shop?.owner?.username}, I want to buy this product`;
+const wa_message_text = `${window?.location?.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${product.value?.shop?.owner?.username}, I want to buy this product`;
 
 
 // Set meta tags dynamically (before page is rendered)

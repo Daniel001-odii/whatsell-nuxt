@@ -1,9 +1,7 @@
 <template>
-
   <ScrollToTop />
 
-  <div class=" min-h-screen md:p-0">
-
+  <div class="min-h-screen md:p-0">
     <!-- HERO CAROUSEL -->
     <!-- <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
   <img :src="item" class="w-full " draggable="false">
@@ -12,11 +10,11 @@
     <HeroSection />
 
     <!-- all categories.... -->
-    <h2 class=" font-bold mt-12">Explore Our Categories</h2>
+    <h2 class="font-bold mt-12">Explore Our Categories</h2>
     <!-- {{ categories }} -->
-    <div class=" flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
+    <div class="flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
       <NuxtLink target="_blank" :to="`/categories/${category.category}`" v-for="(category, index) in categories"
-        class=" flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">
+        class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">
         {{ category.category }}</NuxtLink>
       <!--  <NuxtLink 
   target="_blank"
@@ -26,7 +24,77 @@
     </div>
 
     <!-- best deals for your 2morrow -->
-    <h2 class=" font-bold mt-12">Best Deals for you today</h2>
+    <h2 class="font-bold mt-12">Best Deals for you today</h2>
+    <div v-if="loading" class="mt-12 flex flex-wrap gap-3">
+      <!-- dummy product card -->
+      <div v-for="card in 10"
+        class="flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md">
+        <USkeleton class="w-full h-[50%]" :ui="{ background: 'dark:bg-gray-700' }" />
+        <USkeleton class="w-[80%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+        <USkeleton class="w-full h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
+        <USkeleton class="w-[70%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+      </div>
+    </div>
+    <div v-if="!loading && products.length > 0" class="flex flex-row flex-wrap gap-3">
+      <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
+        <template #default="{ item, index }">
+          <ProductCard class="mt-[15px]" :has-liked-button="true" :id="item._id"
+            :product_price="item.price.toLocaleString()" :image_url="item.images[0]" :views="item.views"
+            :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
+        </template>
+      </MasonryWall>
+    </div>
+
+    <!-- get all shops -->
+    <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
+    <!-- shops: {{ shops }} -->
+    <div class="flex flex-row overflow-x-auto gap-3 mt-3">
+      <ShopCard v-for="(shop, index) in shops" :key="index" :header_image="shop?.headerImage" :name="shop?.name"
+        :category="shop?.category" :image_url="shop?.profile?.image_url"
+        :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
+    </div>
+
+    <div v-if="!user" class="flex flex-col gap-3 justify-center items-center h-[300px]">
+      <p class="text-center">
+        Join whatsell and start selling your products to a wide audience.
+      </p>
+      <NuxtLink to="/register/seller">
+        <button class="rounded-full bg-app_green text-white p-3 px-6 font-bold">
+          Become a Vendor Today!
+        </button>
+      </NuxtLink>
+      <span>Are you a regular buyer?
+        <Nuxtlink to="/register/buyer" class="underline text-blue-500">
+          signup</Nuxtlink>
+        and start buying!
+      </span>
+    </div>
+
+    <!-- BOOSTED SHOPS -->
+    <h2 class="font-bold mt-12">Boosted shops</h2>
+    <div class="flex flex-wrap gap-3 mt-3">
+      <BoostedShopCard v-for="shop in boosted_shops" :name="shop.name" :category="shop.category"
+        :image_url="shop?.profile?.image_url" />
+      <div v-if="!loading_boosted_shops && boosted_shops.length == 0"
+        class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">
+        There are limited slots available,<br />
+        be the first to take an available slot. <br />
+        <NuxtLink v-if="user?.shop" :to="`/account/shop`">
+          <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">
+            Boost Your Shop Now! <i class="bi bi-rocket-fill ml-3"></i>
+          </button>
+        </NuxtLink>
+
+        <NuxtLink v-else to="/account/shop">
+          <button class="rounded-full bg-black text-white p-3 px-6 mt-6 font-bold">
+            Create Your shop
+          </button>
+        </NuxtLink>
+      </div>
+    </div>
+
+    <!-- best deals for your 2morrow -->
+    <h2 class=" font-bold mt-12">Posted previously by vendors</h2>
     <div v-if="loading" class=" mt-12 flex flex-wrap gap-3">
       <!-- dummy product card -->
       <div v-for="card in 10"
@@ -38,7 +106,7 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="products.slice(0,20)" :ssr-columns="1" :column-width="130" :gap="10">
+      <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class=" mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="(item.price).toLocaleString()" :image_url="item.images[0]" :views="item.views"
@@ -47,65 +115,8 @@
       </MasonryWall>
     </div>
 
-    <!-- get all shops -->
-    <h2 class=" font-bold mt-12">Discover Shops Near your location</h2>
-    <!-- shops: {{ shops }} -->
-    <div class=" flex flex-row overflow-x-auto gap-3 mt-3">
-      <ShopCard v-for="(shop, index) in shops" :key="index" :header_image="shop?.headerImage" :name="shop?.name"
-        :category="shop?.category" :image_url="shop?.profile?.image_url"
-        :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
-    </div>
-
-    <div class=" flex flex-col gap-3 justify-center items-center h-[300px]">
-      <p class="text-center">Join whatsell and start selling your products to a wide audience.</p>
-      <NuxtLink to="/register/seller">
-        <button class="rounded-full bg-app_green text-white p-3 px-6 font-bold">Become a Vendor Today!</button>
-      </NuxtLink>
-      <span>Are you a regular buyer? <Nuxtlink to="/register/buyer" class=" underline text-blue-500"> signup</Nuxtlink> and start buying!</span>
-    </div>
-
-
-    <!-- BOOSTED SHOPS -->
-    <h2 class=" font-bold mt-12">Boosted shops</h2>
-    <div class=" flex flex-wrap gap-3 mt-3">
-      <BoostedShopCard v-for="shop in boosted_shops" :name="shop.name" :category="shop.category"
-        :image_url="shop?.profile?.image_url" />
-      <div v-if="!loading_boosted_shops && boosted_shops.length == 0"
-        class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">There are limited slots
-        available,<br /> be the first to take an available slot. <br />
-        <NuxtLink v-if="user?.shop" :to="`/account/shop`">
-          <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">Boost Your Shop Now! <i
-              class="bi bi-rocket-fill ml-3"></i></button>
-        </NuxtLink>
-
-        <NuxtLink v-else to="/account/shop">
-          <button class="rounded-full bg-black text-white p-3 px-6 mt-6 font-bold">Create Your shop</button>
-        </NuxtLink>
-      </div>
-    </div>
-
-    <!-- DISCOUNTS OF THE WEEK -->
-    <!-- <h2 class=" font-bold mt-12">Discounts of the week</h2>
-<div class=" flex flex-row overflow-x-auto gap-3 mt-3">
-  <div v-for="item in 3" class="bg-[#FFEFE0] rounded-md text-black max-w-[350px] flex flex-col h-[400px] overflow-hidden">
-    <div class=" rounded-md p-5 flex flex-col gap-1 h-[50%]">
-      <span>Get</span>
-      <div class=" text-[#A2764C]">
-        <span class=" font-bold text-3xl mr-3">20%</span>
-        <small>Off</small>
-      </div>
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing  praesentium.</p>
-      <button class="rounded-full p-3 bg-[#DBC9B35C]">Start Date - End Date</button>
-    </div>
-    <div class=" h-[50%] bg-red-500 ">
-      <img src="https://picsum.photos/1280/720?random=1" class=" h-full"/>
-    </div>
-  </div>
-</div> -->
-
-
     <!-- FAQ SECTION -->
-    <h2 class=" font-bold mt-12">Services to help you Shop</h2>
+    <h2 class="font-bold mt-12">Services to help you Shop</h2>
     <div class="flex flex-row flex-wrap gap-3 pb-10 mt-3">
       <div
         class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
@@ -113,61 +124,77 @@
           <span class="font-bold text-xl">Frequently Asked Questions</span>
           <p class="mt-2 text-sm">Updates on safe Shopping in our shops</p>
         </div>
-        <div class=" h-[50%] bg-yellow-400 w-full question"></div>
+        <div class="h-[50%] bg-yellow-400 w-full question"></div>
       </div>
 
       <div
         class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
         <div class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full">
           <span class="font-bold text-xl">Navigate WhatSell With Ease</span>
-          <p class="mt-2 text-sm">Updates how you can navigate WhatSell easily</p>
+          <p class="mt-2 text-sm">
+            Updates how you can navigate WhatSell easily
+          </p>
         </div>
-        <div class=" h-[50%] bg-green-400 w-full coins"></div>
+        <div class="h-[50%] bg-green-400 w-full coins"></div>
       </div>
 
       <div
         class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
         <div class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full">
           <span class="font-bold text-xl">Safety Tips for Secure Purchasing</span>
-          <p class="mt-2 text-sm">Get full insight on how to safely buy products on WhatSell</p>
+          <p class="mt-2 text-sm">
+            Get full insight on how to safely buy products on WhatSell
+          </p>
         </div>
-        <div class=" h-[50%] bg-green-800 w-full gaurd"></div>
+        <div class="h-[50%] bg-green-800 w-full gaurd"></div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  name: 'Market'
-})
-import { ref } from 'vue'
-import { useRoute, useAsyncData } from '#imports';
-import axios from 'axios'
+  name: "Market",
+});
+import { ref } from "vue";
+import { useRoute, useAsyncData } from "#imports";
+import axios from "axios";
 
 const items = [
-  'https://picsum.photos/1280/720?random=1',
-  'https://picsum.photos/1280/720?random=2',
-  'https://picsum.photos/1280/720?random=3',
-  'https://picsum.photos/1280/720?random=4',
-  'https://picsum.photos/1280/720?random=5',
-  'https://picsum.photos/1280/720?random=6'
-]
+  "https://picsum.photos/1280/720?random=1",
+  "https://picsum.photos/1280/720?random=2",
+  "https://picsum.photos/1280/720?random=3",
+  "https://picsum.photos/1280/720?random=4",
+  "https://picsum.photos/1280/720?random=5",
+  "https://picsum.photos/1280/720?random=6",
+];
 
 const config = useRuntimeConfig();
 
 const loading = ref(false);
 // Fetch and extract only the `products` array
-const { data: products, error: products_error } = await useAsyncData('products', async () => {
-  loading.value = true;
-  const response = await $fetch(`${config.public.apiBase}/products`);
-  loading.value = false;
-  return response.products // Extracting the nested products array
-})
+const { data: products, error: products_error } = await useAsyncData(
+  "products",
+  async () => {
+    loading.value = true;
+    const response = await $fetch(`${config.public.apiBase}/products`);
+    loading.value = false;
+    return response.products.slice(0,50).reverse(); // Extracting the nested products array
+  }
+);
+
+const { data: prev_products, error: prev_products_error } = await useAsyncData(
+  "prev_products",
+  async () => {
+    loading.value = true;
+    const response = await $fetch(`${config.public.apiBase}/products`);
+    loading.value = false;
+    return response.products.slice(0,10); // Extracting the nested products array
+  }
+);
 
 const categories = ref([]);
-const getcats = async() => {
+const getcats = async () => {
   try {
     const response = await useNuxtApp().$apiFetch(`/categories_image`);
     categories.value = response.data;
@@ -191,8 +218,6 @@ async function getAllShops() {
   shop_loading.value = false;
 }
 
-
-
 const user = ref(null);
 const credits = ref(0);
 const liked_products = ref([]);
@@ -202,11 +227,11 @@ const getUserDetails = async () => {
     user.value = res.user;
     credits.value = res.credits;
     liked_products.value = res.user.liked_products;
-    console.log('user: ', res)
+    console.log("user: ", res);
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const checkLikes = (product_id) => {
   if (liked_products.value.includes(product_id)) {
@@ -216,24 +241,21 @@ const checkLikes = (product_id) => {
   }
 };
 
-
 const loading_boosted_shops = ref(false);
 const boosted_shops = ref([]);
 const getBoostedShops = async () => {
-  loading_boosted_shops.value = true
+  loading_boosted_shops.value = true;
   try {
-    const res = await useNuxtApp().$apiFetch('/shops/boosted/all');
+    const res = await useNuxtApp().$apiFetch("/shops/boosted/all");
     boosted_shops.value = res.shops;
     console.log("boosted shops: ", res);
   } catch (err) {
     console.log("err getting boosted shops: ", err);
   }
-  loading_boosted_shops.value = false
-}
+  loading_boosted_shops.value = false;
+};
+
 getBoostedShops();
-
-
-
 getcats();
 getAllShops();
 getUserDetails();
@@ -241,17 +263,19 @@ getUserDetails();
 // console.log("Fetched products:", products.value)
 // console.log("fetched categories: ", categories.value)
 
-
 const toast = useToast();
 
 const verifyEmail = async (token) => {
   try {
-    const response = await axios.post(`${useRuntimeConfig().public.apiBase}/email_verify`, { token });
+    const response = await axios.post(
+      `${useRuntimeConfig().public.apiBase}/email_verify`,
+      { token }
+    );
     console.log("res from email verifi: ", response);
-    toast.add({ title: response.data.message })
+    toast.add({ title: response.data.message });
   } catch (error) {
     console.log("error from email verifi: ", error);
-    toast.add({ title: error.response.data.message })
+    toast.add({ title: error.response.data.message });
   }
 };
 
@@ -261,31 +285,27 @@ onMounted(() => {
     verifyEmail(token);
   }
 });
-
-
 </script>
 
 <style scoped>
 .question {
-  background: url('../assets/images/questions_yellow.png');
+  background: url("../assets/images/questions_yellow.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .coins {
-  background: url('../assets/images/coins_.png');
+  background: url("../assets/images/coins_.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .gaurd {
-  background: url('../assets/images/gaurd_.png');
+  background: url("../assets/images/gaurd_.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
-
-
 </style>

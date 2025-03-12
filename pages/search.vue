@@ -209,6 +209,6 @@ results.value = useRoute().state?.results || [];
 
 <style scoped>
 .filter_section {
-    @apply flex flex-col p-3 dark:bg-gray-900 border dark:border-gray-600 rounded-md gap-3
+    @apply flex flex-col p-3 dark:bg-gray-900 border dark:border-gray-600 rounded-md gap-3 my-3
 }
 </style>
