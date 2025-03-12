@@ -15,7 +15,8 @@
             <div class=" flex justify-between">
                 <UButton label="Cancel" variant="outline" color="gray" class="p-3" @click="low_credits_modal = false" />
 
-                <UButton color="green" variant="solid" class="p-3" label="Top-up now" @click="[navigateTo('/account/subscriptions'), low_credits_modal = false]" />
+                <UButton color="green" variant="solid" class="p-3" label="Top-up now"
+                    @click="[navigateTo('/account/subscriptions'), low_credits_modal = false]" />
             </div>
         </UCard>
     </UModal>
@@ -40,62 +41,41 @@
                 <div class="flex gap-12 justify-evenly items-center">
                     <div
                         class="flex  font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
-                        <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
-                       
-                            <UButton 
-                            class=" md:hidden"
-                            :color="isHomePage ?'green':'white'"
-                            icon="iconoir:home-simple"
-                            variant="link"
-                            />
+                        <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500' : ''">
+
+                            <UButton class=" md:hidden" :color="isHomePage ? 'green' : 'white'" icon="iconoir:home-simple"
+                                variant="link" />
                             <span class="text-[8px] md:text-sm">Home</span>
                         </NuxtLink>
-                        <NuxtLink to="/shops" class="flex flex-col items-center" :class="isShopsPage ? 'text-green-500':''">
-                            <UButton
-                            class=" md:hidden"
-                            :color="isShopsPage ?'green':'white'"
-                            icon="iconoir:shop-window"
-                            variant="link"
-                            />
+                        <NuxtLink to="/shops" class="flex flex-col items-center"
+                            :class="isShopsPage ? 'text-green-500' : ''">
+                            <UButton class=" md:hidden" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window"
+                                variant="link" />
                             <span class="text-[8px] md:text-sm">Shops</span>
                         </NuxtLink>
-                        <NuxtLink v-if="user.account_type == 'seller'" to="/sell" class="flex flex-col items-center" :class="isSellPage ? 'text-green-500':''">
-                            <UButton
-                            class=" md:hidden"
-                            :color="isSellPage ?'green':'white'"
-                            icon="iconoir:plus-circle-solid"
-                            variant="link"
-                            />
+                        <NuxtLink v-if="user.account_type == 'seller'" to="/sell" class="flex flex-col items-center"
+                            :class="isSellPage ? 'text-green-500' : ''">
+                            <UButton class=" md:hidden" :color="isSellPage ? 'green' : 'white'"
+                                icon="iconoir:plus-circle-solid" variant="link" />
                             <span class="text-[8px] md:text-sm">Sell</span>
                         </NuxtLink>
-                        <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
-                            
-                            <UButton
-                            class=" md:hidden"
-                            :color="isGlipsPage ?'green':'white'"
-                            icon="iconoir:media-video-list"
-                            variant="link"
-                            />
+                        <NuxtLink to="/glips" class="flex flex-col items-center"
+                            :class="isGlipsPage ? 'text-green-500' : ''">
+
+                            <UButton class=" md:hidden" :color="isGlipsPage ? 'green' : 'white'"
+                                icon="iconoir:media-video-list" variant="link" />
                             <span class="text-[8px] md:text-sm">Glips</span>
                         </NuxtLink>
-                        <NuxtLink to="/likes" class="flex flex-col items-center" :class="isLikesPage ? 'text-green-500':''">
-                            <UButton
-                            class=" md:hidden"
-                            :color="isLikesPage ?'green':'white'"
-                            icon="iconoir:thumbs-up"
-                            variant="link"
-                            />
+                        <NuxtLink to="/likes" class="flex flex-col items-center"
+                            :class="isLikesPage ? 'text-green-500' : ''">
+                            <UButton class=" md:hidden" :color="isLikesPage ? 'green' : 'white'" icon="iconoir:thumbs-up"
+                                variant="link" />
                             <span class="text-[8px] md:text-sm">Likes</span>
                         </NuxtLink>
                     </div>
 
-                    <UButton
-                    @click="useRouter().push('/account/shop')"
-                    icon="mingcute:coin-3-fill"
-                    :label="credits.toString()"
-                    color="black"
-                    variant="ghost"
-                    />
+                    <UButton @click="useRouter().push('/account/shop')" icon="mingcute:coin-3-fill"
+                        :label="credits.toString()" color="black" variant="ghost" />
                     <!-- <div div class="flex gap-2 items-center">
                         <img src="../assets/images/coins_group.png" class="w-[35px]" />
                         <span>{{ credits }}</span>
@@ -103,23 +83,20 @@
                     <div>
                         <UDropdown v-if="user" :items="menu_items" :popper="{ placement: 'bottom-start' }"
                             :ui="{ width: 'w-[320px]', background: ' dark:bg-[#21262d]' }">
-                            <UAvatar 
-                            :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
-                            chip-text="" 
-                            :chip-position="user?.email_verification?.is_verified ? 'top-right':''"
+                            <UAvatar :chip-color="user?.email_verification?.is_verified ? 'none' : 'green'" chip-text=""
+                                :chip-position="user?.email_verification?.is_verified ? 'top-right' : ''"
                                 :alt="user?.username.toUpperCase()" />
                             <template #user_contents>
                                 <div class="flex gap-3 items-center justify-center text-[14px] relative">
-                                    <UAvatar 
-                                   :chip-color="user?.email_verification?.is_verified ? 'none':'green'"
-                                    chip-text=""
-                                    :chip-position="user?.email_verification?.is_verified ? 'top-right':''" 
-                                    :alt="user?.username.toUpperCase()" />
+                                    <UAvatar :chip-color="user?.email_verification?.is_verified ? 'none' : 'green'"
+                                        chip-text=""
+                                        :chip-position="user?.email_verification?.is_verified ? 'top-right' : ''"
+                                        :alt="user?.username.toUpperCase()" />
                                     <div class="flex flex-col text-left -gap-1">
                                         <span class="font-bold">{{ user?.username }}</span>
                                         <small :class="!user?.email_verification?.is_verified
-                                                ? 'text-orange-500'
-                                                : ''
+                                            ? 'text-orange-500'
+                                            : ''
                                             ">
                                             <i v-if="!user?.email_verification?.is_verified"
                                                 class="bi bi-exclamation-circle-fill"></i>
@@ -136,8 +113,8 @@
                             </template>
                             <template #theme>
                                 <button class="" :icon="isDark
-                                        ? 'i-heroicons-moon-20-solid'
-                                        : 'i-heroicons-sun-20-solid'
+                                    ? 'i-heroicons-moon-20-solid'
+                                    : 'i-heroicons-sun-20-solid'
                                     " color="gray" variant="link" aria-label="Theme" @click="isDark = !isDark">
                                     Theme
                                 </button>
@@ -183,92 +160,72 @@
                     </form>
                 </div>
 
-           
+
 
                 <!-- auth buttons -->
                 <div class="flex flex-col md:flex-row-reverse items-start md:items-center font-bold gap-3 mt-4 md:mt-0">
                     <NuxtLink to="/login" class="w-full md:w-fit">
-                        <UButton 
-                        color="gray"
-                        label="Login"
-                        class=" font-bold"
-                        variant="link"/>
+                        <UButton color="gray" label="Login" class=" font-bold" variant="link" />
                     </NuxtLink>
 
                     <NuxtLink to="/register" class="w-full md:w-fit">
-                        <UButton 
-                        color="gray"
-                        class="text-nowrap font-bold"
-                        label="Join now"
-                        variant="link"/>
+                        <UButton color="gray" class="text-nowrap font-bold" label="Join now" variant="link" />
                     </NuxtLink>
 
                     <UButton class="" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
                         " color="gray" variant="link" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
-                    
-                   
+
+
                 </div>
             </div>
 
-            
+
             <!-- mobile nav links -->
             <div
                 class="md:ml-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
-                <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500':''">
-                    <UButton 
-                    class=" md:hidden"
-                    :color="isHomePage ?'green':'white'"
-                    icon="iconoir:home-simple"
-                    variant="link"
-                    />
+                <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500' : ''">
+                    <UButton class=" md:hidden" :color="isHomePage ? 'green' : 'white'" icon="iconoir:home-simple"
+                        variant="link" />
                     <span class="text-[8px] md:text-sm">Home</span>
                 </NuxtLink>
-                <NuxtLink to="/shops" class="flex flex-col items-center" :class="isShopsPage ? 'text-green-500':''">
-                    <UButton
-                    class=" md:hidden"
-                    :color="isShopsPage ?'green':'white'"
-                    icon="iconoir:shop-window"
-                    variant="link"
-                    />
+                <NuxtLink to="/shops" class="flex flex-col items-center" :class="isShopsPage ? 'text-green-500' : ''">
+                    <UButton class=" md:hidden" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window"
+                        variant="link" />
                     <span class="text-[8px] md:text-sm">Shops</span>
                 </NuxtLink>
-                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500':''">
-                    <UButton
-                    class=" md:hidden"
-                    :color="isGlipsPage ?'green':'white'"
-                    icon="iconoir:media-video-list"
-                    variant="link"
-                    />
+                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500' : ''">
+                    <UButton class=" md:hidden" :color="isGlipsPage ? 'green' : 'white'" icon="iconoir:media-video-list"
+                        variant="link" />
                     <span class="text-[8px] md:text-sm">Glips</span>
                 </NuxtLink>
             </div>
-            
 
-            
+
+
         </div>
 
-        
-  
-    
 
-    <div v-if="user"
-        class=" px-3 pt-4 w-full flex flex-row justify-center items-center dark:border-gray-600 sticky top-0 mx-auto border-t mb-4">
-        <form @submit.prevent="handleSearch()"
-            class="flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
-            <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-2 outline-none w-full"
-                type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
-            <div class="flex flex-row-reverse justify-between items-center gap-6 flex-1 px-4">
-                <button @click="openFilter" type="button" class="flex md:hidden">
-                    <i class="bi bi-filter"></i>
-                </button>
-                <button type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
+
+
+
+        <div v-if="user"
+            class=" px-3 pt-4 w-full flex flex-row justify-center items-center dark:border-gray-600 sticky top-0 mx-auto border-t mb-4">
+            <form @submit.prevent="handleSearch()"
+                class="flex flex-row w-full lg:w-[600px] md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
+                <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-2 outline-none w-full"
+                    type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
+                <div class="flex flex-row-reverse justify-between items-center gap-6 flex-1 px-4">
+                    <button @click="openFilter" type="button" class="flex md:hidden">
+                        <i class="bi bi-filter"></i>
+                    </button>
+                    <button type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </div>
-
-</div>
 </template>
 
 <script setup>
@@ -313,13 +270,13 @@ const menu_items = [
                 router.push("/account/wallet");
             },
         },
-      /*   {
-            label: "Location",
-            icon: "material-symbols:location-on-outline",
-            click: () => {
-                router.push("/account/");
-            },
-        }, */
+        /*   {
+              label: "Location",
+              icon: "material-symbols:location-on-outline",
+              click: () => {
+                  router.push("/account/");
+              },
+          }, */
         {
             label: "Invoice",
             icon: "material-symbols:insert-page-break",
@@ -367,26 +324,26 @@ const has_alerts = ref(false);
 
 const low_credits_modal = ref(false);
 const getUserDetails = async () => {
-  loading.value = true;
-  try {
-    const res = await useNuxtApp().$apiFetch(`/user`); // Headers are handled by the plugin
-    user.value = res.user;
-    credits.value = res.credits;
-    res.credits <= 5 ? (low_credits_modal.value = true) : (low_credits_modal.value = false);
-    has_alerts.value = !user.value.email_verification?.is_verified || user.value.is_on_hold;
-  } catch (error) {
-    console.log("Couldn't get user: ", error);
-  }
-  loading.value = false;
+    loading.value = true;
+    try {
+        const res = await useNuxtApp().$apiFetch(`/user`); // Headers are handled by the plugin
+        user.value = res.user;
+        credits.value = res.credits;
+        res.credits <= 5 ? (low_credits_modal.value = true) : (low_credits_modal.value = false);
+        has_alerts.value = !user.value.email_verification?.is_verified || user.value.is_on_hold;
+    } catch (error) {
+        console.log("Couldn't get user: ", error);
+    }
+    loading.value = false;
 };
 
 /* const logout = () => {
     userStore.logout();
 }; */
 const logout = () => {
-  const token = useCookie('accessToken');
-  token.value = null; // Clear the token
-  navigateTo('/login'); // Redirect to the login page
+    const token = useCookie('accessToken');
+    token.value = null; // Clear the token
+    navigateTo('/login'); // Redirect to the login page
 };
 
 
@@ -417,26 +374,25 @@ const isLikesPage = computed(() => {
 
 const handleSearch = () => {
     if (!searchQuery.value.trim()) return;
-  
-  try {
-      console.log("searching...")
-    // Navigate to the results page with query and results as route params
-    
-    router.push({
-      path: '/search',
-      query: { find: searchQuery.value }, // Passing results through state (optional, depending on your use case)
-    });
 
-  } catch (error) {
-    console.error("Error fetching search results:", error);
-  } finally {
-    loading.value = false;
-  }
+    try {
+        console.log("searching...")
+        // Navigate to the results page with query and results as route params
+
+        router.push({
+            path: '/search',
+            query: { find: searchQuery.value }, // Passing results through state (optional, depending on your use case)
+        });
+
+    } catch (error) {
+        console.error("Error fetching search results:", error);
+    } finally {
+        loading.value = false;
+    }
 };
 
 
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

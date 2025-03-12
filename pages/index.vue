@@ -73,7 +73,7 @@
       <div v-if="!loading_boosted_shops && boosted_shops.length == 0"
         class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">There are limited slots
         available,<br /> be the first to take an available slot. <br />
-        <NuxtLink v-if="user.shop" :to="`/account/shop`">
+        <NuxtLink v-if="user?.shop" :to="`/account/shop`">
           <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">Boost Your Shop Now! <i
               class="bi bi-rocket-fill ml-3"></i></button>
         </NuxtLink>
@@ -234,11 +234,9 @@ getBoostedShops();
 
 
 
-onMounted(() => {
-  getcats();
-  getAllShops();
-  getUserDetails();
-})
+getcats();
+getAllShops();
+getUserDetails();
 
 // console.log("Fetched products:", products.value)
 // console.log("fetched categories: ", categories.value)
