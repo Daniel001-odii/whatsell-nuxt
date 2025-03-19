@@ -136,7 +136,7 @@ const getUserDetails = async()=> {
     try {
         const res = await useNuxtApp().$apiFetch(`/user`);
         user.value = res.user;
-        shop.value = res.user.shop;
+        shop.value = res?.user?.shop;
         console.log('user from shops page: ', res)
     } catch (error) {
         console.log(error);

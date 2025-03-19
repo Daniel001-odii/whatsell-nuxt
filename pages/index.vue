@@ -171,7 +171,7 @@
   </div>
 </template>
 
-<script setup>s
+<script setup>
 definePageMeta({
   name: "Market",
 });
