@@ -242,7 +242,7 @@ async function getAllShops() {
   shop_loading.value = true;
   try {
     const response = await useNuxtApp().$apiFetch(`/shops/list/all`);
-    shops.value = response.shops;
+    shops.value = response.shops.reverse();
     console.log("all shops: ", response);
   } catch (error) {
     console.log("error getting categories: ", error);
