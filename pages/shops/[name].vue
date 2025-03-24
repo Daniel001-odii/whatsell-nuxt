@@ -44,7 +44,7 @@
               :label="des_expanded ? 'see less':'see more'" variant="link"/>
             </span>
             <span v-if="shop.location"> <i class="bi bi-geo-alt"></i> {{ shop.location }}</span>
-            <span><i class="bi bi-clock-history"></i> {{ shop.createdAt }}</span>
+            <span>joined whatsell: {{ formatCustomDate(shop.createdAt) }}</span>
           </div>
 
           <div class=" flex flex-row justify-between flex-wrap text-center w-full">
@@ -66,8 +66,9 @@
             @click="useRouter().push('/sell')"
             label="Add Product"
             size="lg"/>
-            <UButton
-            v-else
+            <div v-else>
+              <UButton
+            v-if="user"
             @click="followShop(shop._id)"
             :icon="isFollowingShop(followers) ? '':'bi:person-plus-fill'"
             :loading="loading_fl"
@@ -77,6 +78,17 @@
             :color="shop.is_boosted ? 'purple':'green'"
             :label="isFollowingShop(followers) ? 'Following':'Follow'"
             size="lg"/>
+            <UButton
+            v-else
+            @click="useRouter().push('/login')"
+            :icon="isFollowingShop(followers) ? '':'bi:person-plus-fill'"
+            class=" justify-center w-full"
+            :variant="isFollowingShop(followers) ? 'solid':'outline'"
+            :color="shop.is_boosted ? 'purple':'green'"
+            :label="isFollowingShop(followers) ? 'Following':'Follow'"
+            size="lg"/>
+            </div>
+           
           </div>
            
         </div>
@@ -221,6 +233,27 @@ const addViewsToShop = async()=>{
   }catch(err){
     console.log("err adding views to shop: ", err);
   }
+}
+
+function formatCustomDate(isoString) {
+    const date = new Date(isoString);
+    
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+
+    // Function to get ordinal suffix (st, nd, rd, th)
+    const getOrdinalSuffix = (num) => {
+        if (num > 3 && num < 21) return 'th'; // Covers 11th to 19th
+        switch (num % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    };
+
+    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
 }
 
 const current_page = ref(1);
