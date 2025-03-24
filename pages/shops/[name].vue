@@ -418,6 +418,8 @@ const getShopGlips = async(shop_id)=>{
   }
   loading_glips.value = false;
 }
+
+
   
   // Set meta tags dynamically (before page is rendered)
   useHead({

@@ -20,6 +20,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      openCageAPIKey: process.env.OPEN_CAGE_API_KEY,
       googleAnalytics: {
         id: 'G-TNS7YNXYQB' // Replace with your GA4 Measurement ID
       }
