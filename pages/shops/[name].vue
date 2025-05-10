@@ -1,442 +1,520 @@
 <template>
-    <div class="relative" v-if="shop">
-      <!-- SHOP HEADER SECTION -->
-      <div 
-      
-        style="background-size: cover !important; background-position: center; background-repeat: no-repeat;"
-        :style="[getBoostedShopImage(shop.is_boosted)]"
-        class=" h-[200px] md:h-[300px] w-full bg-gray-500 bg-opacity-15 relative">
-        
-       
-          <div class="absolute top-5 right-5 flex gap-3">
-            <UDropdown :items="isAllowed ? items_allowed:items" :popper="{ placement: 'bottom-start' }">
-              <UButton color="white" icon="iconoir:more-horiz" />
-            </UDropdown>
-          </div>
-       
-       
+  <div v-if="!shop">A shop {{ route.params.name }}</div>
+  <component v-else :is="selectedTemplate" />
 
+  <div class="p-3">
+    <div v-if="reviews" class="mb-6 p-4 rounded-lg shadow-sm container mx-auto bg-slate-600/10">
+      <div class="flex items-center gap-4">
+        <span class="text-5xl font-bold"
+          :class="shop.is_boosted ? 'text-purple-700 dark:text-purple-300' : 'text-green-700 dark:text-green-300'">
+          {{ reviews?.stats?.average_rating?.toFixed(1) }}
+        </span>
+        <div>
+          <div class="flex items-center mb-1">
+            <i v-for="star in 5" :key="'avg-star-' + star" class="bi text-xl"
+              :class="star <= Math.round(reviews?.stats?.average_rating) ? (shop.is_boosted ? 'bi-star-fill text-purple-500' : 'bi-star-fill text-green-500') : 'bi-star text-gray-400'">
+            </i>
+          </div>
+          <span class="text-sm text-gray-600 dark:text-gray-400">Based on {{ reviews?.stats?.total_reviews }} review{{
+            reviews?.length
+              === 1 ? '' : 's' }}</span>
+        </div>
       </div>
-      
-      <!-- LOWER SECTION -->
-      <div class="flex flex-col md:flex-row gap-5 relative -top-[80px] w-full">
+  
+    </div>
 
-        <!-- SHOP LEFT -->
-        <div class=" md:w-[350px] w-full flex flex-col gap-3 justify-start items-center">
-          <div 
-          :style="`background: url('${shop?.profile?.image_url}')`"
-          :class="[shop.is_boosted ? 'border-purple-500':'', shop.is_verified ? 'border-green-500':'']"
-          class=" size-[150px] rounded-full border-[8px] justify-center items-center bg-green-100 !bg-cover !bg-center !bg-no-repeat relative">
-            <!-- <img :src="shop?.profile?.image_url" alt="shop_image"/>  -->
-            <span v-if="shop.boosted" class=" absolute size-[30px] -right-0 bottom-2 text-white rounded-full flex justify-center items-center bg-purple-500 p-3">
-              <i class="bi bi-rocket-takeoff-fill"></i>
-            </span>
-          </div>
-         
-          <div class=" flex flex-col text-center">
-            <span class=" font-bold text-xl">{{ shop.name }} <i class="bi text-app_green" :class="shop.is_verified ? 'bi-patch-check-fill':''"></i></span>
-            <small>{{ shop.category }}</small>
-            <span class=" mt-3">{{ shopDescription }} 
-              <UButton 
-              v-if="shop.description.length > 200"
-              :color="shop.is_boosted ? 'purple':'green'"
-              @click="des_expanded = !des_expanded" 
-              :label="des_expanded ? 'see less':'see more'" variant="link"/>
-            </span>
-            <span v-if="shop.location"> <i class="bi bi-geo-alt"></i> {{ shop.location }}</span>
-            <span>joined whatsell: {{ formatCustomDate(shop.createdAt) }}</span>
-          </div>
 
-          <div class=" flex flex-row justify-between flex-wrap text-center w-full">
-            <div>{{ shop.listings }}<br/>Listings</div>
-            <div>{{ followers.length }}<br/>Followers</div>
-            <div>0<br/>Ratings</div>
-          </div>
+    <!-- REVIEW SECTION -->
+    <div v-for="review in reviews.reviews" :key="review._id"
+      class="p-5 border rounded-lg flex flex-col gap-1 justify-start" :class="shop.is_boosted
+        ? 'bg-white dark:bg-gray-800 border-purple-100 dark:border-purple-800/50'
+        : 'bg-white dark:bg-gray-800 border-green-100 dark:border-green-800/50'
+        ">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+        {{ formatReviewDate(review.createdAt) }}
+      </p>
 
-          <!-- ACTION BUTTON -->
-          <div class=" mt-3 w-full">
+      <div class="flex flex-shrink-0">
+        <i v-for="star in 5" :key="review._id + '-star-' + star" class="bi text-sm" :class="star <= review.rating
+          ? shop.is_boosted
+            ? 'bi-star-fill text-purple-500'
+            : 'bi-star-fill text-green-500'
+          : 'bi-star text-gray-400 dark:text-gray-500'
+          ">
+        </i>
+      </div>
 
-            <!-- IF ALLOWED -->
-            <UButton
-            v-if="isAllowed"
-            icon="material-symbols:box-add-sharp"
-            class=" justify-center w-full"
-            variant="outline"
-            :color="shop.is_boosted ? 'purple':'green'"
-            @click="useRouter().push('/sell')"
-            label="Add Product"
-            size="lg"/>
-            <div v-else>
-              <UButton
-            v-if="user"
-            @click="followShop(shop._id)"
-            :icon="isFollowingShop(followers) ? '':'bi:person-plus-fill'"
-            :loading="loading_fl"
-            loading-icon="svg-spinners:bars-rotate-fade"
-            class=" justify-center w-full"
-            :variant="isFollowingShop(followers) ? 'solid':'outline'"
-            :color="shop.is_boosted ? 'purple':'green'"
-            :label="isFollowingShop(followers) ? 'Following':'Follow'"
-            size="lg"/>
-            <UButton
-            v-else
-            @click="useRouter().push('/login')"
-            :icon="isFollowingShop(followers) ? '':'bi:person-plus-fill'"
-            class=" justify-center w-full"
-            :variant="isFollowingShop(followers) ? 'solid':'outline'"
-            :color="shop.is_boosted ? 'purple':'green'"
-            :label="isFollowingShop(followers) ? 'Following':'Follow'"
-            size="lg"/>
-            </div>
-           
-          </div>
-           
+      <strong class="text-gray-800 text-xl dark:text-gray-100">{{
+        review.product_name
+      }}</strong>
+
+      <p class="text-sm">{{ review.feedback }}</p>
+
+      <p class="text-gray-700 dark:text-gray-300 mt-2 whitespace-pre-wrap text-sm flex items-center gap-2">
+        <i class="bi bi-patch-check-fill text-blue-500"></i> verified review by
+        {{ review.user?.username }}
+      </p>
+
+      <div v-if="review.images.length > 0" class="my-4 w-full flex flex-row gap-3">
+        <div v-for="image in review.images" :key="image" class="w-fit">
+          <img :src="image" alt="review image" class="size-[100px] rounded-md" />
         </div>
-
-        <!-- SHOP RIGHT -->
-        <div class=" flex-1 flex flex-col gap-3 md:mt-[100px]">
-
-          <!-- LISTINGS vs GLIPS TAB -->
-          <div class=" flex flex-row p-3 bg-gray-500 bg-opacity-10 gap-1 rounded-md">
-            <UButton
-            @click="currentTab = 0"
-            :variant="currentTab == 0 ? 'solid':'ghost'"
-            :color="shop.is_boosted ? 'purple':'green'"
-            icon="heroicons:squares-plus"
-            size="lg" label="Listings" 
-            class=" flex-1 justify-center"/>
-            <UButton
-            @click="[currentTab = 1, getShopGlips(shop._id)]"
-            :variant="currentTab == 1 ? 'solid':'ghost'" 
-            :color="shop.is_boosted ? 'purple':'green'"
-            icon="heroicons:video-camera"
-            size="lg" label="Glips" 
-            class=" flex-1 justify-center"/>
-          </div>
-
-           <!-- CONTENT AREA -->
-          <!-- PRODUCT LISTINGS -->
-          <div v-if="currentTab === 0" class=" flex flex-col gap- 6 justify-between">
-            <div class="h-[500px] overflow-y-auto">
-              <div v-if="products.length == 0" class=" flex flex-col justify-center items-center gap-3 mt-12 text-gray-600">
-                  <i class=" bi bi-box2 text-6xl"></i>
-                  <span>No products found</span>
-              </div>
-              <MasonryWall
-              :items="products"
-                :ssr-columns="1"
-                :column-width="130"
-                :gap="10"
-                >
-                  <template #default="{ item, index }">
-                    <ProductCard class=" mt-[15px]"
-                      :has-liked-button="true"
-                      :id="item._id"
-                      :product_price="(item.price).toLocaleString()"
-                      :image_url="item.images[0]"
-                      :views="item.views"
-                      :is_liked="checkLikes(item._id)"
-                      :product_slug="item.slug"
-                    />
-                  </template>
-              </MasonryWall>
-            </div>
-
-            <!-- pagination for products -->
-            <div class=" flex gap-6 mt-1" v-if="products.length > 0">
-                  <UButton
-                  :loading="loadingProducts"
-                  loading-icon="svg-spinners:bars-rotate-fade"
-                  :disabled="current_page == 1"
-                  variant="ghost"
-                   :color="shop.is_boosted ? 'purple':'green'"
-                  @click="[current_page --, getShopProducts()]"
-                  icon="heroicons:arrow-small-left"
-                  />
-                  <span>{{ current_page }} of {{ total_page }}</span>
-                  <UButton
-                  :loading="loadingProducts"
-                  loading-icon="svg-spinners:bars-rotate-fade"
-                  variant="ghost"
-                   :color="shop.is_boosted ? 'purple':'green'"
-                  :disabled="current_page == total_page"
-                  icon="heroicons:arrow-small-right"
-                  @click="[current_page ++, getShopProducts()]"
-                  />
-            </div>
-
-          </div>
-          <div v-if="currentTab === 1" class="h-[500px] overflow-y-auto flex flex-wrap w-full gap-3">
-            <USkeleton v-if="loading_glips" v-for="glip in 10" class=" flex-1 w-[130px] h-[200px] min-w-[130px]"
-            :ui="{ background: 'dark:bg-gray-700' }" />
-            <GlipCard
-            v-else
-            :item="item"
-            v-for="item in glips"
-            />
-          </div>
-          
-        </div>
-
-       
       </div>
     </div>
+  </div>
 </template>
 
+<style scoped>
+.shadow-text {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+</style>
+
+<style scoped>
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+</style>
+
 <script setup>
-import { useRoute, useAsyncData, useHead } from '#imports';
+import {
+  useRoute,
+  useAsyncData,
+  useHead,
+  useRouter,
+  useNuxtApp,
+} from "#imports"; // Ensure all imports are here
+import { ref, computed, watch, onMounted } from "vue"; // Add computed, watch, onMounted
+
+import Template_0 from "@/components/templates/Template_0.vue";
+import Template_1 from "@/components/templates/Template_1.vue";
+import Template_2 from "@/components/templates/Template_2.vue";
+import Template_3 from "@/components/templates/Template_3.vue";
+import Template_4 from "@/components/templates/Template_4.vue";
+
+const templateMap = {
+  0: Template_0,
+  1: Template_1,
+  2: Template_2,
+  3: Template_3,
+  4: Template_4,
+};
+
+const selectedTemplate = computed(() => {
+  const template_code = shop.value?.template_code;
+  return templateMap[template_code] || Template_0;
+});
+
 const route = useRoute();
 const config = useRuntimeConfig();
+// ... (all your existing refs: isExpanded, shopImage, etc.)
 const isExpanded = ref(false);
-const shopImage = ref('');
+const shopImage = ref("");
 const shopBoostDuration = ref(1);
 const glipsModal = ref(false);
-const loading = ref(false);
+const loading = ref(false); // This seems to be a general loading, maybe rename if specific
 const currentTab = ref(0);
 const products = ref([]);
-const user = ref('');
-const shopId = ref('');
-const shopRating = ref(4);
+const user = ref(null); // Initialize as null for clarity
+const shopId = ref("");
+const shopRating = ref(4); // This seems to be a static rating, averageRating will be dynamic
 const loadingProducts = ref(false);
-const loadingGlips = ref(false);
+const loadingGlips = ref(false); // Renamed from loading_glips for consistency
 const followers = ref([]);
 const boostShopModal = ref(false);
 const liked_products = ref([]);
-// const shop = ref('');
+const des_expanded = ref(false);
 
-// import verifiedShop from '@/assets/images/verified_shop.png';
-import normalShop from '@/assets/images/non_verified_shop.png';
-import boostedShopImage from '@/assets/images/boosted_shop.png';
+// import verifiedShop from '@/assets/images/verified_shop.png'; // Keep if used elsewhere
+import normalShop from "@/assets/images/non_verified_shop.png";
+import boostedShopImage from "@/assets/images/boosted_shop.png";
 
-/* const getBackgroundImage = computed((isVerified)=>{
-return `background-image: url(${isVerified ? normalShop : normalShop})`
-}); */
+const getBoostedShopImage = (isBoosted) =>
+  `background-image: url(${isBoosted ? boostedShopImage : normalShop})`;
 
-// const getBackgroundImage = (isVerified) => `background-image: url(${isVerified ? normalShop : normalShop})`;
-const getBoostedShopImage = (isBoosted) => `background-image: url(${isBoosted ? boostedShopImage:normalShop})`;
+const {
+  data: shop,
+  pending: shopLoading,
+  error: shopError,
+} = await useAsyncData(
+  "shop",
+  async () => {
+    try {
+      const response = await $fetch(
+        `${config.public.apiBase}/shops/${route.params.name}/full`
+      );
+      console.log("shop: ", response);
+      if (response && response.shop) {
+        shopId.value = response.shop._id;
+        followers.value = response.shop.followers;
+        return response.shop;
+      }
+      return null; // Handle case where shop might not be found
+    } catch (e) {
+      console.error("Error fetching shop data:", e);
+      // Potentially redirect to a 404 page or show an error message
+      // For now, return null and handle it in the template
+      return null;
+    }
+  },
+  {
+    // By default, useAsyncData might not refetch on param change on client-side nav unless key changes or watch is set.
+    // If `route.params.name` can change while on this page, you might need:
+    // watch: [() => route.params.name]
+  }
+);
 
-
-// Fetch shop data before rendering (SSR-compatible)
-const { data: shop } = await useAsyncData('shop', async () => {
-    const response = await $fetch(`${config.public.apiBase}/shops/${route.params.name}/full`);
-    console.log("shop: ", response);
-    shopId.value = response.shop._id;
-    followers.value = response.shop.followers;
-    return response.shop;
+// Review System Refs
+const reviews = ref([]);
+const loadingReviews = ref(false);
+const averageRating = ref(0);
+const showReviewForm = ref(false);
+const newReview = ref({
+  rating: 0,
+  text: "",
 });
+const submittingReview = ref(false);
 
-
-// add views to shop
-const addViewsToShop = async()=>{
-  try{
-    const res = await useNuxtApp().$apiFetch(`/shops/${route.params.name}/view`);
-  }catch(err){
+// === EXISTING FUNCTIONS ===
+const addViewsToShop = async () => {
+  if (!shop.value?._id) return; // Ensure shop is loaded
+  try {
+    await useNuxtApp().$apiFetch(`/shops/${route.params.name}/view`);
+  } catch (err) {
     console.log("err adding views to shop: ", err);
   }
-}
+};
 
 function formatCustomDate(isoString) {
-    const date = new Date(isoString);
-    
-    const day = date.getDate();
-    const month = date.toLocaleString('en-US', { month: 'long' });
-    const year = date.getFullYear();
+  if (!isoString) return "Date not available";
+  const date = new Date(isoString);
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const year = date.getFullYear();
+  const getOrdinalSuffix = (num) => {
+    if (num > 3 && num < 21) return "th";
+    switch (num % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+  return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+}
 
-    // Function to get ordinal suffix (st, nd, rd, th)
-    const getOrdinalSuffix = (num) => {
-        if (num > 3 && num < 21) return 'th'; // Covers 11th to 19th
-        switch (num % 10) {
-            case 1: return 'st';
-            case 2: return 'nd';
-            case 3: return 'rd';
-            default: return 'th';
-        }
-    };
-
-    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+function getPercentageForRating(reviews, rating) {
+  if (!reviews || reviews.length === 0) return 0;
+  const count = reviews.filter((review) => review.rating === rating).length;
+  return Math.round((count / reviews.length) * 100);
 }
 
 const current_page = ref(1);
 const total_page = ref(1);
-const total_products = ref(1)
-const getShopProducts = async()=>{
+const total_products = ref(1);
+const getShopProducts = async () => {
+  if (!shop.value?._id) return; // Ensure shop is loaded
   loadingProducts.value = true;
-  try{
-    const res = await useNuxtApp().$apiFetch(`/products/${route.params.name}/shop?page=${current_page.value}`);
+  try {
+    const res = await useNuxtApp().$apiFetch(
+      `/products/${route.params.name}/shop?page=${current_page.value}`
+    );
     products.value = res.products;
     current_page.value = res.currentPage;
     total_page.value = res.totalPages;
     total_products.value = res.totalProducts;
-
-    console.log("products: ", res);
-  }catch(err){
-    console.log("err getting shops products: ", err)
+  } catch (err) {
+    console.log("err getting shops products: ", err);
   }
   loadingProducts.value = false;
-}
+};
 
+const getUserDetails = async () => {
+  try {
+    const res = await useNuxtApp().$apiFetch(`/user`);
+    user.value = res.user;
+    liked_products.value = res.user.liked_products || []; // Ensure liked_products is an array
+  } catch (error) {
+    console.log("Error fetching user details: ", error);
+    user.value = null; // Set user to null if not logged in or error
+  }
+};
 
-const getUserDetails = async()=> {
-    try {
-        const res = await useNuxtApp().$apiFetch(`/user`);
-        user.value = res.user;
-        liked_products.value = res.user.liked_products;
-        console.log('user: ', res)
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-getShopProducts();
-addViewsToShop();
-getUserDetails();
-
-const des_expanded = ref(false);
-const shopDescription = computed(()=>{
-  if(des_expanded.value){
-    return shop.value.description
+const shopDescription = computed(() => {
+  if (!shop.value?.description) return "";
+  if (des_expanded.value) {
+    return shop.value.description;
   } else {
-    return shop.value.description.slice(0,200) + '...';
+    // Ensure description exists and is long enough before slicing
+    return shop.value.description.length > 200
+      ? shop.value.description.slice(0, 200) + "..."
+      : shop.value.description;
   }
-})
+});
 
-const isAllowed = computed(()=>{
-  if(user.value && shop.value){
-    return user.value._id === shop.value.owner._id
+const isAllowed = computed(() => {
+  if (user.value && shop.value) {
+    return user.value._id === shop.value.owner?._id; // Add optional chaining for owner
   }
-})
+  return false;
+});
 
 const checkLikes = (product_id) => {
-    if(liked_products.value.includes(product_id)){
-        return true;
-    } else {
-        return false;
-    }
+  return liked_products.value.includes(product_id);
 };
-
 
 const isFollowingShop = (followers_) => {
-  let exist = false;
+  if (!user.value || !followers_ || followers_.length === 0) return false;
   const user_id = user.value._id;
-  console.log("got followers: ",followers_)
-  if(followers_.length > 0){
-    followers_.forEach(follower => {
-    if(follower._id === user_id){
-      exist = true;
-      return exist;
-    }
-  });
-  }
-  
-  return exist;
+  return followers_.some((follower) => follower._id === user_id);
 };
 
-
 const getShopById = async (shop_id) => {
-  try{
+  if (!shop_id) return;
+  try {
     const res = await useNuxtApp().$apiFetch(`/shops/${shop_id}`);
-    followers.value = res.shop.followers;
-    // shop.value = res.shop.value;
-    console.log("shop by id: ", res);
-  }catch(err){
+    if (res.shop) {
+      followers.value = res.shop.followers;
+      // If you need to update the main shop object, be careful with reactivity:
+      // Object.assign(shop.value, res.shop); // This might be one way
+    }
+  } catch (err) {
     console.log("err getting shop by id: ", err);
   }
-}
+};
 
 const loading_fl = ref(false);
 const followShop = async (shop_id) => {
+  if (!user.value) {
+    useRouter().push("/login"); // Redirect to login if user not available
+    return;
+  }
+  if (!shop_id) return;
   loading_fl.value = true;
-  try{
-    const res = await useNuxtApp().$apiFetch(`/shops/${shop_id}/follow`, {
-      method: 'POST'
+  try {
+    await useNuxtApp().$apiFetch(`/shops/${shop_id}/follow`, {
+      method: "POST",
     });
-    console.log("followed shop: ", res);
-    getShopById(shop_id);
-  }catch(err){
+    // Re-fetch shop data or followers specifically to update UI
+    await getShopById(shop_id); // This will update followers.value
+  } catch (err) {
     console.log("err following shop: ", err);
+    // Add user feedback (e.g., toast notification)
   }
   loading_fl.value = false;
-}
+};
 
 const shareShop = async () => {
-  if (navigator.share) {
+  if (navigator.share && shop.value) {
     try {
       await navigator.share({
-        title: "Hi, check this Shop on whatsell!",
-        text: `${shop.value.category}`,
-        url: window.location.href, // Current page URL
+        title: `Hi, check out ${shop.value.name} on whatsell!`,
+        text: shop.value.category,
+        url: window.location.href,
       });
-      console.log("Shared successfully");
     } catch (error) {
       console.error("Error sharing:", error);
     }
   } else {
-    alert("Your browser does not support the Web Share API.");
+    // Fallback for browsers that don't support Web Share API (e.g., copy to clipboard)
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Shop link copied to clipboard!"); // Or use a toast
+    } catch (err) {
+      alert("Sharing is not supported or failed.");
+    }
   }
 };
 
-const items = [
-  [{
-    label: 'Share',
-    icon: 'hugeicons:share-05',
-    click: () => {
-      shareShop()
-    }
-  }],
-  [{
-    label: 'Report',
-    icon: 'hugeicons:flag-03',
-    disabled: true
-  }]
-];
+const items = computed(() => [
+  // Make it computed if shop.value is needed or for dynamic states
+  [
+    {
+      label: "Share",
+      icon: "hugeicons:share-05",
+      click: shareShop,
+    },
+  ],
+  [
+    {
+      label: "Report",
+      icon: "hugeicons:flag-03",
+      disabled: true, // Implement reporting if needed
+    },
+  ],
+]);
 
-const items_allowed = [
-  [{
-    label: 'Share',
-    icon: 'hugeicons:share-05',
-    click: () => {
-      shareShop()
-    }
-  }, {
-    label: 'Settings',
-    icon: 'hugeicons:settings-02',
-    click: () => {
-      useRouter().push('/account/shop')
-    }
-  }]
-]
+const items_allowed = computed(() => [
+  // Make it computed
+  [
+    {
+      label: "Share",
+      icon: "hugeicons:share-05",
+      click: shareShop,
+    },
+    {
+      label: "Shop Settings",
+      icon: "hugeicons:settings-02",
+      click: () => {
+        useRouter().push("/account/shop");
+      },
+    },
+  ],
+]);
 
 const glips = ref([]);
-const loading_glips = ref(false)
-const getShopGlips = async(shop_id)=>{
-  loading_glips.value = true;
-  try{
+// loadingGlips is already defined
+const getShopGlips = async (shop_id) => {
+  if (!shop_id) return;
+  loadingGlips.value = true;
+  try {
     const res = await useNuxtApp().$apiFetch(`/products/glips/${shop_id}/all`);
-    glips.value = res.glips
-  }catch(err){
-    console.log('err getting glips: ', err);
+    glips.value = res.glips || [];
+  } catch (err) {
+    console.log("err getting glips: ", err);
+    glips.value = [];
   }
-  loading_glips.value = false;
-}
+  loadingGlips.value = false;
+};
 
+// === REVIEW SYSTEM METHODS ===
+const calculateAverageRating = () => {
+  if (reviews.value.length === 0) {
+    averageRating.value = 0;
+    return;
+  }
+  const totalRating = reviews.value.reduce(
+    (sum, review) => sum + review.rating,
+    0
+  );
+  averageRating.value = totalRating / reviews.value.length;
+};
 
-  
-  // Set meta tags dynamically (before page is rendered)
-  useHead({
-    title: `${shop.value?.name} - NGN${shop.value?.category}`,
-    meta: [
-      { name: 'description', content: shop.value?.description || 'Default description' },
-      { property: "og:title", content: `${shop.value?.name}` },
-      { property: "og:description", content: shop.value?.description || "Default shop Description" },
-      { property: "og:image", content: shop.value?.profile?.image_url },
-      { property: "og:type", content: "shop" },
-      { property: "og:url", content: `https://wha-sell.vercel.app/shops/${route.params.name}` },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: shop.value?.profile?.image_url }
-    ],
+const formatReviewDate = (isoString) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
+};
+
+const getShopReviews = async () => {
+  loadingReviews.value = true;
+  try {
+    const res = await useNuxtApp().$apiFetch(
+      `/shops/${useRoute().params.name}/reviews`
+    );
+    reviews.value = res.data;
+    console.log("shop reviews: ", res);
+  } catch (err) {
+    console.log("err getting shop reviews: ", err);
+  }
+  loadingReviews.value = false;
+};
+onMounted(async () => {
+  getShopReviews();
+});
+
+// Initial data fetching calls
+// getUserDetails should be called early to determine `isAllowed` and `user` state
+onMounted(async () => {
+  await getUserDetails(); // Ensure user is fetched before other dependent logic
+
+  // `shop` is fetched by useAsyncData. We watch it to trigger dependent fetches.
+  // No need to call getShopProducts or addViewsToShop here if already in watch(shop).
+});
+
+// Watch for shop data to become available (from useAsyncData)
+// and then fetch related data like products, views, and reviews.
+watch(
+  shop,
+  (newShopValue) => {
+    if (newShopValue && newShopValue._id) {
+      getShopProducts(); // Fetches initial page of products
+      addViewsToShop();
+      // fetchShopReviews(newShopValue._id); // Fetch reviews for the current shop
+    } else if (!newShopValue && !shopLoading.value) {
+      // Handle case where shop is definitively not found or error occurred
+      console.log("Shop data is null and not loading, possible 404 or error.");
+      // You might want to redirect or show a specific message.
+    }
+  },
+  { immediate: true }
+); // `immediate: true` runs the watcher once on component mount with current shop value
+
+// Set meta tags dynamically (before page is rendered)
+useHead(
+  computed(() => {
+    const shopData = shop.value; // Get current value of shop
+    const title = shopData
+      ? `${shopData.name} - ${shopData.category}`
+      : "Shop Details";
+    const description =
+      shopData?.description || "View products and details for this shop.";
+    const imageUrl = shopData?.profile?.image_url;
+    const pageUrl = `https://wha-sell.vercel.app/shops/${route.params.name}`; // Ensure this is your production URL
+
+    return {
+      title: title,
+      meta: [
+        { name: "description", content: description },
+        { property: "og:title", content: shopData?.name || "Shop on Whatsell" },
+        { property: "og:description", content: description },
+        {
+          property: "og:image",
+          content: imageUrl || "your_default_og_image_url_here.png",
+        },
+        { property: "og:type", content: "profile" }, // 'product.group' or 'profile' could be more suitable for a shop page
+        { property: "og:url", content: pageUrl },
+        {
+          name: "twitter:card",
+          content: imageUrl ? "summary_large_image" : "summary",
+        },
+        {
+          name: "twitter:image",
+          content: imageUrl || "your_default_twitter_image_url_here.png",
+        },
+        // Add more meta tags if needed
+      ],
+      link: [{ rel: "canonical", href: pageUrl }],
+    };
+  })
+);
 </script>
 
 <style scoped>
+/* Add any component-specific styles here if needed */
+/* Example for a subtle scrollbar if desired for review list */
+.max-h-\[600px\]::-webkit-scrollbar {
+  width: 6px;
+}
 
+.max-h-\[600px\]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.max-h-\[600px\]::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.dark .max-h-\[600px\]::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+  /* Ensures newlines in review text are respected */
+}
 </style>
+
+<style scoped></style>

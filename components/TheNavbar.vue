@@ -75,7 +75,7 @@
                     </div>
 
                     <UButton @click="useRouter().push('/account/shop')" icon="mingcute:coin-3-fill"
-                        :label="credits.toString()" color="black" variant="ghost" />
+                        :label="credits?.toString()" color="black" variant="ghost" />
                     <!-- <div div class="flex gap-2 items-center">
                         <img src="../assets/images/coins_group.png" class="w-[35px]" />
                         <span>{{ credits }}</span>

@@ -7,6 +7,8 @@
   <img :src="item" class="w-full " draggable="false">
 </UCarousel>
  -->
+ <button @click="promptForNotificationPermission">Enable Notifications</button>
+
     <HeroSection />
 
     <!-- all categories.... -->
@@ -15,13 +17,7 @@
     <div class="flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
       <NuxtLink target="_blank" :to="`/categories/${category.category}`" v-for="(category, index) in categories"
         class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">
-        {{ category.category }}</NuxtLink>
-      <!--  <NuxtLink 
-  target="_blank"
-  :to="`/categories/${category.category}`" v-for="(category, index) in categories" 
-  :style="category?.firstImage ? `background-image: url('${category?.firstImage[0]}')`:`background-size: contain;`" 
-  class=" flex justify-center items-start text-sm min-w-[200px] h-[80px] md:h-[260px] bg-black bg-opacity-50 text-white rounded-xl pt-5 font-bold">{{ category.category }}</NuxtLink> -->
-    </div>
+        {{ category.category }}</NuxtLink> </div>
 
     <!-- best deals for your 2morrow -->
     <h2 class="font-bold mt-12">Best Deals for you today</h2>
@@ -36,33 +32,18 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class="flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
+     <!--  <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class="mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="item.price.toLocaleString()" :image_url="item.images[0]" :views="item.views"
             :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
         </template>
-      </MasonryWall>
+      </MasonryWall> -->
     </div>
 
     <!-- get all shops -->
     <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
-   <!--  <div class="flex flex-row overflow-x-auto gap-3 mt-3">
-      <ShopCard v-for="(shop, index) in shops" :key="index" :header_image="shop?.headerImage" :name="shop?.name"
-        :category="shop?.category" :image_url="shop?.profile?.image_url"
-        :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
-    </div>
- -->
-  <!--   <Carousel v-bind="carousel_config">
-      <Slide v-for="shop in shops" :key="shop._id">
-        <ShopCard :header_image="shop?.headerImage" :name="shop?.name"
-        :category="shop?.category" :image_url="shop?.profile?.image_url"
-        :location="`${shop?.owner?.location?.state} | ${shop?.owner?.location?.LGA}`" />
-      </Slide>
-      <template #addons>
-        <Navigation />
-      </template>
-    </Carousel> -->
+  
     <UCarousel 
     ref="carouselRef"
     v-slot="{ item }" :items="shops" class=" mt-3" arrows>
@@ -125,13 +106,13 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
+      <!-- <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class=" mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="(item.price).toLocaleString()" :image_url="item.images[0]" :views="item.views"
             :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
         </template>
-      </MasonryWall>
+      </MasonryWall> -->
     </div>
 
     <!-- FAQ SECTION -->
@@ -179,6 +160,32 @@ import { ref } from "vue";
 import { useRoute, useAsyncData } from "#imports";
 import axios from "axios";
 const carouselRef = ref();
+
+
+const promptForNotificationPermission = async () => {
+  try {
+    const permission = await OneSignal.Notifications.requestPermission()
+    if (permission) {
+      console.log('Notification permission granted')
+      // You can now get the user's ID
+      const userId = await OneSignal.User.pushSubscription.getId()
+      console.log('User ID:', userId)
+      
+      // Send this ID to your backend if needed
+    } else {
+      console.log('Notification permission denied')
+    }
+  } catch (error) {
+    console.error('Error requesting permission:', error)
+  }
+}
+
+const checkSubscriptionStatus = async () => {
+  const isSubscribed = await OneSignal.Notifications.isPushSupported()
+  const permission = await OneSignal.Notifications.permission
+  console.log('Push supported:', isSubscribed)
+  console.log('Permission status:', permission)
+}
 
 onMounted(() => {
   setInterval(() => {

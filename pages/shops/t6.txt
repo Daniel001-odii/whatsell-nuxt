@@ -1,0 +1,409 @@
+<template>
+  <div class="relative" v-if="shop">
+    <!-- HERO SECTION WITH OVERLAY -->
+    <div class="relative">
+      <!-- Background Image with Gradient Overlay -->
+      <div 
+        :style="[getBoostedShopImage(shop.is_boosted)]"
+        class="h-[300px] md:h-[400px] w-full bg-cover bg-center relative overflow-hidden"
+      >
+        <!-- Dark Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70"></div>
+      </div>
+      
+      <!-- Profile Content Positioned on Hero -->
+      <div class="container mx-auto px-4">
+        <div class="relative -top-[100px] flex flex-col items-center md:items-start md:flex-row md:gap-8">
+          <!-- Profile Image -->
+          <div 
+            :style="`background: url('${shop?.profile?.image_url}')`"
+            :class="[
+              shop.is_boosted ? 'ring-4 ring-amber-400 shadow-lg shadow-amber-300/30' : '',
+              shop.is_verified ? 'ring-4 ring-teal-500 shadow-lg shadow-teal-300/30' : ''
+            ]"
+            class="size-[160px] md:size-[180px] rounded-full bg-cover bg-center shadow-xl relative border-4 border-white dark:border-gray-800"
+          >
+            <span v-if="shop.boosted" class="absolute -right-2 bottom-3 size-[38px] text-white rounded-full flex justify-center items-center bg-amber-500 p-2">
+              <i class="bi bi-rocket-takeoff-fill text-lg"></i>
+            </span>
+          </div>
+          
+          <!-- Shop Info -->
+          <div class="flex-1 mt-4 md:mt-10 text-center md:text-left text-white">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start">
+              <div>
+                <h1 class="text-2xl md:text-3xl font-bold flex items-center justify-center md:justify-start gap-2">
+                  {{ shop.name }}
+                  <i class="bi bi-patch-check-fill text-teal-400" v-if="shop.is_verified"></i>
+                </h1>
+                <div class="text-gray-200 mt-1">{{ shop.category }}</div>
+                
+                <div class="mt-3 text-gray-200 flex items-center justify-center md:justify-start gap-2" v-if="shop.location">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>{{ shop.location }}</span>
+                </div>
+                <div class="text-gray-300 text-sm mt-1">joined whatsell: {{ formatCustomDate(shop.createdAt) }}</div>
+              </div>
+              
+              <!-- Stats in Hero Section -->
+              <div class="flex gap-6 mt-4 md:mt-0 justify-center md:justify-end text-gray-200">
+                <div class="text-center">
+                  <div class="font-bold text-2xl">{{ shop.listings }}</div>
+                  <div class="text-sm">Listings</div>
+                </div>
+                <div class="text-center">
+                  <div class="font-bold text-2xl">{{ followers.length }}</div>
+                  <div class="text-sm">Followers</div>
+                </div>
+                <div class="text-center">
+                  <div class="font-bold text-2xl">0</div>
+                  <div class="text-sm">Ratings</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- MAIN CONTENT AREA -->
+    <div class="container mx-auto px-4 -mt-[60px] mb-12">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6">
+        <!-- Shop Description & Action Section -->
+        <div class="flex flex-col lg:flex-row gap-8 mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
+          <!-- Description Section -->
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold mb-3" :class="shop.is_boosted ? 'text-amber-600' : 'text-teal-600'">About This Shop</h2>
+            <p class="text-gray-700 dark:text-gray-300">
+              {{ shopDescription }}
+              <UButton 
+                v-if="shop.description.length > 200"
+                :color="shop.is_boosted ? 'yellow' : 'teal'"
+                @click="des_expanded = !des_expanded" 
+                :label="des_expanded ? 'see less' : 'see more'" 
+                variant="link"
+              />
+            </p>
+          </div>
+          
+          <!-- Action Button Section -->
+          <div class="md:w-[280px]">
+            <div class="absolute top-5 right-5 flex gap-3">
+              <UDropdown :items="isAllowed ? items_allowed : items" :popper="{ placement: 'bottom-start' }">
+                <UButton color="gray" icon="iconoir:more-horiz" variant="ghost" />
+              </UDropdown>
+            </div>
+            
+            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <!-- If owner -->
+              <UButton
+                v-if="isAllowed"
+                icon="material-symbols:box-add-sharp"
+                class="w-full justify-center"
+                :color="shop.is_boosted ? 'yellow' : 'teal'"
+                @click="useRouter().push('/sell')"
+                label="Add Product"
+                size="lg"
+              />
+              <!-- If visitor -->
+              <template v-else>
+                <UButton
+                  v-if="user"
+                  @click="followShop(shop._id)"
+                  :icon="isFollowingShop(followers) ? '' : 'bi:person-plus-fill'"
+                  :loading="loading_fl"
+                  loading-icon="svg-spinners:bars-rotate-fade"
+                  class="w-full justify-center"
+                  :variant="isFollowingShop(followers) ? 'solid' : 'outline'"
+                  :color="shop.is_boosted ? 'yellow' : 'teal'"
+                  :label="isFollowingShop(followers) ? 'Following' : 'Follow'"
+                  size="lg"
+                />
+                <UButton
+                  v-else
+                  @click="useRouter().push('/login')"
+                  :icon="isFollowingShop(followers) ? '' : 'bi:person-plus-fill'"
+                  class="w-full justify-center"
+                  :variant="isFollowingShop(followers) ? 'solid' : 'outline'" 
+                  :color="shop.is_boosted ? 'yellow' : 'teal'"
+                  :label="isFollowingShop(followers) ? 'Following' : 'Follow'"
+                  size="lg"
+                />
+              </template>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tabs and Content Section -->
+        <div class="w-full">
+          <!-- Tabs Navigation -->
+          <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+            <div class="flex gap-1">
+              <UButton
+                @click="currentTab = 0"
+                :variant="currentTab == 0 ? 'ghost' : 'ghost'"
+                :class="currentTab == 0 ? 'border-b-2' : ''"
+                :style="currentTab == 0 ? {borderColor: shop.is_boosted ? '#ca8a04' : '#0d9488'} : {}"
+                :color="currentTab == 0 ? (shop.is_boosted ? 'yellow' : 'teal') : 'gray'"
+                icon="heroicons:squares-plus"
+                size="lg" 
+                label="Listings" 
+              />
+              <UButton
+                @click="[currentTab = 1, getShopGlips(shop._id)]"
+                :variant="currentTab == 1 ? 'ghost' : 'ghost'"
+                :class="currentTab == 1 ? 'border-b-2' : ''"
+                :style="currentTab == 1 ? {borderColor: shop.is_boosted ? '#ca8a04' : '#0d9488'} : {}"
+                :color="currentTab == 1 ? (shop.is_boosted ? 'yellow' : 'teal') : 'gray'"
+                icon="heroicons:video-camera"
+                size="lg" 
+                label="Glips" 
+              />
+            </div>
+          </div>
+          
+          <!-- Tab Content: Listings -->
+          <div v-if="currentTab === 0" class="flex flex-col gap-6">
+            <div class="min-h-[500px] overflow-hidden">
+              <div v-if="products.length == 0" class="flex flex-col justify-center items-center gap-3 mt-12 text-gray-600 dark:text-gray-400">
+                <i class="bi bi-box2 text-6xl opacity-50"></i>
+                <span class="text-lg">No products found</span>
+              </div>
+              <div v-else>
+                <MasonryWall
+                  :items="products"
+                  :ssr-columns="1"
+                  :column-width="200"
+                  :gap="16"
+                >
+                  <template #default="{ item }">
+                    <ProductCard 
+                      class="transform transition-all duration-300 hover:-translate-y-1"
+                      :has-liked-button="true"
+                      :id="item._id"
+                      :product_price="(item.price).toLocaleString()"
+                      :image_url="item.images[0]"
+                      :views="item.views"
+                      :is_liked="checkLikes(item._id)"
+                      :product_slug="item.slug"
+                    />
+                  </template>
+                </MasonryWall>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center items-center gap-6 mt-4" v-if="products.length > 0">
+              <UButton
+                :loading="loadingProducts"
+                loading-icon="svg-spinners:bars-rotate-fade"
+                :disabled="current_page == 1"
+                variant="ghost"
+                :color="shop.is_boosted ? 'yellow' : 'teal'"
+                @click="[current_page--, getShopProducts()]"
+                icon="heroicons:arrow-small-left"
+              />
+              <span class="text-gray-700 dark:text-gray-300">{{ current_page }} of {{ total_page }}</span>
+              <UButton
+                :loading="loadingProducts"
+                loading-icon="svg-spinners:bars-rotate-fade"
+                variant="ghost"
+                :color="shop.is_boosted ? 'yellow' : 'teal'"
+                :disabled="current_page == total_page"
+                icon="heroicons:arrow-small-right"
+                @click="[current_page++, getShopProducts()]"
+              />
+            </div>
+          </div>
+          
+          <!-- Tab Content: Glips -->
+          <div v-if="currentTab === 1" class="min-h-[500px]">
+            <div v-if="loading_glips" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <USkeleton v-for="glip in 8" :key="glip" class="h-[200px] rounded-lg"
+                :ui="{ background: 'dark:bg-gray-700' }" 
+              />
+            </div>
+            <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <GlipCard
+                v-for="item in glips"
+                :key="item._id"
+                :item="item"
+                class="transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+            <div v-if="!loading_glips && glips.length === 0" class="flex flex-col justify-center items-center gap-3 mt-12 text-gray-600 dark:text-gray-400 py-8">
+              <i class="bi bi-camera-video text-6xl opacity-50"></i>
+              <span class="text-lg">No glips available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- REVIEWS SECTION -->
+      <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-semibold" 
+            :class="shop.is_boosted ? 'text-amber-600' : 'text-teal-600'">
+            Customer Reviews
+          </h3>
+          
+          <div v-if="user && !isAllowed && !showReviewForm">
+            <UButton
+              label="Write a Review"
+              :color="shop.is_boosted ? 'yellow' : 'teal'"
+              variant="soft"
+              icon="bi:pencil-square"
+              @click="showReviewForm = true"
+              size="sm"
+            />
+          </div>
+        </div>
+        
+        <!-- Review Stats -->
+        <div v-if="!loadingReviews && reviews.length > 0" 
+          class="mb-6 p-6 rounded-lg"
+          :class="shop.is_boosted ? 'bg-amber-50 dark:bg-amber-950/20' : 'bg-teal-50 dark:bg-teal-950/20'"
+        >
+          <div class="flex items-center gap-8">
+            <div class="text-center">
+              <span class="block text-5xl font-bold" 
+                :class="shop.is_boosted ? 'text-amber-600 dark:text-amber-400' : 'text-teal-600 dark:text-teal-400'">
+                {{ averageRating.toFixed(1) }}
+              </span>
+              <span class="text-sm text-gray-600 dark:text-gray-400">out of 5</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <i v-for="star in 5" :key="'avg-star-' + star"
+                   class="bi text-2xl"
+                   :class="star <= Math.round(averageRating) ? 
+                     (shop.is_boosted ? 'bi-star-fill text-amber-500' : 'bi-star-fill text-teal-500') 
+                     : 'bi-star text-gray-300 dark:text-gray-600'"
+                >
+                </i>
+              </div>
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                Based on {{ reviews.length }} review{{ reviews.length === 1 ? '' : 's' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Review Form -->
+        <div v-if="showReviewForm" 
+          class="mb-8 p-6 border rounded-lg"
+          :class="shop.is_boosted ? 
+            'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20' : 
+            'border-teal-200 dark:border-teal-800 bg-teal-50 dark:bg-teal-950/20'"
+        >
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-medium text-gray-800 dark:text-gray-100">Share Your Experience</h4>
+            <UButton
+              icon="bi:x-lg"
+              variant="ghost"
+              color="gray"
+              size="sm"
+              square
+              @click="showReviewForm = false; newReview = { rating: 0, text: '' };"
+            />
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rating:</label>
+            <div class="flex space-x-2">
+              <button 
+                v-for="star in 5" 
+                :key="'new-star-' + star" 
+                @click="newReview.rating = star" 
+                type="button" 
+                class="focus:outline-none p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <i class="bi text-3xl transition-transform duration-150 ease-in-out"
+                  :class="[
+                    star <= newReview.rating ? 
+                      (shop.is_boosted ? 'bi-star-fill text-amber-500' : 'bi-star-fill text-teal-500') : 
+                      'bi-star text-gray-300 dark:text-gray-600',
+                    star <= newReview.rating ? 'scale-110' : 'hover:scale-110'
+                  ]"
+                >
+                </i>
+              </button>
+            </div>
+          </div>
+          
+          <div>
+            <label for="reviewText" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Your Review:
+            </label>
+            <UTextarea
+              id="reviewText"
+              v-model="newReview.text"
+              :color="shop.is_boosted ? 'yellow' : 'teal'"
+              placeholder="Tell us about your experience with this shop..."
+              rows="4"
+              size="lg"
+            />
+          </div>
+          
+          <UButton
+            label="Submit Review"
+            :color="shop.is_boosted ? 'yellow' : 'teal'"
+            @click="submitShopReview"
+            :loading="submittingReview"
+            loading-icon="svg-spinners:bars-rotate-fade"
+            class="mt-4"
+            size="md"
+            :disabled="!newReview.rating || !newReview.text.trim()"
+          />
+        </div>
+        
+        <!-- Reviews List -->
+        <div v-if="loadingReviews" class="text-center py-10">
+          <i class="bi bi-arrow-repeat text-4xl animate-spin" 
+            :class="shop.is_boosted ? 'text-amber-500' : 'text-teal-500'"></i>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">Loading reviews...</p>
+        </div>
+        
+        <div v-else-if="reviews.length === 0 && !loadingReviews" 
+          class="text-center py-10 text-gray-500 dark:text-gray-400">
+          <i class="bi bi-chat-square-dots-fill text-5xl mb-3 opacity-60"></i>
+          <p class="font-semibold text-lg">No Reviews Yet</p>
+          <p class="text-sm" v-if="user && !isAllowed">Be the first to share your experience!</p>
+          <p class="text-sm" v-else-if="!user">Log in to share your experience!</p>
+        </div>
+        
+        <div v-else class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+          <div v-for="review in reviews" :key="review._id" 
+            class="p-5 border rounded-lg shadow-sm transition-all hover:shadow-md"
+            :class="shop.is_boosted ? 
+              'border-amber-100 dark:border-amber-800/30 dark:bg-gray-800/60' : 
+              'border-teal-100 dark:border-teal-800/30 dark:bg-gray-800/60'"
+          >
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <strong class="text-gray-800 dark:text-gray-100">
+                    {{ review.user?.name || 'Valued Customer' }}
+                  </strong>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ formatReviewDate(review.createdAt) }}
+                  </span>
+                </div>
+                <div class="flex mt-1">
+                  <i v-for="star in 5" :key="review._id + '-star-' + star"
+                    class="bi text-sm"
+                    :class="star <= review.rating ? 
+                      (shop.is_boosted ? 'bi-star-fill text-amber-500' : 'bi-star-fill text-teal-500') : 
+                      'bi-star text-gray-400 dark:text-gray-500'"
+                  >
+                  </i>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 mt-3 whitespace-pre-wrap">{{ review.text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

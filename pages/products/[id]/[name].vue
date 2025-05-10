@@ -3,37 +3,30 @@
   <UModal v-model="proceed_to_buy" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
     <UCard>
       <template #header>
-       <span class=" text-xl font-bold"> Proceed to purchase</span>
+        <span class=" text-xl font-bold"> Proceed to purchase</span>
       </template>
       <div class=" flex flex-col gap-3">
-        <span>Before you proceed, make sure you carefully read and follow these helpful tips to ensure the safety of yourself and your goods!</span>
+        <span>Before you proceed, make sure you carefully read and follow these helpful tips to ensure the safety of
+          yourself
+          and your goods!</span>
         <div class=" flex flex-col text-left p-12 bg-blue-500 bg-opacity-20 rounded-lg">
-          <span class=" font-bold bg-blue-500 rounded-md p-5 w-fit text-center mx-auto"><i class="bi bi-shield-check"></i> Safety tips</span>
+          <span class=" font-bold bg-blue-500 rounded-md p-5 w-fit text-center mx-auto"><i
+              class="bi bi-shield-check"></i>
+            Safety tips</span>
           <ol class="list-decimal pl-5 mt-3">
-            <li v-for="item in buying_rules">{{item}}</li>
+            <li v-for="item in buying_rules">{{ item }}</li>
           </ol>
         </div>
       </div>
       <template #footer>
         <div class=" w-full flex justify-between items-center">
-          <UButton
-          label="Cancel"
-          color="red"
-          varaint="soft"
-          size="xl"
-          @click="proceed_to_buy = !proceed_to_buy"
-          />
+          <UButton label="Cancel" color="red" varaint="soft" size="xl" @click="proceed_to_buy = !proceed_to_buy" />
 
           <!-- `https://wa.me/${product?.shop?.owner?.phone}?text=${wa_message_text}` : '#'"> -->
-          <a :href="`https://wa.me/${product?.shop?.owner?.phone}/?text=${wa_message_text}`" >
-            <UButton
-            label="Proceed"
-            color="green"
-            size="xl"
-            @click="proceed_to_buy = !proceed_to_buy"
-            variant="solid"
-            />
-        </a>
+          <a :href="`https://wa.me/${product?.shop?.owner?.phone}/?text=${wa_message_text}`">
+            <UButton label="Proceed" color="green" size="xl" @click="proceed_to_buy = !proceed_to_buy"
+              variant="solid" />
+          </a>
         </div>
       </template>
     </UCard>
@@ -45,7 +38,7 @@
   <UModal v-model="product_description" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
     <UCard>
       <template #header>
-       <span class=" text-xl font-bold"> {{ product.name }}</span>
+        <span class=" text-xl font-bold"> {{ product.name }}</span>
       </template>
       <div v-html="formattedDecription" class=" max-h-[500px] overflow-y-auto inner"></div>
     </UCard>
@@ -124,14 +117,15 @@
     <!-- SHOP AREA -->
     <div class=" flex flex- gap-3 p-3 border dark:border-gray-600 mb-3 rounded-xl">
       <div class=" size-[100px] overflow-hidden">
-        <img :src="product?.shop?.profile?.image_url" @click="useRouter().push(`/shops/${product?.shop?.name}`)" class=" rounded-md cursor-pointer" />
+        <img :src="product?.shop?.profile?.image_url" @click="useRouter().push(`/shops/${product?.shop?.name}`)"
+          class=" rounded-md cursor-pointer" />
       </div>
 
-      <div class=" flex flex-col">
-        <span class=" font-bold text-xl cursor-pointer" @click="useRouter().push(`/shops/${product?.shop?.name}`)">{{ product?.shop?.name }}</span>
-        <span>{{ product?.shop?.category }}</span>
-        <span>{{ product?.shop?.profile?.location?.state }}</span>
-        <span>{{ product?.shop?.createdAt.toLocaleString() }}</span>
+      <div class=" flex flex-col gap-2">
+        <span class=" font-bold text-xl cursor-pointer" @click="useRouter().push(`/shops/${product?.shop?.name}`)">{{
+          product?.shop?.name }}</span>
+        <span class="bg-green-500 bg-opacity-10 px-3 py-1 text-green-700 text-sm font-semibold w-fit">{{ product?.shop?.category }}</span>
+        <span class="text-sm">{{ product?.shop?.profile?.location?.state }} | joined {{ product?.shop?.createdAt.split('T')[0] }}</span>
       </div>
     </div>
 
@@ -144,8 +138,8 @@
           <UCarousel v-slot="{ item }" :items="product?.images" :prev-button="{
             icon: 'i-heroicons-arrow-left-20-solid',
           }" :next-button="{
-                    icon: 'i-heroicons-arrow-right-20-solid',
-                  }" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
+            icon: 'i-heroicons-arrow-right-20-solid',
+          }" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
             <img :src="item" class="w-full !max-h-[800px]" draggable="false">
           </UCarousel>
           <!-- <span>{{ product_images.length }}</span> -->
@@ -163,7 +157,7 @@
 
       <div class="flex flex-col md:w-[50%]">
         <span class="bg-green-500 bg-opacity-10 px-3 py-1 text-green-700 text-2xl font-semibold w-fit">{{ product.name
-          }}</span>
+        }}</span>
         <span class="px-3 py-2 mt-2 text-orange-600 bg-orange-500 bg-opacity-10 w-fit rounded-md text-sm">
           <i class="bi bi-stars"></i>
           {{ product.condition }}
@@ -171,10 +165,10 @@
         <div class="text-3xl font-bold mt-3 flex flex-col">
           <span>NGN {{ product.price.toLocaleString() }}</span>
           <span class="text-sm" v-if="product.negotiable">Negotiable</span>
-          
+
           <span v-if="product.delivery_fee" class="text-blue-500 text-[20px]">+ NGN{{
             product.delivery_fee.toLocaleString() }} delivery fee</span>
-            <small class="text-sm" v-else>Non-negotiable</small>
+          <small class="text-sm" v-else>Non-negotiable</small>
         </div>
 
         <div class="flex flex-col gap-2 mt-5">
@@ -183,7 +177,8 @@
           </div>
 
           <div class="flex flex-col-reverse relative">
-            <UButton label="see more" variant="link" color="green" @click="product_description = !product_description"/>
+            <UButton label="see more" variant="link" color="green"
+              @click="product_description = !product_description" />
             <div v-html="formattedDecription.substring(0, 200)" class=" ">
             </div>
           </div>
@@ -194,8 +189,21 @@
           </div>
         </div>
         <div class="mt-3 flex flex-col gap-2">
-          <button class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
-            @click="user ? (proceed_to_buy = !proceed_to_buy) : (no_auth_like = !no_auth_like)">Buy this item</button>
+
+
+          <UButton v-if="product.shop.accept_payments" 
+          block
+            :disabled="checking_out"
+            :loading="checking_out"
+            color="blue"
+            :icon="checking_out ? 'svg-spinners:6-dots-scale-middle' : 'hugeicons:payment-success-01'"
+            class="bg-blue-500 hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
+            @click="user ? checkoutProduct() : (no_auth_like = !no_auth_like)">Buy this item</UButton>
+
+
+          <button v-else class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
+            @click="user ? (proceed_to_buy = !proceed_to_buy) : (no_auth_like = !no_auth_like)">Message seller</button>
+
           <div class=" flex flex-row justify-evenly">
 
             <NuxtLink :to="`/shops/${product?.shop?.name}`" target="_blank" class="action_btns">
@@ -206,7 +214,8 @@
             </NuxtLink>
 
             <a v-if="user && product" class="action_btns border-l"
-              :href="product?.shop?.owner?.phone ? `https://wa.me/${product?.shop?.owner?.phone}` : '#'" target="_blank">
+              :href="product?.shop?.owner?.phone ? `https://wa.me/${product?.shop?.owner?.phone}` : '#'"
+              target="_blank">
               <button class="flex gap-3">
                 <i class="bi bi-chat-square-quote"></i>
                 <span class="hidden md:flex">Chat</span>
@@ -251,13 +260,12 @@
 import { ref } from 'vue';
 import { useRoute, useAsyncData, useHead } from '#imports';
 import { useRequestURL } from '#app';
-
 const buying_rules = [
-"Avoid paying in advance, even if it's delivery",
-"Meet the seller at a safe public place",
-"Inspect the item and ensure it’s exactly what you ordered",
-"Make sure that the packed item is what you’ve inspected",
-"Only pay if you’re satisfied!"
+  "Avoid paying in advance, even if it's delivery",
+  "Meet the seller at a safe public place",
+  "Inspect the item and ensure it’s exactly what you ordered",
+  "Make sure that the packed item is what you’ve inspected",
+  "Only pay if you’re satisfied!"
 ]
 
 const proceed_to_buy = ref(false);
@@ -333,7 +341,7 @@ const { data: product } = await useAsyncData('product', async () => {
   const response = await $fetch(`${config.public.apiBase}/products/${route.params.id}`);
   shop.value = response.product.shop
   product_images.value = response.product.images;
-
+  console.log("product: ", response.product);
   return response.product;
 });
 
@@ -372,6 +380,35 @@ const no_auth_like = ref(false);
 
 const wa_message_text = `${window?.location?.href} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} ${encodeURIComponent('\n')} Hello ${product.value?.shop?.owner?.username}, I want to buy this product`;
 
+const toast = useToast();
+const checking_out = ref(false);
+const checkoutProduct = async () => {
+  try {
+    checking_out.value = true;
+    const res = await useNuxtApp().$apiFetch(`/products/${route.params.id}/checkout`, {
+      method: 'POST',
+      body: {
+        email: user.value.email,
+        name: user.value.name,
+        phone: user.value.phone,
+        delivery_info: {
+          address: user.value.address,
+        }
+      }
+    });
+    console.log("checkout product: ", res);
+    window.location.href = res.payment_url;
+  } catch (error) {
+    console.log("error checking out product: ", error);
+  /*   useToast().add({
+      title: 'Error',
+      description: 'Failed to process checkout. Please try again.',
+      color: 'red'
+    }); */
+    toast.add({ title: error._data.message })
+  }
+  checking_out.value = false;
+}
 
 // Set meta tags dynamically (before page is rendered)
 useHead({
