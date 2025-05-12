@@ -32,6 +32,74 @@
     </UCard>
   </UModal>
 
+  <!-- CHECKOUT MODAL -->
+  <UModal v-model="checkout_modal" :ui="{ container: 'flex items-center justify-center min-h-screen' }">
+    <UCard>
+      <template #header>
+        <span class="text-xl font-bold">Product Checkout</span>
+      </template>
+      <div class="flex flex-col gap-4">
+        <!-- Product Summary -->
+        <div class="flex gap-3 border-b border-gray-300/20 pb-3">
+          <img :src="product?.images[0]" class="w-20 h-20 object-cover rounded-lg" />
+          <div class="flex flex-col">
+            <h3 class="font-semibold">{{ product?.name }}</h3>
+            <p class="text-sm text-gray-600">{{ product?.shop?.name }}</p>
+            <p class="font-medium">₦{{ product?.price }}</p>
+          </div>
+        </div>
+
+        <!-- User Details -->
+        <div class="flex flex-col gap-4">
+          <h4 class="font-medium">Delivery Details</h4>
+          <div class="flex flex-col gap-2">
+            <span class="font-medium">Full Name</span>
+            <UInput v-model="user.username" label="Full Name" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="font-medium">Phone Number (for contact)</span>
+            <UInput v-model="user.phone" label="Phone Number" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="font-medium">Delivery Address</span>
+            <UTextarea v-model="user.address" label="Delivery Address" />
+          </div>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <span class="font-medium">Additional notes</span>
+            <UTextarea v-model="user.notes" label="Additional notes" />
+          </div>
+        </div>
+
+        <!-- Price Calculations -->
+        <div class="flex flex-col gap-2 p-3 rounded-lg">
+          <div class="flex justify-between">
+            <span>Product Price</span>
+            <span>₦{{ product?.price }}</span>
+          </div>
+          <div class="flex justify-between" v-if="product?.delivery_fee">
+            <span>Delivery Fee</span>
+            <span>₦{{ product?.delivery_fee }}</span>
+          </div>
+          <div class="flex justify-between font-bold border-t border-gray-300/20 pt-2">
+            <span>Total</span>
+            <span>₦{{ product?.price + (product?.delivery_fee || 0) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="w-full flex justify-between items-center">
+          <UButton label="Cancel" color="red" variant="soft" size="lg" @click="checkout_modal = false" />
+          <UButton label="Pay Now" color="green" size="lg" @click="checkoutProduct" variant="solid" />
+        </div>
+      </template>
+    </UCard>
+  </UModal>
+
 
 
   <!-- PRODUCT DESCRIPTION -->
@@ -135,13 +203,18 @@
       <div class="flex flex-col gap-3 md:w-[50%] ">
         <!-- <div :style="`background-image: url('${main_image}'); background-size: contain;`" class="full-image w-full h-[400px] rounded-md flex justify-center items-center bg-gray-100"></div> -->
         <div class=" flex flex-col gap-3">
-          <UCarousel v-slot="{ item }" :items="product?.images" :prev-button="{
-            icon: 'i-heroicons-arrow-left-20-solid',
-          }" :next-button="{
-            icon: 'i-heroicons-arrow-right-20-solid',
-          }" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
-            <img :src="item" class="w-full !max-h-[800px]" draggable="false">
-          </UCarousel>
+          <div class="relative overflow-hidden">
+            <UCarousel v-slot="{ item }" :items="product?.images" :prev-button="{
+              icon: 'i-heroicons-arrow-left-20-solid',
+            }" :next-button="{
+              icon: 'i-heroicons-arrow-right-20-solid',
+            }" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
+              <img :src="item" class="w-full !max-h-[800px]" draggable="false">
+            </UCarousel>
+            <div v-if="product?.status?.value === 'sold'" class="absolute top-0 left-10 bg-red-500 text-white px-8 py-2 -rotate-45 -translate-x-[40%] translate-y-[60%] text-5xl font-bold w-[300px] text-center">
+              SOLD
+            </div>
+          </div>
           <!-- <span>{{ product_images.length }}</span> -->
           <div class="flex flex-row gap-3 overflow-hidden relative">
             <img v-for="image in product?.images" class=" size-[50px] rounded-lg " :src="image"
@@ -193,12 +266,12 @@
 
           <UButton v-if="product.shop.accept_payments" 
           block
-            :disabled="checking_out"
+            :disabled="checking_out || product?.status?.value === 'sold'"
             :loading="checking_out"
             color="blue"
             :icon="checking_out ? 'svg-spinners:6-dots-scale-middle' : 'hugeicons:payment-success-01'"
             class="bg-blue-500 hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
-            @click="user ? checkoutProduct() : (no_auth_like = !no_auth_like)">Buy this item</UButton>
+            @click="user ? checkout_modal = !checkout_modal : (no_auth_like = !no_auth_like)">Buy this item</UButton>
 
 
           <button v-else class="bg-app_green hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
@@ -268,7 +341,9 @@ const buying_rules = [
   "Only pay if you’re satisfied!"
 ]
 
+
 const proceed_to_buy = ref(false);
+const checkout_modal = ref(false);
 const product_description = ref(false);
 // Get current route
 const route = useRoute();
@@ -389,10 +464,14 @@ const checkoutProduct = async () => {
       method: 'POST',
       body: {
         email: user.value.email,
-        name: user.value.name,
+        name: user.value.username,
         phone: user.value.phone,
         delivery_info: {
           address: user.value.address,
+          state: user.value?.location?.state,
+          city: user.value?.location?.LGA,
+          phone: user.value.phone,
+          additional_notes: user.value.notes,
         }
       }
     });

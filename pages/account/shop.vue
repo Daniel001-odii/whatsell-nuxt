@@ -488,6 +488,21 @@
         </select>
       </div>
 
+
+      <div class="flex flex-col gap-3 mt-4">
+        <span>Payment Collection <UBadge color="orange" size="sm" label="recommended" /></span>
+        <div class="flex items-start gap-3">
+          <UToggle @change="updateShop()" v-model="shop.accept_payments" />
+          <span class="text-sm text-gray-600 dark:text-gray-300">
+            Enable direct payments for products through WhatSell
+            <small class="block text-blue-500 text-sm">
+              <i class="bi bi-info-circle"></i> When enabled, customers can pay directly on WhatSell instead of direct payments on WhatsApp.
+              This feature is recommended for all sellers to avoid scams and ensure secure transactions.
+            </small>
+          </span>
+        </div>
+      </div>
+
       <div class="flex flex-col gap-3 mt-3">
         <span>Shop template</span>
         <div class="h-[400px] overflow-y-auto">
@@ -970,6 +985,7 @@ const getUserDetails = async () => {
     shop.description = res.user.shop.description;
     shop.image = res.user.shop.profile.image_url;
     shop.is_boosted = res.user.shop.is_boosted;
+    shop.accept_payments = res.user.shop.accept_payments;
     getShopProducts(res.user.shop.name);
     console.log("user: ", res);
   } catch (error) {
