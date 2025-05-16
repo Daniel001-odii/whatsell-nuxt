@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-1 relative min-w-[300px] h-fit bg-gray-50 dark:bg-gray-900 rounded-lg flex-col overflow-hidden">
+    <div class="flex flex-1 relative min-w-[300px] h-fit bg-gray-50 dark:bg-gray-900 rounded-lg flex-col overflow-hidden border-4 border-[#00C1F6]">
      <RouterLink :to="`/shops/${name}`">
          <div class=" h-[200px] lg:h-[300px] w-full relative bg-green-100" :style="`background-image:url(${image_url})`" style="background-position: center; background-repeat: no-repeat; background-size: cover;">
              <span class="absolute right-6 top-4 rounded-full size-[40px] flex justify-center items-center text-white bg-[#00C1F6]">

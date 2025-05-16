@@ -16,7 +16,7 @@
         <!-- IMAGE -->
         <div class="overflow-hidden rounded-2xl">
             <NuxtLink v-if="product_slug" :to="id ? `/products/${id}/${product_slug}`:'#'" class="text-sm clamp-4">
-                <img :src="image_url" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer md:max-w-[280px]" />
+                <img :src="image_url" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer md:max-w-[400px]" />
                 <img v-if="!image_url" src="../assets/images/logo/whatsell_gray.png" class="w-full transition-transform duration-300 transform group-hover:scale-125 peer" />
             </NuxtLink>
         </div>

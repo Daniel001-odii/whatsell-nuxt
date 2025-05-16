@@ -28,7 +28,7 @@
                     <NuxtLink :to="`/shops/${shop.name}`" class=" font-bold text-xl capitalize">{{ shop.name }}
                     </NuxtLink>
                     <span>{{ shop.category }}</span>
-                    <small>joined: {{ shop.createdAt }}</small>
+                    <small>joined: {{ shop.createdAt.split("T")[0] }}</small>
                 </div>
             </div>
         </div>
@@ -65,18 +65,23 @@
             <ShopCard v-for="shop in followed_shops" :name="shop.name" :category="shop.category"
                 :image_url="shop?.profile?.image_url" :location="shop?.profile?.location" />
 
-            <div v-if="followed_shops.length === 0"
+            <div v-if="followed_shops.length === 0 && user"
                 class=" p-12 flex flex-col items-center justify-center w-full gap-3">
                 <i class="bi bi-exclamation-circle text-4xl"></i>
                 <span>youre not following any shops yet</span>
+            </div>
+            <div v-if="!user" class=" p-12 flex flex-col items-center justify-center w-full gap-3">
+                <i class="bi bi-exclamation-circle text-4xl"></i>
+                <span>Please 
+                    <RouterLink to="/login" class="underline text-blue-500">login</RouterLink> to view shops youre following</span>
             </div>
         </div>
 
 
 
 
-        <!-- BOOSTED SHOPS -->
-        <h2 class=" font-bold mt-12">Boosted shops</h2>
+        <!-- Premium Sellers -->
+        <h2 class=" font-bold mt-12">Premium Sellers</h2>
         <div v-if="loading_boosted_shops" class=" flex flex-row gap-3 mt-3  overflow-x-auto py-5">
             <USkeleton class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
             <USkeleton class=" size-[280px]" :ui="{ background: 'dark:bg-gray-700' }" />
@@ -102,7 +107,7 @@
         <!-- BEST SELLING -->
         <h2 class=" font-bold mt-12">All shops</h2>
         <!-- {{ all_shops }} -->
-        <div class=" flex flex-row gap-3 mt-3 overflow-x-auto py-5">
+        <div class=" flex flex-row flex-wrap gap-3 mt-3 py-5">
             <ShopCard v-for="shop in all_shops" :name="shop.name" :header_image="shop.headerImage"
                 :category="shop.category" :image_url="shop?.profile?.image_url" :location="shop?.profile?.location" />
             <div v-if="all_shops.length === 0" class=" p-12 flex flex-col items-center justify-center w-full gap-3">
@@ -166,9 +171,9 @@ const getBoostedShops = async () => {
     try {
         const res = await useNuxtApp().$apiFetch('/shops/boosted/all');
         boosted_shops.value = res.shops;
-        console.log("boosted shops: ", res);
+        console.log("Premium Sellers: ", res);
     } catch (err) {
-        console.log("err getting boosted shops: ", err);
+        console.log("err getting Premium Sellers: ", err);
     }
     loading_boosted_shops.value = false
 }

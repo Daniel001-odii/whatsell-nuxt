@@ -3,11 +3,11 @@
 
   <div class="min-h-screen md:p-0">
     <!-- HERO CAROUSEL -->
-<!--     <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
+    <!--     <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
   <img :src="item" class="w-full " draggable="false">
 </UCarousel> -->
 
- <!-- <button @click="promptForNotificationPermission">Enable Notifications</button> -->
+    <!-- <button @click="promptForNotificationPermission">Enable Notifications</button> -->
 
     <HeroSection />
 
@@ -15,46 +15,91 @@
     <h2 class="font-bold mt-12">Explore Our Categories</h2>
     <!-- {{ categories }} -->
     <div class="flex flex-row gap-3 overflow-x-auto mt-3 cat_box">
-      <NuxtLink target="_blank" :to="`/categories/${category.category}`" v-for="(category, index) in categories"
-        class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold">
-        {{ category.category }}</NuxtLink> </div>
+      <NuxtLink
+        target="_blank"
+        :to="`/categories/${category.category}`"
+        v-for="(category, index) in categories"
+        class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold"
+      >
+        {{ category.category }}</NuxtLink
+      >
+    </div>
 
     <!-- best deals for your 2morrow -->
     <h2 class="font-bold mt-12">Best Deals for you today</h2>
     <div v-if="loading" class="mt-12 flex flex-wrap gap-3">
       <!-- dummy product card -->
-      <div v-for="card in 10"
-        class="flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md">
-        <USkeleton class="w-full h-[50%]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-[80%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-full h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-[70%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+      <div
+        v-for="card in 10"
+        class="flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md"
+      >
+        <USkeleton
+          class="w-full h-[50%]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-[80%] h-[10px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-full h-[20px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-[70%] h-[10px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
       </div>
     </div>
-    <div v-if="!loading && products.length > 0" class="flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
+    <div
+      v-if="!loading && products.length > 0"
+      class="flex flex-row flex-wrap gap-3"
+    >
+      <MasonryWall
+        :items="products.slice(0, 20)"
+        :ssr-columns="1"
+        :column-width="130"
+        :gap="10"
+      >
         <template #default="{ item, index }">
-          <ProductCard class="mt-[15px]" :has-liked-button="true" :id="item._id"
-            :product_price="item.price.toLocaleString()" :image_url="item.images[0]" :views="item.views"
-            :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
+          <ProductCard
+            class="mt-[15px]"
+            :has-liked-button="true"
+            :id="item._id"
+            :product_price="item.price.toLocaleString()"
+            :image_url="item.images[0]"
+            :views="item.views"
+            :is_liked="checkLikes(item._id)"
+            :product_slug="item.slug"
+          />
         </template>
       </MasonryWall>
     </div>
 
     <!-- get all shops -->
     <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
-  
-    <UCarousel 
-    ref="carouselRef"
-    v-slot="{ item }" :items="shops" class=" mt-3" arrows>
+
+    <UCarousel
+      ref="carouselRef"
+      v-slot="{ item }"
+      :items="shops"
+      class="mt-3"
+      arrows
+    >
       <ShopCard
-      class=" mr-3"
-      :header_image="item?.headerImage" :name="item?.name"
-        :category="item?.category" :image_url="item?.profile?.image_url"
-        :location="`${item?.owner?.location?.state} | ${item?.owner?.location?.LGA}`" />
+        class="mr-3"
+        :header_image="item?.headerImage"
+        :name="item?.name"
+        :category="item?.category"
+        :image_url="item?.profile?.image_url"
+        :location="`${item?.owner?.location?.state} | ${item?.owner?.location?.LGA}`"
+      />
     </UCarousel>
 
-    <div v-if="!user" class="flex flex-col gap-3 justify-center items-center h-[300px]">
+    <div
+      v-if="!user"
+      class="flex flex-col gap-3 justify-center items-center h-[300px]"
+    >
       <p class="text-center">
         Join whatsell and start selling your products to a wide audience.
       </p>
@@ -63,30 +108,42 @@
           Become a Vendor Today!
         </button>
       </NuxtLink>
-      <span>Are you a regular buyer?
+      <span
+        >Are you a regular buyer?
         <Nuxtlink to="/register/buyer" class="underline text-blue-500">
-          signup</Nuxtlink>
+          signup</Nuxtlink
+        >
         and start buying!
       </span>
     </div>
 
-    <!-- BOOSTED SHOPS -->
-    <h2 class="font-bold mt-12">Boosted shops</h2>
+    <!-- Premium Sellers -->
+    <h2 class="font-bold mt-12">Premium Sellers</h2>
     <div class="flex flex-wrap gap-3 mt-3">
-      <BoostedShopCard v-for="shop in boosted_shops" :name="shop.name" :category="shop.category"
-        :image_url="shop?.profile?.image_url" />
-      <div v-if="!loading_boosted_shops && boosted_shops.length == 0"
-        class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]">
+      <BoostedShopCard
+        v-for="shop in boosted_shops"
+        :name="shop.name"
+        :category="shop.category"
+        :image_url="shop?.profile?.image_url"
+      />
+      <div
+        v-if="!loading_boosted_shops && boosted_shops.length == 0"
+        class="p-5 py-8 text-center w-full bg-[#00c1f618] rounded-lg text-xl text-[#00C1F6]"
+      >
         There are limited slots available,<br />
         be the first to take an available slot. <br />
         <NuxtLink v-if="user?.shop" :to="`/account/shop`">
-          <button class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold">
+          <button
+            class="rounded-full bg-[#00C1F6] text-white p-3 px-6 mt-6 font-bold"
+          >
             Boost Your Shop Now! <i class="bi bi-rocket-fill ml-3"></i>
           </button>
         </NuxtLink>
 
         <NuxtLink v-else to="/account/shop">
-          <button class="rounded-full bg-black text-white p-3 px-6 mt-6 font-bold">
+          <button
+            class="rounded-full bg-black text-white p-3 px-6 mt-6 font-bold"
+          >
             Create Your shop
           </button>
         </NuxtLink>
@@ -94,33 +151,86 @@
     </div>
 
     <!-- best deals for your 2morrow -->
-    <h2 class=" font-bold mt-12">Posted previously by vendors</h2>
-    <div v-if="loading" class=" mt-12 flex flex-wrap gap-3">
+    <h2 class="font-bold mt-12 mb-6">Posted previously by vendors</h2>
+    <div v-if="loading" class="mt-12 flex flex-wrap gap-3">
       <!-- dummy product card -->
-      <div v-for="card in 10"
-        class=" flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md">
-        <USkeleton class="w-full h-[50%]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-[80%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-full h-[20px]" :ui="{ background: 'dark:bg-gray-700' }" />
-        <USkeleton class="w-[70%] h-[10px]" :ui="{ background: 'dark:bg-gray-700' }" />
+      <div
+        v-for="card in 10"
+        class="flex-1 md:flex-0 min-w-[150px] w-[150px] h-[200px] flex flex-col gap-2 p-1 bg-gray-500 bg-opacity-20 rounded-md"
+      >
+        <USkeleton
+          class="w-full h-[50%]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-[80%] h-[10px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-full h-[20px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
+        <USkeleton
+          class="w-[70%] h-[10px]"
+          :ui="{ background: 'dark:bg-gray-700' }"
+        />
       </div>
     </div>
-    <div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
-      <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
+    <div
+      v-if="!loading && products.length > 0"
+      class="flex flex-row flex-wrap gap-3"
+    >
+      <MasonryWall
+        :items="prev_products"
+        :ssr-columns="1"
+        :column-width="130"
+        :gap="10"
+      >
         <template #default="{ item, index }">
-          <ProductCard class=" mt-[15px]" :has-liked-button="true" :id="item._id"
-            :product_price="(item.price).toLocaleString()" :image_url="item.images[0]" :views="item.views"
-            :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
+          <ProductCard
+            class="mt-[15px]"
+            :has-liked-button="true"
+            :id="item._id"
+            :product_price="item.price.toLocaleString()"
+            :image_url="item.images[0]"
+            :views="item.views"
+            :is_liked="checkLikes(item._id)"
+            :product_slug="item.slug"
+          />
         </template>
       </MasonryWall>
+    </div>
+
+    <!-- BEST SELLING -->
+    <h2 class="font-bold mt-12">All shops</h2>
+    <!-- {{ all_shops }} -->
+    <div class="flex flex-row flex-wrap gap-3 mt-3 py-5">
+      <ShopCard
+        v-for="shop in shops"
+        :name="shop.name"
+        :header_image="shop.headerImage"
+        :category="shop.category"
+        :image_url="shop?.profile?.image_url"
+        :location="shop?.profile?.location"
+      />
+      <div
+        v-if="shops.length === 0"
+        class="p-12 flex flex-col items-center justify-center w-full gap-3"
+      >
+        <i class="bi bi-exclamation-circle text-4xl"></i>
+        <span>No shops available</span>
+      </div>
     </div>
 
     <!-- FAQ SECTION -->
     <h2 class="font-bold mt-12">Services to help you Shop</h2>
     <div class="flex flex-row flex-wrap gap-3 pb-10 mt-3">
       <div
-        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
-        <div class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full">
+        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none"
+      >
+        <div
+          class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full"
+        >
           <span class="font-bold text-xl">Frequently Asked Questions</span>
           <p class="mt-2 text-sm">Updates on safe Shopping in our shops</p>
         </div>
@@ -128,8 +238,11 @@
       </div>
 
       <div
-        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
-        <div class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full">
+        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none"
+      >
+        <div
+          class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full"
+        >
           <span class="font-bold text-xl">Navigate WhatSell With Ease</span>
           <p class="mt-2 text-sm">
             Updates how you can navigate WhatSell easily
@@ -139,9 +252,14 @@
       </div>
 
       <div
-        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none">
-        <div class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full">
-          <span class="font-bold text-xl">Safety Tips for Secure Purchasing</span>
+        class="flex flex-col justify-between items-center flex-1 rounded-md overflow-hidden h-[300px] min-w-[300px] border dark:border-none"
+      >
+        <div
+          class="flex flex-col gap-3 bg-white dark:bg-gray-900 h-[50%] p-5 w-full"
+        >
+          <span class="font-bold text-xl"
+            >Safety Tips for Secure Purchasing</span
+          >
           <p class="mt-2 text-sm">
             Get full insight on how to safely buy products on WhatSell
           </p>
@@ -161,43 +279,42 @@ import { useRoute, useAsyncData } from "#imports";
 import axios from "axios";
 const carouselRef = ref();
 
-
 const promptForNotificationPermission = async () => {
   try {
-    const permission = await OneSignal.Notifications.requestPermission()
+    const permission = await OneSignal.Notifications.requestPermission();
     if (permission) {
-      console.log('Notification permission granted')
+      console.log("Notification permission granted");
       // You can now get the user's ID
-      const userId = await OneSignal.User.pushSubscription.getId()
-      console.log('User ID:', userId)
-      
+      const userId = await OneSignal.User.pushSubscription.getId();
+      console.log("User ID:", userId);
+
       // Send this ID to your backend if needed
     } else {
-      console.log('Notification permission denied')
+      console.log("Notification permission denied");
     }
   } catch (error) {
-    console.error('Error requesting permission:', error)
+    console.error("Error requesting permission:", error);
   }
-}
+};
 
 const checkSubscriptionStatus = async () => {
-  const isSubscribed = await OneSignal.Notifications.isPushSupported()
-  const permission = await OneSignal.Notifications.permission
-  console.log('Push supported:', isSubscribed)
-  console.log('Permission status:', permission)
-}
+  const isSubscribed = await OneSignal.Notifications.isPushSupported();
+  const permission = await OneSignal.Notifications.permission;
+  console.log("Push supported:", isSubscribed);
+  console.log("Permission status:", permission);
+};
 
 onMounted(() => {
   setInterval(() => {
-    if (!carouselRef.value) return
+    if (!carouselRef.value) return;
 
     if (carouselRef.value.page === carouselRef.value.pages) {
-      return carouselRef.value.select(0)
+      return carouselRef.value.select(0);
     }
 
-    carouselRef.value.next()
-  }, 3000)
-})
+    carouselRef.value.next();
+  }, 3000);
+});
 
 const items = [
   "https://picsum.photos/1280/720?random=1",
@@ -218,7 +335,7 @@ const { data: products, error: products_error } = await useAsyncData(
     loading.value = true;
     const response = await $fetch(`${config.public.apiBase}/products`);
     loading.value = false;
-    return response.products.slice(0,50).reverse(); // Extracting the nested products array
+    return response.products.slice(0, 50).reverse(); // Extracting the nested products array
   }
 );
 
@@ -228,7 +345,7 @@ const { data: prev_products, error: prev_products_error } = await useAsyncData(
     loading.value = true;
     const response = await $fetch(`${config.public.apiBase}/products`);
     loading.value = false;
-    return response.products.slice(0,10); // Extracting the nested products array
+    return response.products.slice(0, 10); // Extracting the nested products array
   }
 );
 
@@ -287,9 +404,9 @@ const getBoostedShops = async () => {
   try {
     const res = await useNuxtApp().$apiFetch("/shops/boosted/all");
     boosted_shops.value = res.shops;
-    console.log("boosted shops: ", res);
+    console.log("Premium Sellers: ", res);
   } catch (err) {
-    console.log("err getting boosted shops: ", err);
+    console.log("err getting Premium Sellers: ", err);
   }
   loading_boosted_shops.value = false;
 };
