@@ -3,11 +3,11 @@
 
   <div class="min-h-screen md:p-0">
     <!-- HERO CAROUSEL -->
-    <!-- <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
+    <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
   <img :src="item" class="w-full " draggable="false">
 </UCarousel>
- -->
- <button @click="promptForNotificationPermission">Enable Notifications</button>
+
+ <!-- <button @click="promptForNotificationPermission">Enable Notifications</button> -->
 
     <HeroSection />
 
@@ -32,13 +32,13 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class="flex flex-row flex-wrap gap-3">
-     <!--  <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
+      <MasonryWall :items="products.slice(0, 20)" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class="mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="item.price.toLocaleString()" :image_url="item.images[0]" :views="item.views"
             :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
         </template>
-      </MasonryWall> -->
+      </MasonryWall>
     </div>
 
     <!-- get all shops -->
@@ -106,13 +106,13 @@
       </div>
     </div>
     <div v-if="!loading && products.length > 0" class=" flex flex-row flex-wrap gap-3">
-      <!-- <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
+      <MasonryWall :items="prev_products" :ssr-columns="1" :column-width="130" :gap="10">
         <template #default="{ item, index }">
           <ProductCard class=" mt-[15px]" :has-liked-button="true" :id="item._id"
             :product_price="(item.price).toLocaleString()" :image_url="item.images[0]" :views="item.views"
             :is_liked="checkLikes(item._id)" :product_slug="item.slug" />
         </template>
-      </MasonryWall> -->
+      </MasonryWall>
     </div>
 
     <!-- FAQ SECTION -->
