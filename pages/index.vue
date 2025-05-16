@@ -3,9 +3,9 @@
 
   <div class="min-h-screen md:p-0">
     <!-- HERO CAROUSEL -->
-    <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
+<!--     <UCarousel v-slot="{ item }" :items="items" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden mt-3 !max-h-[300px]" arrows>
   <img :src="item" class="w-full " draggable="false">
-</UCarousel>
+</UCarousel> -->
 
  <!-- <button @click="promptForNotificationPermission">Enable Notifications</button> -->
 

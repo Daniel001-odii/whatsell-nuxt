@@ -1,7 +1,7 @@
 <template>
-    <span>{{ shops_near_me }}</span>
+   <!--  <span>{{ shops_near_me }}</span>
     <span>{{ location_error }}</span>
-    <span>{{ state }}</span>
+    <span>{{ state }}</span> -->
     <div class=" flex flex-col">
         <div v-if="loading_user" class=" flex gap-3 p-3 rounded-md h-[150px] mt-12">
             <USkeleton class="min-w-[150px] h-full md:w-[200px] md:h-[120px]"
