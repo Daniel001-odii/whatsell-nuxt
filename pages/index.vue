@@ -68,7 +68,7 @@
             :product_name="item.name"
           />
         </div> -->
-      <MasonryWall
+     <!--  <MasonryWall
         :items="products.slice(0, 20)"
         :ssr-columns="1"
         :column-width="130"
@@ -87,7 +87,7 @@
             :product_name="item.name"
           />
         </template>
-      </MasonryWall>
+      </MasonryWall> -->
     </div>
 
     <!-- get all shops -->
