@@ -55,7 +55,9 @@
       v-if="!loading && products.length > 0"
       class="flex flex-row flex-wrap gap-3"
     >
-    <!-- <div v-for="item in products">
+<div class=" flex justify-center items-center w-full">
+    <div class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-6 ">
+    <div v-for="item in products" >
     <ProductCard
             class="mt-[15px]"
             :has-liked-button="true"
@@ -67,7 +69,9 @@
             :product_slug="item.slug"
             :product_name="item.name"
           />
-        </div> -->
+        </div>
+      </div>
+    </div>
      <!--  <MasonryWall
         :items="products.slice(0, 20)"
         :ssr-columns="1"
