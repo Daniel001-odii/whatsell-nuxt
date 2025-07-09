@@ -14,21 +14,43 @@
         </div>
 
         <!-- SHOP PREVIEW IF USER IS SELLER -->
-        <div v-if="!loading_user && user && shop" class=" flex flex-col">
-            <h2 class=" font-bold mt-12">Your Shop</h2>
-            <div class="h-[150px] flex gap-3 p-3 border dark:border-gray-600 rounded-md mt-3 hover:border-green-500">
-                <NuxtLink :to="`/shops/${shop.name}`">
-                    <div :style="`background: url(${shop?.profile?.image_url});`"
-                        style="background-position: center; background-size: cover; background-repeat: no-repeat;"
-                        class=" h-full w-[150px] md:w-[200px] rounded-md bg-gray-600 border dark:border-gray-600">
-                        <!-- <img :src="shop?.profile?.image_url" alt="shop image"/> -->
+        <div v-if="!loading_user && user && shop" class="flex flex-col">
+            <h2 class="font-bold mt-12 mb-4 text-2xl flex items-center gap-2">
+                <i class="bi bi-shop text-green-600"></i>
+                Your Shop
+            </h2>
+            <div class="flex flex-col md:flex-row gap-5 p-5 border dark:border-gray-600 rounded-xl mt-3 bg-white dark:bg-gray-900 shadow hover:shadow-lg transition-shadow duration-200">
+                <!-- Shop Image -->
+                <NuxtLink :to="`/shops/${shop.name}`" class="flex-shrink-0">
+                    <div
+                        :style="`background: url(${shop?.profile?.image_url}); background-position: center; background-size: cover; background-repeat: no-repeat;`"
+                        class="h-[120px] w-[120px] md:h-[150px] md:w-[150px] rounded-full border-4 border-green-500 shadow-md flex items-center justify-center overflow-hidden bg-gray-200 dark:bg-gray-700"
+                    >
+                        <i v-if="!shop?.profile?.image_url" class="bi bi-shop text-5xl text-green-400"></i>
                     </div>
                 </NuxtLink>
-                <div class=" flex flex-col">
-                    <NuxtLink :to="`/shops/${shop.name}`" class=" font-bold text-xl capitalize">{{ shop.name }}
-                    </NuxtLink>
-                    <span>{{ shop.category }}</span>
-                    <small>joined: {{ shop.createdAt.split("T")[0] }}</small>
+                <!-- Shop Info -->
+                <div class="flex flex-col justify-center flex-1 gap-2">
+                    <div class="flex items-center gap-2">
+                        <NuxtLink :to="`/shops/${shop.name}`" class="font-bold text-2xl capitalize hover:underline">
+                            {{ shop.name }}
+                        </NuxtLink>
+                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-700 rounded text-xs uppercase tracking-wide">
+                            {{ shop.category }}
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3 mt-1">
+                        <i class="bi bi-calendar-event text-gray-400"></i>
+                        <small class="text-gray-500">Joined: {{ shop.createdAt.split("T")[0] }}</small>
+                    </div>
+                    <div class="flex items-center gap-3 mt-2">
+                        <NuxtLink :to="`/shops/${shop.name}`" class="text-blue-500 hover:underline text-sm flex items-center gap-1">
+                            <i class="bi bi-box-arrow-up-right"></i> Visit Shop
+                        </NuxtLink>
+                        <NuxtLink to="/account/shop" class="text-gray-500 hover:text-green-600 text-sm flex items-center gap-1">
+                            <i class="bi bi-pencil-square"></i> Edit Shop
+                        </NuxtLink>
+                    </div>
                 </div>
             </div>
         </div>

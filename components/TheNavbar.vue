@@ -24,7 +24,7 @@
 
 
     <!-- USER SESSION EXPIRED -->
-    <div class="border-b border-gray-300 dark:border-gray-600 sticky top-0 z-[99999] bg-inherit">
+    <div class="border-b border-gray-300 dark:border-gray-600 z-[99999] bg-inherit">
 
         <!-- AUTH NAVBAR -->
         <div v-if="user" class="flex flex-col gap-3 justify-center items-center p-3 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">

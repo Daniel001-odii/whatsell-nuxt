@@ -53,26 +53,28 @@
     </div>
     <div
       v-if="!loading && products.length > 0"
-      class="flex flex-row flex-wrap gap-3"
+      class=""
     >
-<div class=" flex justify-center items-center w-full">
-    <div class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-6 ">
-    <div v-for="item in products" >
-    <ProductCard
-            class="mt-[15px]"
-            :has-liked-button="true"
-            :id="item._id"
-            :product_price="item.price.toLocaleString()"
-            :image_url="item.images[0]"
-            :views="item.views"
-            :is_liked="checkLikes(item._id)"
-            :product_slug="item.slug"
-            :product_name="item.name"
-          />
+      <div class="flex justify-center items-center w-full">
+        <div
+          class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-6"
+        >
+          <div v-for="item in products">
+            <ProductCard
+              class="mt-[15px]"
+              :has-liked-button="true"
+              :id="item._id"
+              :product_price="item.price.toLocaleString()"
+              :image_url="item.images[0]"
+              :views="item.views"
+              :is_liked="checkLikes(item._id)"
+              :product_slug="item.slug"
+              :product_name="item.name"
+            />
+          </div>
         </div>
       </div>
-    </div>
-     <!--  <MasonryWall
+      <!--  <MasonryWall
         :items="products.slice(0, 20)"
         :ssr-columns="1"
         :column-width="130"
@@ -92,47 +94,6 @@
           />
         </template>
       </MasonryWall> -->
-    </div>
-
-    <!-- get all shops -->
-    <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
-
-    <UCarousel
-      ref="carouselRef"
-      v-slot="{ item }"
-      :items="shops"
-      class="mt-3"
-      arrows
-    >
-      <ShopCard
-        class="mr-3"
-        :header_image="item?.headerImage"
-        :name="item?.name"
-        :category="item?.category"
-        :image_url="item?.profile?.image_url"
-        :location="`${item?.owner?.location?.state} | ${item?.owner?.location?.LGA}`"
-      />
-    </UCarousel>
-
-    <div
-      v-if="!user"
-      class="flex flex-col gap-3 justify-center items-center h-[300px]"
-    >
-      <p class="text-center">
-        Join whatsell and start selling your products to a wide audience.
-      </p>
-      <NuxtLink to="/register/seller">
-        <button class="rounded-full bg-app_green text-white p-3 px-6 font-bold">
-          Become a Vendor Today!
-        </button>
-      </NuxtLink>
-      <span
-        >Are you a regular buyer?
-        <Nuxtlink to="/register/buyer" class="underline text-blue-500">
-          signup</Nuxtlink
-        >
-        and start buying!
-      </span>
     </div>
 
     <!-- Premium Sellers -->
@@ -168,6 +129,91 @@
       </div>
     </div>
 
+    <!-- get all shops -->
+    <h2 class="font-bold mt-12">Discover Shops Near your location</h2>
+
+    <!--  <UCarousel
+      ref="carouselRef"
+      v-slot="{ item }"
+      :items="shops"
+      class="mt-3"
+      arrows
+    >
+      <ShopCard
+        class="mr-3"
+        :header_image="item?.headerImage"
+        :name="item?.name"
+        :category="item?.category"
+        :image_url="item?.profile?.image_url"
+        :location="`${item?.owner?.location?.state} | ${item?.owner?.location?.LGA}`"
+      />
+    </UCarousel>
+ -->
+
+    <!-- {{ all_shops }} -->
+    <div
+      class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 py-5 relative h-[790px] overflow-hidden"
+    >
+      <ShopCard
+        v-for="shop in shops"
+        :name="shop.name"
+        :header_image="shop.headerImage"
+        :category="shop.category"
+        :image_url="shop?.profile?.image_url"
+        :location="shop?.profile?.location"
+      />
+      <div
+        v-if="shops.length === 0"
+        class="p-12 flex flex-col items-center justify-center w-full gap-3 col-span-full"
+      >
+        <i class="bi bi-exclamation-circle text-4xl"></i>
+        <span>No shops available</span>
+      </div>
+
+      <!-- Cover -->
+      <div
+        class="w-full h-[65%] bottom-0 overflow_cover_dark hidden dark:flex absolute justify-center items-center"
+      >
+        <UButton
+          @click="navigateTo('/shops')"
+          label="See All Shops"
+          color="green"
+          class="bg-app_green"
+        />
+      </div>
+      <div
+        class="w-full h-[65%] bottom-0 overflow_cover dark:hidden absolute flex justify-center items-center"
+      >
+        <UButton
+          @click="navigateTo('/shops')"
+          label="See All Shops"
+          color="green"
+          class="bg-app_green"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="!user"
+      class="flex flex-col gap-3 justify-center items-center h-[300px]"
+    >
+      <p class="text-center">
+        Join whatsell and start selling your products to a wide audience.
+      </p>
+      <NuxtLink to="/register/seller">
+        <button class="rounded-full bg-app_green text-white p-3 px-6 font-bold">
+          Become a Vendor Today!
+        </button>
+      </NuxtLink>
+      <span
+        >Are you a regular buyer?
+        <Nuxtlink to="/register/buyer" class="underline text-blue-500">
+          signup</Nuxtlink
+        >
+        and start buying!
+      </span>
+    </div>
+
     <!-- best deals for your 2morrow -->
     <h2 class="font-bold mt-12 mb-6">Posted previously by vendors</h2>
     <div v-if="loading" class="mt-12 flex flex-wrap gap-3">
@@ -198,7 +244,7 @@
       v-if="!loading && products.length > 0"
       class="flex flex-row flex-wrap gap-3"
     >
-     <!--  <MasonryWall
+      <!--  <MasonryWall
         :items="prev_products"
         :ssr-columns="1"
         :column-width="130"
@@ -220,33 +266,7 @@
     </div>
 
     <!-- BEST SELLING -->
-    <h2 class="font-bold mt-12">All shops</h2>
-    <!-- {{ all_shops }} -->
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 py-5 relative h-[790px] overflow-hidden">
-      <ShopCard
-        v-for="shop in shops"
-        :name="shop.name"
-        :header_image="shop.headerImage"
-        :category="shop.category"
-        :image_url="shop?.profile?.image_url"
-        :location="shop?.profile?.location"
-      />
-      <div
-        v-if="shops.length === 0"
-        class="p-12 flex flex-col items-center justify-center w-full gap-3 col-span-full"
-      >
-        <i class="bi bi-exclamation-circle text-4xl"></i>
-        <span>No shops available</span>
-      </div>
-      
-      <!-- Cover -->
-       <div class=" w-full h-[65%] bottom-0 overflow_cover_dark hidden dark:flex absolute justify-center items-center ">
-        <UButton  @click="navigateTo('/shops')"  label="See All Shops" color="green" class=" bg-app_green"/>
-       </div>
-       <div class=" w-full h-[65%] bottom-0 overflow_cover dark:hidden absolute flex justify-center items-center">
-        <UButton  @click="navigateTo('/shops')" label="See All Shops"  color="green" class=" bg-app_green"/>
-       </div>
-    </div>
+    <!-- <h2 class="font-bold mt-12">All shops</h2> -->
 
     <!-- FAQ SECTION -->
     <h2 class="font-bold mt-12">Services to help you Shop</h2>
