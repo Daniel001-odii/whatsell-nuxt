@@ -55,12 +55,13 @@
       v-if="!loading && products.length > 0"
       class=""
     >
-      <div class="flex justify-center items-center w-full">
+      <div class="flex justify-start items-start w-full border">
         <div
-          class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-6"
+          class="columns-2 sm:columns-3 lg:columns-4 xl:columns-4 gap-4 space-y-4"
         >
-          <div v-for="item in products">
+          <div v-for="item in products" class="break-inside-avoid">
             <ProductCard
+              :user="user"
               class="mt-[15px]"
               :has-liked-button="true"
               :id="item._id"
