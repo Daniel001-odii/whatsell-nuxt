@@ -1,6 +1,6 @@
 <!-- components/HeroSection.vue -->
 <template>
-    <ClientOnly>
+    <!-- <ClientOnly> -->
       <!-- <section class="hero bg-gradient-to-r from-green-500 to-green-700 rounded-lg"> -->
       <!-- <section class="hero bg-app_green rounded-lg">
         <div class="hero-content">
@@ -33,7 +33,7 @@
         </div>
        
       </div>
-    </ClientOnly>
+    <!-- </ClientOnly> -->
   </template>
   
   <script>

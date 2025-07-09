@@ -24,10 +24,10 @@
 
 
     <!-- USER SESSION EXPIRED -->
-    <div class="border-b border-gray-300 dark:border-gray-600">
+    <div class="border-b border-gray-300 dark:border-gray-600 sticky top-0 z-[99999] bg-inherit">
 
         <!-- AUTH NAVBAR -->
-        <div v-if="user" class="flex flex-col gap-3 justify-center items-center p-3 sticky top-0 z-30 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
+        <div v-if="user" class="flex flex-col gap-3 justify-center items-center p-3 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
             <div class="container mx-auto flex w-full items-center justify-between">
                 <div class="flex flex-row w-full md:w-fit justify-between">
                     <div class="w-[120px]">
@@ -113,7 +113,7 @@
 
         <!-- NON_AUTH NAVBAR -->
         <div v-else
-            class="container mx-auto flex md:flex-row flex-col w-full md:items-center justify-between gap-4 relative p-3 sticky top-0 z-30 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
+            class="container mx-auto flex md:flex-row flex-col w-full md:items-center justify-between gap-4 p-3 sticky top-0 z-30 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
             <div class="flex flex-row w-full md:w-fit justify-between">
                 <div class="w-[120px]">
                     <NuxtLink to="/">

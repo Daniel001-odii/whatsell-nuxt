@@ -19,7 +19,7 @@
         target="_blank"
         :to="`/categories/${category.category}`"
         v-for="(category, index) in categories"
-        class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-xl font-bold"
+        class="flex justify-center items-center text-sm min-w-[200px] p-3 bg-white border dark:border-gray-600 dark:bg-gray-900 rounded-full font-bold"
       >
         {{ category.category }}</NuxtLink
       >
@@ -55,6 +55,19 @@
       v-if="!loading && products.length > 0"
       class="flex flex-row flex-wrap gap-3"
     >
+    <!-- <div v-for="item in products">
+    <ProductCard
+            class="mt-[15px]"
+            :has-liked-button="true"
+            :id="item._id"
+            :product_price="item.price.toLocaleString()"
+            :image_url="item.images[0]"
+            :views="item.views"
+            :is_liked="checkLikes(item._id)"
+            :product_slug="item.slug"
+            :product_name="item.name"
+          />
+        </div> -->
       <MasonryWall
         :items="products.slice(0, 20)"
         :ssr-columns="1"
@@ -181,7 +194,7 @@
       v-if="!loading && products.length > 0"
       class="flex flex-row flex-wrap gap-3"
     >
-      <MasonryWall
+     <!--  <MasonryWall
         :items="prev_products"
         :ssr-columns="1"
         :column-width="130"
@@ -199,13 +212,13 @@
             :product_slug="item.slug"
           />
         </template>
-      </MasonryWall>
+      </MasonryWall> -->
     </div>
 
     <!-- BEST SELLING -->
     <h2 class="font-bold mt-12">All shops</h2>
     <!-- {{ all_shops }} -->
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 py-5">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 py-5 relative h-[790px] overflow-hidden">
       <ShopCard
         v-for="shop in shops"
         :name="shop.name"
@@ -221,6 +234,14 @@
         <i class="bi bi-exclamation-circle text-4xl"></i>
         <span>No shops available</span>
       </div>
+      
+      <!-- Cover -->
+       <div class=" w-full h-[65%] bottom-0 overflow_cover_dark hidden dark:flex absolute justify-center items-center ">
+        <UButton  @click="navigateTo('/shops')"  label="See All Shops" color="green" class=" bg-app_green"/>
+       </div>
+       <div class=" w-full h-[65%] bottom-0 overflow_cover dark:hidden absolute flex justify-center items-center">
+        <UButton  @click="navigateTo('/shops')" label="See All Shops"  color="green" class=" bg-app_green"/>
+       </div>
     </div>
 
     <!-- FAQ SECTION -->
