@@ -2,7 +2,7 @@
 <template>
     <ClientOnly>
       <!-- <section class="hero bg-gradient-to-r from-green-500 to-green-700 rounded-lg"> -->
-      <section class="hero bg-app_green rounded-lg">
+      <!-- <section class="hero bg-app_green rounded-lg">
         <div class="hero-content">
           <div class="hero-text">
             <h1 ref="title" class="title">{{ currentTitle }}</h1>
@@ -20,7 +20,19 @@
             />
           </div>
         </div>
-      </section>
+      </section> -->
+      <div class="flex flex-col justify-center items-center p-4 text-center min-h-[450px]">
+
+        <div class="gap-4 flex flex-col my-4 justify-center items-center">
+          <h1 class=" text-5xl font-bold">Buy  & Sell <br/> <span class=" text-app_green">Any</span>thing, Any <span class=" text-app_green">where</span></h1>
+          <span class= "max-w-md">Join thousands of buyers and sellers on Nigeria's fastest-growing marketplace. Discover amazing products or start your business today.</span>
+        </div>
+        <div class="flex gap-3">
+          <UButton class=" bg-app_green" color="" label="Start Shopping"/>
+          <UButton variant="outline" color="gray" label="List a product"/>
+        </div>
+       
+      </div>
     </ClientOnly>
   </template>
   

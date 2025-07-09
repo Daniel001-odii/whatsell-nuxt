@@ -12,7 +12,7 @@
 
 
 
-    <div class="min-w-[125px] md:min-w-0 relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:bg-slate-100/20 border border-transparent h-fit w-fit">
+    <div class="min-w-[125px] md:min-w-0 relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:border-green-500 hover:shadow-md border border-transparent h-fit w-fit">
         <!-- IMAGE -->
         <div class="overflow-hidden rounded-2xl">
             <NuxtLink v-if="product_slug" :to="id ? `/products/${id}/${product_slug}`:'#'" class="text-sm clamp-4">

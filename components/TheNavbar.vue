@@ -27,7 +27,7 @@
     <div class="border-b border-gray-300 dark:border-gray-600">
 
         <!-- AUTH NAVBAR -->
-        <div v-if="user" class="flex flex-col gap-3 justify-center items-center p-3">
+        <div v-if="user" class="flex flex-col gap-3 justify-center items-center p-3 sticky top-0 z-30 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
             <div class="container mx-auto flex w-full items-center justify-between">
                 <div class="flex flex-row w-full md:w-fit justify-between">
                     <div class="w-[120px]">
@@ -40,36 +40,21 @@
                 <!-- nav links -->
                 <div class="flex gap-12 justify-evenly items-center">
                     <div
-                        class="flex  font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
-                        <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500' : ''">
-
-                            <UButton class=" md:hidden" :color="isHomePage ? 'green' : 'white'" icon="iconoir:home-simple"
-                                variant="link" />
-                            <span class="text-[8px] md:text-sm">Home</span>
-                        </NuxtLink>
-                        <NuxtLink to="/shops" class="flex flex-col items-center"
-                            :class="isShopsPage ? 'text-green-500' : ''">
-                            <UButton class=" md:hidden" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window"
-                                variant="link" />
+                        class="flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                        <NuxtLink to="/shops" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isShopsPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                            <UButton class="md:hidden transition-transform duration-200" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window" variant="link" />
                             <span class="text-[8px] md:text-sm">Shops</span>
                         </NuxtLink>
-                        <NuxtLink v-if="user.account_type == 'seller'" to="/sell" class="flex flex-col items-center"
-                            :class="isSellPage ? 'text-green-500' : ''">
-                            <UButton class=" md:hidden" :color="isSellPage ? 'green' : 'white'"
-                                icon="iconoir:plus-circle-solid" variant="link" />
+                        <NuxtLink v-if="user.account_type == 'seller'" to="/sell" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isSellPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                            <UButton class="md:hidden transition-transform duration-200" :color="isSellPage ? 'green' : 'white'" icon="iconoir:plus-circle-solid" variant="link" />
                             <span class="text-[8px] md:text-sm">Sell</span>
                         </NuxtLink>
-                        <NuxtLink to="/glips" class="flex flex-col items-center"
-                            :class="isGlipsPage ? 'text-green-500' : ''">
-
-                            <UButton class=" md:hidden" :color="isGlipsPage ? 'green' : 'white'"
-                                icon="iconoir:media-video-list" variant="link" />
+                        <NuxtLink to="/glips" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isGlipsPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                            <UButton class="md:hidden transition-transform duration-200" :color="isGlipsPage ? 'green' : 'white'" icon="iconoir:media-video-list" variant="link" />
                             <span class="text-[8px] md:text-sm">Glips</span>
                         </NuxtLink>
-                        <NuxtLink to="/likes" class="flex flex-col items-center"
-                            :class="isLikesPage ? 'text-green-500' : ''">
-                            <UButton class=" md:hidden" :color="isLikesPage ? 'green' : 'white'" icon="iconoir:thumbs-up"
-                                variant="link" />
+                        <NuxtLink to="/likes" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isLikesPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                            <UButton class="md:hidden transition-transform duration-200" :color="isLikesPage ? 'green' : 'white'" icon="iconoir:thumbs-up" variant="link" />
                             <span class="text-[8px] md:text-sm">Likes</span>
                         </NuxtLink>
                     </div>
@@ -128,27 +113,24 @@
 
         <!-- NON_AUTH NAVBAR -->
         <div v-else
-            class="container mx-auto flex md:flex-row flex-col w-full md:items-center justify-between gap-4 relative p-3">
+            class="container mx-auto flex md:flex-row flex-col w-full md:items-center justify-between gap-4 relative p-3 sticky top-0 z-30 bg-white dark:bg-[#21262d] transition-shadow duration-300" :class="{ 'shadow-lg': isSticky }">
             <div class="flex flex-row w-full md:w-fit justify-between">
                 <div class="w-[120px]">
                     <NuxtLink to="/">
                         <img src="../assets/images/logo/whatsell_logo.png" />
                     </NuxtLink>
                 </div>
-                <UButton variant="link" @click="toggleMenu" color="green" class="md:hidden inline-block">
+                <UButton variant="link" @click="toggleMenu" color="green" class="md:hidden inline-block transition-transform duration-200" :class="{ 'rotate-90': is_collapsed }">
                     <i class="bi bi-ui-radios-grid"></i>
                 </UButton>
             </div>
 
-
             <!-- search -->
-            <div :class="is_collapsed ? 'md:flex' : 'hidden md:flex'"
-                class="md:w-fit md:flex-1 flex-col gap-3 md:flex-row md:justify-between md:items-center">
+            <Transition name="slide-fade">
+                <div v-if="is_collapsed" :class="is_collapsed ? 'md:flex' : 'hidden md:flex'" class="md:w-fit md:flex-1 flex-col gap-3 md:flex-row md:justify-between md:items-center">
                 <div class="flex flex-col w-full justify-center items-center mt-6 md:mt-0">
-                    <form @submit.prevent="handleSearch()"
-                        class="flex flex-row w-full md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
-                        <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-3 outline-none w-full"
-                            type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
+                        <form @submit.prevent="handleSearch()" class="flex flex-row w-full md:w-[300px] rounded-full overflow-hidden gap-1 bg-white dark:bg-gray-900 border dark:border-gray-600 items-center">
+                            <input v-model="searchQuery" @keyup.enter="handleSearch" class="px-5 p-3 outline-none w-full" type="text" placeholder=" Search for shops, foods,cloths, drinks..." />
                         <div class="flex flex-row-reverse justify-between items-center gap-6 flex-1 px-4">
                             <button @click="openFilter" type="button" class="flex md:hidden">
                                 <i class="bi bi-filter"></i>
@@ -159,46 +141,29 @@
                         </div>
                     </form>
                 </div>
-
-
-
                 <!-- auth buttons -->
                 <div class="flex flex-col md:flex-row-reverse items-start md:items-center font-bold gap-3 mt-4 md:mt-0">
                     <NuxtLink to="/login" class="w-full md:w-fit">
-                        <UButton color="gray" label="Login" class=" font-bold" variant="link" />
+                            <UButton color="gray" label="Login" class="font-bold transition-all duration-200 hover:text-green-500 hover:scale-105" variant="link" />
                     </NuxtLink>
-
-                    <NuxtLink to="/register" class="w-full md:w-fit">
-                        <UButton color="gray" class="text-nowrap font-bold" label="Join now" variant="link" />
-                    </NuxtLink>
-
-                    <UButton class="" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
-                        " color="gray" variant="link" aria-label="Theme" @click="isDark = !isDark">Theme</UButton>
-
-
+                    </div>
                 </div>
-            </div>
+            </Transition>
 
 
             <!-- mobile nav links -->
-            <div
-                class="md:ml-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
-                <NuxtLink to="/" class="flex flex-col items-center" :class="isHomePage ? 'text-green-500' : ''">
-                    <UButton class=" md:hidden" :color="isHomePage ? 'green' : 'white'" icon="iconoir:home-simple"
-                        variant="link" />
-                    <span class="text-[8px] md:text-sm">Home</span>
-                </NuxtLink>
-                <NuxtLink to="/shops" class="flex flex-col items-center" :class="isShopsPage ? 'text-green-500' : ''">
-                    <UButton class=" md:hidden" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window"
-                        variant="link" />
+            <Transition name="slide-fade">
+                <div v-if="is_collapsed" class="md:ml-3 flex font-bold md:justify-between justify-evenly gap-8 md:gap-12 items-center fixed md:relative bottom-0 p-2 md:p-0 left-0 z-10 md:z-10 right-0 bg-white dark:bg-[#21262d] border-t dark:border-gray-600 md:border-none">
+                    <NuxtLink to="/shops" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isShopsPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                        <UButton class="md:hidden transition-transform duration-200" :color="isShopsPage ? 'green' : 'white'" icon="iconoir:shop-window" variant="link" />
                     <span class="text-[8px] md:text-sm">Shops</span>
                 </NuxtLink>
-                <NuxtLink to="/glips" class="flex flex-col items-center" :class="isGlipsPage ? 'text-green-500' : ''">
-                    <UButton class=" md:hidden" :color="isGlipsPage ? 'green' : 'white'" icon="iconoir:media-video-list"
-                        variant="link" />
+                    <NuxtLink to="/glips" class="flex flex-col items-center transition-all duration-200 ease-in-out hover:text-green-500 hover:scale-105" :class="isGlipsPage ? 'text-green-500 border-b-2 border-green-500' : ''">
+                        <UButton class="md:hidden transition-transform duration-200" :color="isGlipsPage ? 'green' : 'white'" icon="iconoir:media-video-list" variant="link" />
                     <span class="text-[8px] md:text-sm">Glips</span>
                 </NuxtLink>
             </div>
+            </Transition>
 
 
 
@@ -229,7 +194,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 const { $axios } = useNuxtApp();
 const colorMode = useColorMode();
 const searchQuery = ref("");
@@ -346,10 +311,14 @@ const logout = () => {
     navigateTo('/login'); // Redirect to the login page
 };
 
-
+const isSticky = ref(false);
 
 onMounted(() => {
     getUserDetails();
+    // Sticky shadow on scroll
+    window.addEventListener('scroll', () => {
+        isSticky.value = window.scrollY > 10;
+    });
 });
 
 const isHomePage = computed(() => {
@@ -395,4 +364,12 @@ const handleSearch = () => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>

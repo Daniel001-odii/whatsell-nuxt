@@ -71,6 +71,7 @@
             :views="item.views"
             :is_liked="checkLikes(item._id)"
             :product_slug="item.slug"
+            :product_name="item.name"
           />
         </template>
       </MasonryWall>
@@ -204,7 +205,7 @@
     <!-- BEST SELLING -->
     <h2 class="font-bold mt-12">All shops</h2>
     <!-- {{ all_shops }} -->
-    <div class="flex flex-row flex-wrap gap-3 mt-3 py-5">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 py-5">
       <ShopCard
         v-for="shop in shops"
         :name="shop.name"
@@ -215,7 +216,7 @@
       />
       <div
         v-if="shops.length === 0"
-        class="p-12 flex flex-col items-center justify-center w-full gap-3"
+        class="p-12 flex flex-col items-center justify-center w-full gap-3 col-span-full"
       >
         <i class="bi bi-exclamation-circle text-4xl"></i>
         <span>No shops available</span>
