@@ -53,6 +53,9 @@ animation: rotation 0.9s linear infinite;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #21262d 50%);
 }
 
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+}
 
 /* SCROLL BAR */
 

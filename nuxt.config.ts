@@ -55,18 +55,18 @@ export default defineNuxtConfig({
       link: [
         // Favicon
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        // Google Fonts: Poppins
+        // Google Fonts: Cabinet Grotesk
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap',
+          href: 'https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700&display=swap',
         },
       ],
       style: [
-        // Apply Poppins as the default font globally
+        // Apply Cabinet Grotesk as the default font globally
         {
           children: `
             body {
-              font-family: 'Poppins', sans-serif;
+              font-family: 'Cabinet Grotesk', sans-serif;
             }
           `,
         },
