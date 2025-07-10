@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="`/shops/${name}`" class="flex flex-1 max-w-[320px]  min-w-[150px] relative h-[290px] bg-gray-50 dark:bg-black rounded-lg flex-col overflow-hidden">
+    <NuxtLink :to="`/shops/${name}`" class="flex flex-1 max-w-[320px]  min-w-[200px] relative h-[290px] bg-gray-50 dark:bg-black rounded-lg flex-col overflow-hidden">
         <div class=" h-[60%] w-full relative" 
         :style="header_image ? `background: url(${header_image})`: `background: url(${image_url})`" 
         style="background-position: center; background-repeat: no-repeat; background-size: 120%;">

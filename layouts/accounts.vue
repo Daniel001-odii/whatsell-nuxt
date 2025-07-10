@@ -56,7 +56,7 @@
 
             <div class="flex flex-col gap-3 w-full pb-12">
                 <div class="font-bold p-3 border rounded-lg text-green-700 bg-white dark:bg-gray-900 dark:border-gray-600">
-                    <span>{{ useRouter().currentRoute.value.name }}</span>
+                    <span class=" capitalize">{{ useRouter().currentRoute.value.name.split("-").join(" ") }}</span>
                 </div>
                 <slot/>
             </div>

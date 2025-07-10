@@ -1,6 +1,6 @@
 <template>
 <!-- <div class="dark:bg-[#21262d]"> -->
-  <div class="">
+  <div class="bg-slate-50" style="">
 <NuxtLayout>
   <UNotifications />
     <div class=" ">

@@ -3,70 +3,103 @@
 
 <!-- LISTING MODAL -->
 <UModal
-    :ui="{ container: 'flex items-center justify-center min-h-screen' }"
-    v-model="listing_modal"
+  :ui="{ container: 'flex items-center justify-center min-h-screen' }"
+  v-model="listing_modal"
+>
+  <UCard
+    :ui="{
+      ring: 'ring-1 ring-app_green/30 shadow-lg',
+      divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+      body: 'px-8 py-6 bg-gray-50 dark:bg-gray-900 rounded-b-xl',
+      header: 'px-8 py-5 bg-gradient-to-r from-green-100 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-t-xl',
+      footer: 'px-8 py-5 bg-gray-50 dark:bg-gray-900 rounded-b-xl'
+    }"
+    class="max-w-md w-full"
   >
-    <UCard
-      :ui="{
-        ring: '',
-        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-      }"
-    >
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h3
-            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-          >
-            Complete product listing
+    <template #header>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="bg-app_green/10 rounded-full p-2">
+            <i class="bi bi-box-seam text-app_green text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+            Product Listing
           </h3>
-          <UButton
-            color="gray"
-            variant="ghost"
-            icon="i-heroicons-x-mark-20-solid"
-            class="-my-1"
-            @click="listing_modal = false"
-          />
         </div>
-      </template>
-      <div class=" flex flex-col gap-3 justify-center items-center">
-        <div v-if="uploaded_product" class="flex flex-col justify-center items-center text-center">
-            <span class=" font-bold text-3xl text-app_green">Product Uploaded!</span>
-            <small>Click below to see your product page</small>
-        </div>
-        <ProductCard
-        :class="uploaded_product ? 'border border-app_green':''"
-        class=" !min-w-[200px] !w-[200px]"
-        :id="uploaded_product ? uploaded_product._id:null"
-        :product_slug="product.name"
-        :has-liked-button="false"
-        :image_url="product.images[0]"
-        :product_price="product.price.toLocaleString()"
-        :views="0"
+        <UButton
+          color="gray"
+          variant="ghost"
+          icon="i-heroicons-x-mark-20-solid"
+          class="-my-1"
+          @click="listing_modal = false"
         />
       </div>
-      <template #footer>
-        <UButton
-        v-if="!uploaded_product"
-        @click="postProduct"
-        color="green"
-        size="lg"
-        label="Post Now"
-        :loading="uploading_product"
-        loading-icon="svg-spinners:6-dots-scale-middle"
-        block
+    </template>
+    <div class="flex flex-col gap-5 justify-center items-center py-2">
+      <div
+        v-if="uploaded_product"
+        class="flex flex-col justify-center items-center text-center gap-2"
+      >
+        <div class="flex items-center justify-center mb-2">
+          <div class="bg-app_green/20 rounded-full p-3 animate-bounce">
+            <i class="bi bi-check-circle-fill text-4xl text-app_green"></i>
+          </div>
+        </div>
+        <span class="font-bold text-2xl text-app_green">Product Uploaded!</span>
+        <small class="text-gray-600 dark:text-gray-300">Click below to see your product page</small>
+      </div>
+      <div
+        v-else
+        class="flex flex-col items-center text-center gap-2"
+      >
+        <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">Ready to post your product?</span>
+        <small class="text-gray-500 dark:text-gray-400">Review your listing before posting.</small>
+      </div>
+      <div class="w-full flex justify-center">
+        <ProductCard
+          :class="uploaded_product ? 'border-2 border-app_green shadow-lg scale-105 transition-all duration-300' : 'border border-gray-200 dark:border-gray-700 shadow-sm'"
+          class="!min-w-[220px] !w-[220px] rounded-xl bg-white dark:bg-gray-800"
+          :id="uploaded_product ? uploaded_product._id : null"
+          :product_slug="product.name"
+          :has-liked-button="false"
+          :image_url="product.images[0]"
+          :product_name="product.name"
+          :product_price="product.price.toLocaleString()"
+          :views="0"
         />
-        <!-- `/products/${id}/${product_slug}` -->
-        <NuxtLink  v-else :to="`/products/${uploaded_product._id}/${uploaded_product.slug}`" target="_blank" class="w-full">
-            <UButton
+      </div>
+    </div>
+    <template #footer>
+      <div class="flex flex-col gap-3 w-full">
+        <UButton
+          v-if="!uploaded_product"
+          @click="postProduct"
+          color="green"
+          size="lg"
+          label="Post Now"
+          :loading="uploading_product"
+          loading-icon="svg-spinners:6-dots-scale-middle"
+          block
+          class="font-semibold text-lg py-3 rounded-lg shadow hover:shadow-md transition"
+        />
+        <NuxtLink
+          v-else
+          :to="`/products/${uploaded_product._id}/${uploaded_product.slug}`"
+          target="_blank"
+          class="w-full"
+        >
+          <UButton
             icon="hugeicons:delivery-view-01"
             color="blue"
             size="lg"
             label="View Product"
             block
-            />
+            class="font-semibold text-lg py-3 rounded-lg shadow hover:shadow-md transition"
+          />
         </NuxtLink>
-      </template>
-    </UCard>
+      </div>
+    </template>
+  </UCard>
 </UModal>
 
 <!-- GLIP MODAL -->

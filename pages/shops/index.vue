@@ -1,7 +1,4 @@
 <template>
-   <!--  <span>{{ shops_near_me }}</span>
-    <span>{{ location_error }}</span>
-    <span>{{ state }}</span> -->
     <div class=" flex flex-col">
         <div v-if="loading_user" class=" flex gap-3 p-3 rounded-md h-[150px] mt-12">
             <USkeleton class="min-w-[150px] h-full md:w-[200px] md:h-[120px]"
@@ -16,7 +13,6 @@
         <!-- SHOP PREVIEW IF USER IS SELLER -->
         <div v-if="!loading_user && user && shop" class="flex flex-col">
             <h2 class="font-bold mt-12 mb-4 text-2xl flex items-center gap-2">
-                <i class="bi bi-shop text-green-600"></i>
                 Your Shop
             </h2>
             <div class="flex flex-col md:flex-row gap-5 p-5 border dark:border-gray-600 rounded-xl mt-3 bg-white dark:bg-gray-900 shadow hover:shadow-lg transition-shadow duration-200">

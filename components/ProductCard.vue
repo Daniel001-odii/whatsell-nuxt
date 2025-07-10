@@ -12,7 +12,7 @@
 
 
 
-    <div class="min-w-[180px] sm:min-w-[250px] lg:min-w-[280px] relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:bg-slate-100/20 h-fit">
+    <div class="min-w-[180px] sm:min-w-[250px] lg:min-w-[280px] relative group bg-white dark:bg-gray-900 p-1 rounded-2xl hover:bg-gray-200/30 h-fit">
         <!-- IMAGE -->
         <div class="overflow-hidden rounded-2xl">
             <NuxtLink v-if="product_slug" :to="id ? `/products/${id}/${product_slug}`:'#'" class="text-sm clamp-4">
@@ -41,12 +41,12 @@
                     <i :class="isLiked ? 'bi bi-hand-thumbs-up-fill text-green-500' : 'bi bi-hand-thumbs-up'"></i>
                 </button>
             </div>
-           <!--  <div class="text-gray-400 text-[12px] flex justify-between">
+            <div class="text-gray-400 text-[12px] flex justify-between">
                 <span>
                     <i class="bi bi-eye-fill"></i>
                     {{ views }} views
                 </span>
-            </div> -->
+            </div>
         </div>
     </div>
 </template>

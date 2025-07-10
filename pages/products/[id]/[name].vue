@@ -183,23 +183,27 @@
 
   <div class=" p-5">
     <!-- SHOP AREA -->
-    <div class=" flex flex- gap-3 p-3 border dark:border-gray-600 mb-3 rounded-xl">
-      <div class=" size-[100px] overflow-hidden">
+    <div class=" flex flex- gap-3 p-3 bg-white dark:bg-gray-700/50 mb-3 rounded-xl">
+      <div class=" size-[100px] overflow-hidden p-3 relative">
+        <div class=" rounded-full bg-green-500 size-[20px] right-0 absolute border-2 border-white"></div>
         <img :src="product?.shop?.profile?.image_url" @click="useRouter().push(`/shops/${product?.shop?.name}`)"
-          class=" rounded-md cursor-pointer" />
+          class=" rounded-xl cursor-pointer" />
       </div>
 
       <div class=" flex flex-col gap-2">
         <span class=" font-bold text-xl cursor-pointer" @click="useRouter().push(`/shops/${product?.shop?.name}`)">{{
           product?.shop?.name }}</span>
-        <span class="bg-green-500 bg-opacity-10 px-3 py-1 text-green-700 text-sm font-semibold w-fit">{{ product?.shop?.category }}</span>
-        <span class="text-sm">{{ product?.shop?.profile?.location?.state }} | joined {{ product?.shop?.createdAt.split('T')[0] }}</span>
+        <span class="bg-green-500 bg-opacity-10 px-3 py-1 text-green-700 text-sm font-semibold w-fit">{{
+          product?.shop?.category }}</span>
+        <span class="text-sm">{{ product?.shop?.profile?.location?.state }} - joined 
+          <!-- {{ product?.shop?.createdAt.split('T')[0] }} -->
+          {{ new Date(product?.shop?.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
       </div>
     </div>
 
 
     <!-- PRODUCT DETAIL AREA -->
-    <div class="flex flex-col md:flex-row gap-12 flex-wra relative" v-if="product">
+    <div class="flex flex-col md:flex-row gap-8 flex-wra relative" v-if="product">
       <div class="flex flex-col gap-3 md:w-[50%] ">
         <!-- <div :style="`background-image: url('${main_image}'); background-size: contain;`" class="full-image w-full h-[400px] rounded-md flex justify-center items-center bg-gray-100"></div> -->
         <div class=" flex flex-col gap-3">
@@ -211,14 +215,24 @@
             }" :ui="{ item: 'basis-full' }" class="rounded-lg overflow-hidden max-h-[400px]" arrows>
               <img :src="item" class="w-full !max-h-[800px]" draggable="false">
             </UCarousel>
-            <div v-if="product?.status?.value === 'sold'" class="absolute top-0 left-10 bg-red-500 text-white px-8 py-2 -rotate-45 -translate-x-[40%] translate-y-[60%] text-5xl font-bold w-[300px] text-center">
+           <!--  <div v-if="product?.status?.value === 'sold'"
+              class="absolute top-0 left-10 bg-red-500 text-white px-8 py-2 -rotate-45 -translate-x-[40%] translate-y-[60%] text-5xl font-bold w-[300px] text-center">
               SOLD
+            </div> -->
+            <div v-if="product?.status?.value === 'sold'"
+              class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+              <img src="../../../assets/images/sold_stamp.png" alt="Sold Stamp" class="pointer-events-none select-none w-[200px]" />
             </div>
           </div>
           <!-- <span>{{ product_images.length }}</span> -->
           <div class="flex flex-row gap-3 overflow-hidden relative">
-            <img v-for="image in product?.images" class=" size-[50px] rounded-lg " :src="image"
-              @click="previewImage(image)" />
+            <img
+              v-for="image in product?.images"
+              class="size-[50px] rounded-lg bg-white"
+              :src="image"
+              :alt="`Product image of ${product?.name}`"
+              @click="previewImage(image)"
+            />
             <!-- EXTRA IMG INDICATOR -->
             <div v-if="product_images > 4"
               class=" size-[100px] absolute right-0 rounded-lg flex justify-center items-center extra_img_indicator">
@@ -228,7 +242,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:w-[50%]">
+      <div class="flex flex-col md:w-[50%] bg-white dark:bg-gray-700/50 p-6 rounded-lg">
         <span class="bg-green-500 bg-opacity-10 px-3 py-1 text-green-700 text-2xl font-semibold w-fit">{{ product.name
         }}</span>
         <span class="px-3 py-2 mt-2 text-orange-600 bg-orange-500 bg-opacity-10 w-fit rounded-md text-sm">
@@ -264,11 +278,8 @@
         <div class="mt-3 flex flex-col gap-2">
 
 
-          <UButton v-if="product.shop.accept_payments" 
-          block
-            :disabled="checking_out || product?.status?.value === 'sold'"
-            :loading="checking_out"
-            color="blue"
+          <UButton v-if="product.shop.accept_payments" block
+            :disabled="checking_out || product?.status?.value === 'sold'" :loading="checking_out" color="blue"
             :icon="checking_out ? 'svg-spinners:6-dots-scale-middle' : 'hugeicons:payment-success-01'"
             class="bg-blue-500 hover:bg-opacity-90 text-white w-full rounded-lg p-3 text-lg font-semibold"
             @click="user ? checkout_modal = !checkout_modal : (no_auth_like = !no_auth_like)">Buy this item</UButton>
@@ -286,15 +297,16 @@
               </button>
             </NuxtLink>
 
-            <a v-if="user && product" class="action_btns border-l"
+          <!--   <a v-if="user && product" class="action_btns border-l"
               :href="product?.shop?.owner?.phone ? `https://wa.me/${product?.shop?.owner?.phone}` : '#'"
               target="_blank">
               <button class="flex gap-3">
                 <i class="bi bi-chat-square-quote"></i>
                 <span class="hidden md:flex">Chat</span>
               </button>
-            </a>
-            <button @click="no_auth_like = true" v-else class="action_btns border-l">
+            </a> -->
+            
+            <button @click="no_auth_like = true" class="action_btns border-l">
               <i class="bi bi-chat-square-quote"></i>
               <span class="hidden md:flex">Chat</span>
             </button>
@@ -318,13 +330,15 @@
     <!-- {{ product }} -->
     <!-- SIMILAR ITEMS YOU MAY LIKE -->
     <h2 class=" font-bold mt-12">Similar items you may like</h2>
-    <div class="flex flex-row overflow-x-auto mt-3 pt-5 gap-3">
+    <div class="flex flex-wrap mt-3 pt-5 gap-3">
       <!-- similar products: {{ similar_products }} -->
-      <ProductCard v-for="(item, index) in similar_products" class=" mt-[3px] !max-w-[150px]" :hasLikedButton="false"
-        :id="item._id" :product_slug="item.slug" :views="item.views" :posted="item.createdAt"
-        :product_price="item.price.toLocaleString()" :shop_name="item.shop.name"
-        @like-product="addProductToLikes(item._id)" :image_url="item.images[0]">
-      </ProductCard>
+      <div class="max-w-[120px]" v-for="(item, index) in similar_products">
+        <ProductCard class=" mt-[3px]" :hasLikedButton="false" :id="item._id" :product_slug="item.slug"
+          :views="item.views" :posted="item.createdAt" :product_price="item.price.toLocaleString()"
+          :shop_name="item.shop.name" :product_name="item.name" @like-product="addProductToLikes(item._id)"
+          :image_url="item.images[0]">
+        </ProductCard>
+      </div>
     </div>
   </div>
 </template>
@@ -479,11 +493,11 @@ const checkoutProduct = async () => {
     window.location.href = res.payment_url;
   } catch (error) {
     console.log("error checking out product: ", error);
-  /*   useToast().add({
-      title: 'Error',
-      description: 'Failed to process checkout. Please try again.',
-      color: 'red'
-    }); */
+    /*   useToast().add({
+        title: 'Error',
+        description: 'Failed to process checkout. Please try again.',
+        color: 'red'
+      }); */
     toast.add({ title: error._data.message })
   }
   checking_out.value = false;
